@@ -3,7 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('admin/css/image-previewer.css')}}" type="text/css" />
-<style>
+<style nonce="{{ csp_nonce() }}">
     #canvas_container {
         width: 100%;
         height: 550px;
@@ -115,15 +115,15 @@
                             </div>
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <a href="{{route('document_edit', $country->id)}}" style="background:yellow;color:black;border-color:yellow;" type="button" class="btn btn-success add-btn me-2" id="create-btn"><i class="ri-edit-line align-bottom me-1"></i> Edit</a>
-                                    <button onclick="deleteHandler('{{route('document_delete', $country->id)}}')" style="background:red" type="button" class="btn btn-danger add-btn" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                    <a href="{{route('document_edit', $country->id)}}" type="button" class="btn btn-success add-btn me-2" id="create-btn"><i class="ri-edit-line align-bottom me-1"></i> Edit</a>
+                                    <button onclick="deleteHandler('{{route('document_delete', $country->id)}}')" type="button" class="btn btn-danger add-btn" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
                                 </div>
                             </div>
                         </div>
                         <div class="text-muted">
                             <div class="pt-3 pb-3 border-top border-top-dashed border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Title :</p>
@@ -152,12 +152,12 @@
                                             <h5 class="fs-15 mb-0">{{$country->deity}}</h5>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="pt-3 pb-3 border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Version :</p>
@@ -218,7 +218,7 @@
                                             <h5 class="fs-15 mb-0">{{$country->created_at}}</h5>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             @if($country->tags)
@@ -259,25 +259,25 @@
                                                 </label>
                                                 <button id="go_next" title="next page"><i class="bx bx-skip-next"></i></button>
                                             </div>
-                                    
-                                            <div id="zoom_controls">  
+
+                                            <div id="zoom_controls">
                                                 <button id="zoom_in" title="zoom in"><i class="ri-zoom-in-line"></i></button>
                                                 <button id="zoom_out" title="zoom out"><i class="ri-zoom-out-line"></i></button>
-                                            </div> 
+                                            </div>
                                         </div>
 
                                         <div id="canvas_container">
                                             <canvas id="pdf_renderer"></canvas>
                                         </div>
-                                
-                                        
+
+
                                     </div>
 
                                 </div>
                                 @endif
                             </div>
 
-                            
+
                         </div>
                     </div>
                     <!-- end card body -->
@@ -292,46 +292,13 @@
 
 
 
-@stop          
+@stop
 
 @section('javascript')
 <script src="{{ asset('admin/js/pages/img-previewer.min.js') }}"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
-<script>
-    function deleteHandler(url){
-        iziToast.question({
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            title: 'Hey',
-            message: 'Are you sure about that?',
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', function (instance, toast) {
-
-                    window.location.replace(url);
-                    // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-        
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }],
-            ],
-            onClosing: function(instance, toast, closedBy){
-                console.info('Closing | closedBy: ' + closedBy);
-            },
-            onClosed: function(instance, toast, closedBy){
-                console.info('Closed | closedBy: ' + closedBy);
-            }
-        });
-    }
-</script>
-<script>
+@include('includes.admin.delete_handler')
+<script nonce="{{ csp_nonce() }}">
     const myViewer = new ImgPreviewer('#image-container',{
       // aspect ratio of image
         fillRatio: 0.9,
@@ -344,28 +311,28 @@
             zIndex: 99
         },
         // zoom options
-        imageZoom: { 
+        imageZoom: {
             min: 0.1,
             max: 5,
             step: 0.1
         },
         // detect whether the parent element of the image is hidden by the css style
         bubblingLevel: 0,
-        
+
     });
 </script>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 
-    
+
     var myState = {
         pdf: null,
         currentPage: 1,
         zoom: 1
     }
-    
+
     pdfjsLib.getDocument('{{asset('storage/upload/documents/'.$country->document)}}').then((pdf) => {
-    
+
         myState.pdf = pdf;
         document.getElementById("totalPageCount").innerHTML = myState.pdf._pdfInfo.numPages;
         render();
@@ -374,15 +341,15 @@
 
     function render() {
         myState.pdf.getPage(myState.currentPage).then((page) => {
-        
+
             var canvas = document.getElementById("pdf_renderer");
             var ctx = canvas.getContext('2d');
-    
+
             var viewport = page.getViewport(myState.zoom);
 
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-        
+
             page.render({
                 canvasContext: ctx,
                 viewport: viewport
@@ -390,7 +357,7 @@
         });
     }
 
-    
+
 
     document.getElementById('go_previous').addEventListener('click', (e) => {
         if(myState.pdf == null || myState.currentPage == 1) return false;
@@ -408,15 +375,15 @@
 
     document.getElementById('current_page').addEventListener('keypress', (e) => {
         if(myState.pdf == null) return;
-        
+
         // Get key code
         var code = (e.keyCode ? e.keyCode : e.which);
-        
+
         // If key code matches that of the Enter key
         if(code == 13) {
-            var desiredPage = 
+            var desiredPage =
             document.getElementById('current_page').valueAsNumber;
-                                
+
             if(desiredPage >= 1 && desiredPage <= myState.pdf._pdfInfo.numPages) {
                 myState.currentPage = desiredPage;
                 document.getElementById("current_page").value = desiredPage;

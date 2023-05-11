@@ -168,61 +168,7 @@
 
 @section('javascript')
 
-{{-- <script src="{ asset('admin/libs/list.js/list.min.js') }}"></script> --}}
-{{-- <script src="{ asset('admin/libs/list.pagination.js/list.pagination.min.js') }}"></script> --}}
-
-<!-- listjs init -->
-{{-- <script src="{ asset('admin/js/pages/listjs.init.js') }}"></script> --}}
-
-<script nonce="{{ csp_nonce() }}">
-    function deleteHandler(url){
-        iziToast.question({
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            title: 'Hey',
-            message: 'Are you sure about that?',
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', function (instance, toast) {
-
-                    window.location.replace(url);
-                    // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-                }],
-            ],
-            onClosing: function(instance, toast, closedBy){
-                console.info('Closing | closedBy: ' + closedBy);
-            },
-            onClosed: function(instance, toast, closedBy){
-                console.info('Closed | closedBy: ' + closedBy);
-            }
-        });
-    }
-</script>
-
-<script>
-    function callSearchHandler(){
-        var str= "";
-        var arr = [];
-        if(document.getElementById('search').value){
-            arr.push("search="+document.getElementById('search').value)
-        }
-        if(document.getElementById('filter').value){
-            arr.push("filter="+document.getElementById('filter').value)
-        }
-        str = arr.join('&');
-        window.location.replace('{{route('image_view_access')}}?'+str)
-        return false;
-    }
-</script>
+@include('includes.admin.delete_handler')
+@include('includes.admin.call_search_handler', ['url'=>route('image_view_access')])
 
 @stop

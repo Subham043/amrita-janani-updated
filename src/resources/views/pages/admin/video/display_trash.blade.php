@@ -1,11 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-<link rel="stylesheet" href="{{ asset('main/css/plugins/plyr.css')}}" type="text/css" />
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -43,7 +38,7 @@
                         <div class="text-muted">
                             <div class="pt-3 pb-3 border-top border-top-dashed border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Title :</p>
@@ -72,12 +67,12 @@
                                             <h5 class="fs-15 mb-0">{{$country->deity}}</h5>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="pt-3 pb-3 border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Version :</p>
@@ -143,7 +138,7 @@
                                             <h5 class="fs-15 mb-0">{{$country->created_at}}</h5>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             @if($country->description_unformatted)
@@ -173,7 +168,7 @@
                                 @endif
                             </div>
 
-                            
+
                         </div>
                     </div>
                     <!-- end card body -->
@@ -188,65 +183,9 @@
 
 
 
-@stop          
+@stop
 
 @section('javascript')
-<script src="{{ asset('main/js/plugins/plyr.js') }}"></script>
-<script>
-    function deleteHandler(url){
-        iziToast.question({
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            title: 'Hey',
-            message: 'Are you sure about that?',
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', function (instance, toast) {
-
-                    window.location.replace(url);
-                    // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-        
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }],
-            ],
-            onClosing: function(instance, toast, closedBy){
-                console.info('Closing | closedBy: ' + closedBy);
-            },
-            onClosed: function(instance, toast, closedBy){
-                console.info('Closed | closedBy: ' + closedBy);
-            }
-        });
-    }
-</script>
-<script>
-const controls = [
-    'play-large', // The large play button in the center
-    'restart', // Restart playback
-    'rewind', // Rewind by the seek time (default 10 seconds)
-    'play', // Play/pause playback
-    'fast-forward', // Fast forward by the seek time (default 10 seconds)
-    'progress', // The progress bar and scrubber for playback and buffering
-    'current-time', // The current time of playback
-    'duration', // The full duration of the media
-    'mute', // Toggle mute
-    'volume', // Volume control
-    'captions', // Toggle captions
-    'settings', // Settings menu
-    'pip', 
-    'airplay', 
-    'fullscreen'
-];
-
-const player = new Plyr('#player', {
-    controls,
-});
-</script>
+@include('includes.admin.delete_handler')
+@include('includes.admin.video_player_script')
 @stop

@@ -1,12 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-<link rel="stylesheet" href="{{ asset('main/css/plugins/plyr.css')}}" type="text/css" />
-
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -195,63 +189,8 @@
 @stop
 
 @section('javascript')
-<script src="{{ asset('main/js/plugins/plyr.js') }}"></script>
-<script>
-const controls = [
-    'play-large', // The large play button in the center
-    'restart', // Restart playback
-    'rewind', // Rewind by the seek time (default 10 seconds)
-    'play', // Play/pause playback
-    'fast-forward', // Fast forward by the seek time (default 10 seconds)
-    'progress', // The progress bar and scrubber for playback and buffering
-    'current-time', // The current time of playback
-    'duration', // The full duration of the media
-    'mute', // Toggle mute
-    'volume', // Volume control
-    'captions', // Toggle captions
-    'settings', // Settings menu
-];
 
-const player = new Plyr('#player', {
-    controls,
-});
-</script>
-
-<script>
-function deleteHandler(url) {
-    iziToast.question({
-        timeout: 20000,
-        close: false,
-        overlay: true,
-        displayMode: 'once',
-        id: 'question',
-        zindex: 999,
-        title: 'Hey',
-        message: 'Are you sure about that?',
-        position: 'center',
-        buttons: [
-            ['<button><b>YES</b></button>', function(instance, toast) {
-
-                window.location.replace(url);
-                // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-
-            }, true],
-            ['<button>NO</button>', function(instance, toast) {
-
-                instance.hide({
-                    transitionOut: 'fadeOut'
-                }, toast, 'button');
-
-            }],
-        ],
-        onClosing: function(instance, toast, closedBy) {
-            console.info('Closing | closedBy: ' + closedBy);
-        },
-        onClosed: function(instance, toast, closedBy) {
-            console.info('Closed | closedBy: ' + closedBy);
-        }
-    });
-}
-</script>
+@include('includes.admin.audio_player_script')
+@include('includes.admin.delete_handler')
 
 @stop

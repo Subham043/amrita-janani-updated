@@ -1,11 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-<link rel="stylesheet" href="{{ asset('main/css/plugins/plyr.css')}}" type="text/css" />
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -40,7 +35,7 @@
                             </div>
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <form action="{{route('audio_toggle_report', $country->id)}}" method="get" style="margin-right:10px;">
+                                    <form action="{{route('audio_toggle_report', $country->id)}}" method="get" class="mr-3">
                                         <select class="form-control mr-2" name="status" onchange="this.form.submit()">
                                             <option value="0" {{ $country->status==0 ? 'selected':''}}>Pending</option>
                                             <option value="1" {{ $country->status==1 ? 'selected':''}}>In progress</option>
@@ -54,7 +49,7 @@
                         <div class="text-muted">
                             <div class="pt-3 pb-3 border-top border-top-dashed border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Audio Title :</p>
@@ -79,12 +74,12 @@
                                             <h5 class="fs-15 mb-0">{{$country->User->email}}</h5>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="pt-3 pb-3 border-bottom border-bottom-dashed mt-4">
                                 <div class="row">
-                                    
+
                                     <div class="col-lg-3 col-sm-6">
                                         <div>
                                             <p class="mb-2 text-uppercase fw-medium fs-13">Requested Date :</p>
@@ -105,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             @if($country->message)
                             <div class="pt-3 pb-3 border-bottom border-bottom-dashed mt-4">
                                 <h6 class="fw-semibold text-uppercase">Message From {{$country->User->name}}</h6>
@@ -124,7 +119,7 @@
                                 @endif
                             </div>
 
-                            
+
                         </div>
                     </div>
                     <!-- end card body -->
@@ -139,64 +134,11 @@
 
 
 
-@stop          
+@stop
 
 @section('javascript')
-<script src="{{ asset('main/js/plugins/plyr.js') }}"></script>
-<script>
-const controls = [
-    'play-large', // The large play button in the center
-    'restart', // Restart playback
-    'rewind', // Rewind by the seek time (default 10 seconds)
-    'play', // Play/pause playback
-    'fast-forward', // Fast forward by the seek time (default 10 seconds)
-    'progress', // The progress bar and scrubber for playback and buffering
-    'current-time', // The current time of playback
-    'duration', // The full duration of the media
-    'mute', // Toggle mute
-    'volume', // Volume control
-    'captions', // Toggle captions
-    'settings', // Settings menu
-];
 
-const player = new Plyr('#player', {
-    controls,
-});
-</script>
-
-<script>
-    function deleteHandler(url){
-        iziToast.question({
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            title: 'Hey',
-            message: 'Are you sure about that?',
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', function (instance, toast) {
-
-                    window.location.replace(url);
-                    // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-        
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }],
-            ],
-            onClosing: function(instance, toast, closedBy){
-                console.info('Closing | closedBy: ' + closedBy);
-            },
-            onClosed: function(instance, toast, closedBy){
-                console.info('Closed | closedBy: ' + closedBy);
-            }
-        });
-    }
-</script>
+@include('includes.admin.audio_player_script')
+@include('includes.admin.delete_handler')
 
 @stop

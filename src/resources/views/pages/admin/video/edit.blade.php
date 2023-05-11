@@ -1,20 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-<link href="{{ asset('admin/libs/quill/quill.core.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/libs/quill/quill.bubble.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/libs/quill/quill.snow.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/css/tagify.css' ) }}" rel="stylesheet" type="text/css" />
-
-<style>
-    #description{
-        min-height: 200px;
-    }
-</style>
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -60,7 +46,7 @@
                                     <div>
                                         <label for="title" class="form-label">Title</label>
                                         <input type="text" class="form-control" name="title" id="title" value="{{$country->title}}">
-                                        @error('title') 
+                                        @error('title')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -69,7 +55,7 @@
                                     <div>
                                         <label for="year" class="form-label">Year</label>
                                         <input type="text" class="form-control" name="year" id="year" value="{{$country->year}}">
-                                        @error('year') 
+                                        @error('year')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -78,7 +64,7 @@
                                     <div>
                                         <label for="version" class="form-label">Version</label>
                                         <input type="text" class="form-control" name="version" id="version" value="{{$country->version}}">
-                                        @error('version') 
+                                        @error('version')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -87,7 +73,7 @@
                                     <div>
                                         <label for="deity" class="form-label">Deity</label>
                                         <input type="text" class="form-control" name="deity" id="deity" value="{{$country->deity}}">
-                                        @error('deity') 
+                                        @error('deity')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -96,7 +82,7 @@
                                     <div>
                                         <label for="tags" class="form-label">Tags</label>
                                         <input type="text" class="form-control" name="tags" id="tags" value="{{old('tags')}}">
-                                        @error('tags') 
+                                        @error('tags')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -105,7 +91,7 @@
                                     <div>
                                         <label for="topics" class="form-label">Topics</label>
                                         <input type="text" class="form-control" name="topics" id="topics" value="{{old('topics')}}">
-                                        @error('topics') 
+                                        @error('topics')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -114,7 +100,7 @@
                                     <div>
                                         <label for="language" class="form-label">Language</label>
                                         <select id="language" name="language" multiple></select>
-                                        @error('language') 
+                                        @error('language')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -125,17 +111,17 @@
                                         <input type="text" class="form-control" name="video" id="video" value="{{$country->video}}">
                                         <div class="form-text"><code>youtube url format : </code>https://www.youtube.com/embed/3QPp_DlcZpM</div>
                                         <div class="form-text"><code>vimeo url format : </code>https://player.vimeo.com/video/291685166</div>
-                                        @error('video') 
+                                        @error('video')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-xxl-12 col-md-12">
                                     <div>
                                         <label for="description" class="form-label">Description</label>
                                         <div id="description">{!! $country->description !!}</div>
-                                            @error('description') 
+                                            @error('description')
                                                 <div class="invalid-message">{{ $message }}</div>
                                             @enderror
                                     </div>
@@ -149,7 +135,7 @@
                                                 <label class="form-check-label" for="flexSwitchCheckRightDisabled">Status</label>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div><!--end col-->
                                 <div class="col-lg-12 col-md-12">
@@ -160,19 +146,19 @@
                                                 <label class="form-check-label" for="flexSwitchCheckRightDisabled2">Restricted</label>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div><!--end col-->
 
                                 <div class="col-xxl-12 col-md-12">
                                     <button type="submit" class="btn btn-primary waves-effect waves-light" id="submitBtn">Update</button>
                                 </div>
-                                
+
                             </div>
                             </form>
                             <!--end row-->
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -180,175 +166,25 @@
         </div>
         <!--end row-->
 
-        
+
 
     </div> <!-- container-fluid -->
 </div><!-- End Page-content -->
 
 
 
-@stop          
-           
+@stop
+
 
 @section('javascript')
-<script src="{{ asset('admin/libs/quill/quill.min.js' ) }}"></script>
-<script src="{{ asset('admin/js/pages/choices.min.js') }}"></script>
 <script src="{{ asset('admin/js/pages/axios.min.js') }}"></script>
-<script src="{{ asset('admin/js/pages/tagify.min.js') }}"></script>
-<script src="{{ asset('admin/js/pages/tagify.polyfills.min.js') }}"></script>
 
-<script type="text/javascript">
-var quillDescription = new Quill('#description', {
-    theme: 'snow'
-});
-</script>
-
-<script type="text/javascript">
-    var tagElem = [];
-    @if($tags_exist)
-        @foreach($tags_exist as $tag)
-        tagElem.push("{{$tag}}")
-        @endforeach
-    @endif
-var availableTags = "";
-var tagInput = document.getElementById('tags'),
-tagify = new Tagify(tagInput, {
-    whitelist : tagElem,
-    dropdown : {
-        classname     : "color-blue",
-        enabled       : 0,              // show the dropdown immediately on focus
-        position      : "text",         // place the dropdown near the typed text
-        closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
-        highlightFirst: true
-    }
-});
-@if($country->tags)
-availableTags = "{{$country->tags}}"
-tagify.addTags(availableTags.split(','))
-@endif
-</script>
-
-<script type="text/javascript">
-    var topicElem = [];
-    @if($topics_exist)
-        @foreach($topics_exist as $topic)
-        topicElem.push("{{$topic}}")
-        @endforeach
-    @endif
-var availableTopics = "";
-var topicInput = document.getElementById('topics'),
-tagifyTopic = new Tagify(topicInput, {
-    whitelist : topicElem,
-    dropdown : {
-        classname     : "color-blue",
-        enabled       : 0,              // show the dropdown immediately on focus
-        position      : "text",         // place the dropdown near the typed text
-        closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
-        highlightFirst: true
-    }
-});
-@if($country->topics)
-availableTopics = "{{$country->topics}}"
-tagifyTopic.addTags(availableTopics.split(','))
-@endif
-</script>
-
-<script type="text/javascript">
-
-const choicesLangauge = new Choices('#language', {
-    silent: false,
-    items: [],
-    choices: [
-        @foreach($languages as $val)
-            {
-                value: '{{$val->id}}',
-                label: '{{$val->name}}',
-                selected: {{(in_array($val->id, $country->GetLanguagesId())) ? 'true' : 'false'}},
-            },
-        @endforeach
-    ],
-    renderChoiceLimit: -1,
-    maxItemCount: -1,
-    addItems: true,
-    addItemFilter: null,
-    removeItems: true,
-    removeItemButton: false,
-    editItems: false,
-    allowHTML: true,
-    duplicateItemsAllowed: true,
-    delimiter: ',',
-    paste: true,
-    searchEnabled: true,
-    searchChoices: true,
-    searchFloor: 1,
-    searchResultLimit: 4,
-    searchFields: ['label', 'value'],
-    position: 'auto',
-    resetScrollPosition: true,
-    shouldSort: true,
-    shouldSortItems: false,
-    // sorter: () => {...},
-    placeholder: true,
-    placeholderValue: 'Select the language',
-    searchPlaceholderValue: null,
-    prependValue: null,
-    appendValue: null,
-    renderSelectedChoices: 'auto',
-    loadingText: 'Loading...',
-    noResultsText: 'No results found',
-    noChoicesText: 'No choices to choose from',
-    itemSelectText: 'Press to select',
-    addItemText: (value) => {
-      return `Press Enter to add <b>"${value}"</b>`;
-    },
-    maxItemText: (maxItemCount) => {
-      return `Only ${maxItemCount} values can be added`;
-    },
-    valueComparer: (value1, value2) => {
-      return value1 === value2;
-    },
-    classNames: {
-      containerOuter: 'choices',
-      containerInner: 'choices__inner',
-      input: 'choices__input',
-      inputCloned: 'choices__input--cloned',
-      list: 'choices__list',
-      listItems: 'choices__list--multiple',
-      listSingle: 'choices__list--single',
-      listDropdown: 'choices__list--dropdown',
-      item: 'choices__item',
-      itemSelectable: 'choices__item--selectable',
-      itemDisabled: 'choices__item--disabled',
-      itemChoice: 'choices__item--choice',
-      placeholder: 'choices__placeholder',
-      group: 'choices__group',
-      groupHeading: 'choices__heading',
-      button: 'choices__button',
-      activeState: 'is-active',
-      focusState: 'is-focused',
-      openState: 'is-open',
-      disabledState: 'is-disabled',
-      highlightedState: 'is-highlighted',
-      selectedState: 'is-selected',
-      flippedState: 'is-flipped',
-      loadingState: 'is-loading',
-      noResults: 'has-no-results',
-      noChoices: 'has-no-choices'
-    },
-    // Choices uses the great Fuse library for searching. You
-    // can find more options here: https://fusejs.io/api/options.html
-    fuseOptions: {
-      includeScore: true
-    },
-    labelId: '',
-    callbackOnInit: null,
-    callbackOnCreateTemplates: null
-  });
+@include('includes.admin.quill')
+@include('includes.admin.tags_update_script')
+@include('includes.admin.choice_language_update', ['languages' => $languages, 'country'=>$country])
 
 
-  </script>
-
-<script type="text/javascript">
+<script type="text/javascript" nonce="{{ csp_nonce() }}">
 
 // initialize the validation library
 const validation = new JustValidate('#countryForm', {
@@ -413,23 +249,6 @@ validation
   .onSuccess(async (event) => {
     // event.target.submit();
 
-    const errorToast = (message) =>{
-            iziToast.error({
-                title: 'Error',
-                message: message,
-                position: 'bottomCenter',
-                timeout:7000
-            });
-        }
-        const successToast = (message) =>{
-            iziToast.success({
-                title: 'Success',
-                message: message,
-                position: 'bottomCenter',
-                timeout:6000
-            });
-        }
-
         var submitBtn = document.getElementById('submitBtn')
         submitBtn.innerHTML = `
             <span class="d-flex align-items-center">
@@ -442,7 +261,7 @@ validation
             </span>
             `
         submitBtn.disabled = true;
-    
+
       try {
         var formData = new FormData();
         formData.append('title',document.getElementById('title').value)
@@ -470,7 +289,7 @@ validation
             }
         }
         // formData.append('refreshUrl','{{URL::current()}}')
-        
+
         const response = await axios.post('{{route('video_update', $country->id)}}', formData)
         successToast(response.data.message)
         setTimeout(function(){

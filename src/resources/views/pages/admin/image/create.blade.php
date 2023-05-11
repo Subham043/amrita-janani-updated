@@ -1,20 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-<link href="{{ asset('admin/libs/quill/quill.core.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/libs/quill/quill.bubble.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/libs/quill/quill.snow.css' ) }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('admin/css/tagify.css' ) }}" rel="stylesheet" type="text/css" />
-
-<style nonce="{{ csp_nonce() }}">
-    #description{
-        min-height: 200px;
-    }
-</style>
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -180,57 +166,11 @@
 
 
 @section('javascript')
-<script src="{{ asset('admin/libs/quill/quill.min.js' ) }}"></script>
 <script src="{{ asset('admin/js/pages/choices.min.js') }}"></script>
 <script src="{{ asset('admin/js/pages/axios.min.js') }}"></script>
-<script src="{{ asset('admin/js/pages/tagify.min.js') }}"></script>
-<script src="{{ asset('admin/js/pages/tagify.polyfills.min.js') }}"></script>
 
-<script type="text/javascript" nonce="{{ csp_nonce() }}">
-var quillDescription = new Quill('#description', {
-    theme: 'snow'
-});
-</script>
-
-<script type="text/javascript" nonce="{{ csp_nonce() }}">
-    var tagElem = [];
-    @if($tags_exist)
-        @foreach($tags_exist as $tag)
-        tagElem.push("{{$tag}}")
-        @endforeach
-    @endif
-var tagInput = document.getElementById('tags'),
-tagify = new Tagify(tagInput, {
-    whitelist : tagElem,
-    dropdown : {
-        classname     : "color-blue",
-        enabled       : 0,              // show the dropdown immediately on focus
-        position      : "text",         // place the dropdown near the typed text
-        closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
-        highlightFirst: true
-    }
-});
-</script>
-
-<script type="text/javascript" nonce="{{ csp_nonce() }}">
-    var topicElem = [];
-    @if($topics_exist)
-        @foreach($topics_exist as $topic)
-        topicElem.push("{{$topic}}")
-        @endforeach
-    @endif
-var topicInput = document.getElementById('topics'),
-tagifyTopic = new Tagify(topicInput, {
-    whitelist : topicElem,
-    dropdown : {
-        classname     : "color-blue",
-        enabled       : 0,              // show the dropdown immediately on focus
-        position      : "text",         // place the dropdown near the typed text
-        closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
-        highlightFirst: true
-    }
-});
-</script>
+@include('includes.admin.quill')
+@include('includes.admin.tags_create_script')
 
 <script type="text/javascript" nonce="{{ csp_nonce() }}">
 
@@ -290,23 +230,6 @@ validation
   ])
   .onSuccess(async (event) => {
     // event.target.submit();
-
-    const errorToast = (message) =>{
-            iziToast.error({
-                title: 'Error',
-                message: message,
-                position: 'bottomCenter',
-                timeout:7000
-            });
-        }
-        const successToast = (message) =>{
-            iziToast.success({
-                title: 'Success',
-                message: message,
-                position: 'bottomCenter',
-                timeout:6000
-            });
-        }
 
 
         var submitBtn = document.getElementById('submitBtn')

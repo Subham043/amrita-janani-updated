@@ -35,8 +35,8 @@
                     <div class="card-body">
                         <div id="customerList">
                             <div class="row g-4 mb-3">
-                                
-                                <div class="col-sm row mt-4" style="justify-content: flex-end">
+
+                                <div class="col-sm row mt-4 justify-content-end">
                                     <form  method="get" action="{{route('audio_view_access')}}" class="col-sm-auto" onsubmit="return callSearchHandler()">
                                         <div class="d-flex justify-content-sm-end">
                                             <div class="search-box ms-2">
@@ -123,21 +123,18 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
                                 @else
                                 <div class="noresult">
                                     <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
-                                        </lord-icon>
                                         <h5 class="mt-2">Sorry! No Result Found</h5>
                                     </div>
                                 </div>
                                 @endif
                             </div>
-                            
+
                             @if($country->total() > 0)
                             <div class="d-flex justify-content-end">
                                 <div class="pagination-wrap hstack gap-2">
@@ -171,61 +168,7 @@
 
 @section('javascript')
 
-{{-- <script src="{ asset('admin/libs/list.js/list.min.js') }}"></script> --}}
-{{-- <script src="{ asset('admin/libs/list.pagination.js/list.pagination.min.js') }}"></script> --}}
-
-<!-- listjs init -->
-{{-- <script src="{ asset('admin/js/pages/listjs.init.js') }}"></script> --}}
-
-<script>
-    function deleteHandler(url){
-        iziToast.question({
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            title: 'Hey',
-            message: 'Are you sure about that?',
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', function (instance, toast) {
-
-                    window.location.replace(url);
-                    // instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-        
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }],
-            ],
-            onClosing: function(instance, toast, closedBy){
-                console.info('Closing | closedBy: ' + closedBy);
-            },
-            onClosed: function(instance, toast, closedBy){
-                console.info('Closed | closedBy: ' + closedBy);
-            }
-        });
-    }
-</script>
-
-<script>
-    function callSearchHandler(){
-        var str= "";
-        var arr = [];
-        if(document.getElementById('search').value){
-            arr.push("search="+document.getElementById('search').value)
-        }
-        if(document.getElementById('filter').value){
-            arr.push("filter="+document.getElementById('filter').value)
-        }
-        str = arr.join('&');
-        window.location.replace('{{route('audio_view_access')}}?'+str)
-        return false;
-    }
-</script>
+@include('includes.admin.delete_handler')
+@include('includes.admin.call_search_handler', ['url'=>route('audio_view_access')])
 
 @stop

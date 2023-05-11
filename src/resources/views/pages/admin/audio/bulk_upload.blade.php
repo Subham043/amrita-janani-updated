@@ -49,21 +49,21 @@
                                     <div>
                                         <label for="excel" class="form-label">Excel File</label>
                                         <input class="form-control" type="file" name="excel" id="excel">
-                                        @error('excel') 
+                                        @error('excel')
                                             <div class="invalid-message">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-xxl-12 col-md-12">
                                     <button type="submit" class="btn btn-primary waves-effect waves-light" id="submitBtn">Upload</button>
                                 </div>
-                                
+
                             </div>
                             </form>
                             <!--end row-->
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -71,20 +71,20 @@
         </div>
         <!--end row-->
 
-        
+
 
     </div> <!-- container-fluid -->
 </div><!-- End Page-content -->
 
 @include('pages.admin.audio.tutorial_modal')
 
-@stop          
-           
+@stop
+
 
 @section('javascript')
 <script src="{{ asset('admin/js/pages/axios.min.js') }}"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{{ csp_nonce() }}">
 
 
 // initialize the validation library
@@ -112,24 +112,7 @@ validation
   .onSuccess(async (event) => {
     // event.target.submit();
 
-    const errorToast = (message) =>{
-            iziToast.error({
-                title: 'Error',
-                message: message,
-                position: 'bottomCenter',
-                timeout:7000
-            });
-        }
-        const successToast = (message) =>{
-            iziToast.success({
-                title: 'Success',
-                message: message,
-                position: 'bottomCenter',
-                timeout:6000
-            });
-        }
 
-        
         var submitBtn = document.getElementById('submitBtn')
         submitBtn.innerHTML = `
             <span class="d-flex align-items-center">
@@ -142,12 +125,12 @@ validation
             </span>
             `
         submitBtn.disabled = true;
-    
+
       try {
         var formData = new FormData();
         formData.append('excel',document.getElementById('excel').files[0])
         // formData.append('refreshUrl','{{URL::current()}}')
-        
+
         const response = await axios.post('{{route('audio_bulk_upload_store')}}', formData)
         successToast(response.data.message)
         setTimeout(function(){

@@ -38,15 +38,18 @@ class ContentSecurityPolicy extends Basic
 
         //start of common
         ->addDirective(Directive::IMG, 'i3.ytimg.com')
+        ->addDirective(Directive::IMG, 'i.vimeocdn.com')
         ->addDirective(Directive::IMG, 'vumbnail.com')
         ->addDirective(Directive::FONT, 'use.fontawesome.com')
         ->addDirective(Directive::FONT, 'at.alicdn.com')
         ->addDirective(Directive::FONT, 'fonts.gstatic.com')
+        ->addDirective(Directive::SCRIPT, 'player.vimeo.com')
         ->addDirective(Directive::STYLE, 'use.fontawesome.com')
         ->addDirective(Directive::STYLE, 'fonts.googleapis.com')
         ->addDirective(Directive::FRAME, 'www.google.com')
         ->addDirective(Directive::FRAME, 'player.vimeo.com')
-        ->addDirective(Directive::FRAME, 'www.youtube.com');
+        ->addDirective(Directive::FRAME, 'www.youtube.com')
+        ->addDirective(Directive::CONNECT, 'cdn.plyr.io');
     }
 
 }

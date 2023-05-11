@@ -52,7 +52,7 @@
                                             <option value="2" {{ $country->status==2 ? 'selected':''}}>Completed</option>
                                         </select>
                                     </form>
-                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('image_delete_report', $item->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('image_delete_report', $item->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1 pointer-events-none"></i> Delete</button>
                                 </div>
                             </div>
                         </div>

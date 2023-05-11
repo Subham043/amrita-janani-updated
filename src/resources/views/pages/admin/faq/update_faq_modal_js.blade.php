@@ -1,4 +1,9 @@
 <script nonce="{{ csp_nonce() }}">
+    document.querySelectorAll('.edit-item-btn').forEach(el => {
+        el.addEventListener('click', function(){
+            editHandler(event.target.getAttribute('data-id'), event.target.getAttribute('data-question'), event.target.getAttribute('data-answer'))
+        })
+    });
     function editHandler(id, question, answer){
         document.getElementById('question_update').value = question;
         document.getElementById('answer_update').value = answer;

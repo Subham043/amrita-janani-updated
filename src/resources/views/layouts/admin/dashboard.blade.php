@@ -41,6 +41,9 @@
             .invalid-message{
                 color:red;
             }
+            .pointer-events-none{
+                pointer-events: none;
+            }
         </style>
 
 

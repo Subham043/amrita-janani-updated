@@ -40,7 +40,7 @@
                                             class="ri-edit-line align-bottom me-1"></i> Edit</a>
                                     <button data-link="{{route('audio_delete', $country->id)}}"
                                         type="button" class="btn btn-danger add-btn remove-item-btn" id="create-btn"><i
-                                            class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                            class="ri-delete-bin-line align-bottom me-1 pointer-events-none"></i> Delete</button>
                                 </div>
                             </div>
                         </div>

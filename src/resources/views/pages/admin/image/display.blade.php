@@ -46,7 +46,7 @@
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
                                     <a href="{{route('image_edit', $country->id)}}" type="button" class="btn btn-success add-btn me-2" id="create-btn"><i class="ri-edit-line align-bottom me-1"></i> Edit</a>
-                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('image_delete', $country->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('image_delete', $country->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1 pointer-events-none"></i> Delete</button>
                                 </div>
                             </div>
                         </div>

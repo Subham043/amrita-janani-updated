@@ -92,7 +92,7 @@
                                                     <div class="flex-shrink-0">
                                                         <div class="d-flex gap-3">
                                                             <button type="button" class="btn btn-sm fs-18 btn-link text-body text-decoration-none px-0 text-danger remove-item-btn" data-link="{{route('banner_delete', $item->id)}}">
-                                                                <i class="ri-delete-bin-fill text-danger fs-18 align-bottom me-1"></i> Delete
+                                                                <i class="ri-delete-bin-fill text-danger fs-18 align-bottom me-1 pointer-events-none"></i> Delete
                                                             </button>
                                                         </div>
                                                     </div>

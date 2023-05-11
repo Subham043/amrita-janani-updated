@@ -74,7 +74,7 @@
                                                     <td>
                                                         <div class="d-flex gap-2">
                                                             <div class="edit">
-                                                                <button data-bs-toggle="modal" data-bs-target="#myModalUpdate" onclick="editHandler('{{$item->id}}', '{{$item->question}}', '{!!$item->answer!!}')" class="btn btn-sm btn-success edit-item-btn">Edit</button>
+                                                                <button data-bs-toggle="modal" data-bs-target="#myModalUpdate" class="btn btn-sm btn-success edit-item-btn" data-id="{{$item->id}}" data-question="{!!$item->question!!}" data-answer="{!!$item->answer!!}">Edit</button>
                                                             </div>
                                                             <div class="remove">
                                                                 <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('faq_delete', $item->id)}}">Remove</button>

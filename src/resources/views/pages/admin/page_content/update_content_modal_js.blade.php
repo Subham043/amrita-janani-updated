@@ -1,10 +1,15 @@
 <script nonce="{{ csp_nonce() }}">
+    document.querySelectorAll('.edit-item-btn').forEach(el => {
+        el.addEventListener('click', function(){
+            editHandlers(event.target.getAttribute('data-id'))
+        })
+    });
     async function editHandlers(id){
         try {
             var formData = new FormData();
             formData.append('id',id)
             const response = await axios.post('{{route('getPageContent')}}', formData)
-            console.log(response);
+            // console.log(response);
             document.getElementById('heading_update').value = response.data.data.heading;
             document.getElementById('image_position_update').value = response.data.data.image_position;
             quillDescriptionUpdate.root.innerHTML = response.data.data.description;

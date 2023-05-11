@@ -17,6 +17,7 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use App\Support\Mp3\MP3File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Webpatser\Uuid\Uuid;
 
 class AudioController extends Controller
 {

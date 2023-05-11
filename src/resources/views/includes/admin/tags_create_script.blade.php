@@ -7,7 +7,7 @@
     var tagElem = [];
     @if($tags_exist)
         @foreach($tags_exist as $tag)
-        tagElem.push("{{$tag}}")
+        tagElem.push(`{{$tag}}`)
         @endforeach
     @endif
 var tagInput = document.getElementById('tags'),
@@ -27,7 +27,7 @@ tagify = new Tagify(tagInput, {
     var topicElem = [];
     @if($topics_exist)
         @foreach($topics_exist as $topic)
-        topicElem.push("{{$topic}}")
+        topicElem.push(`{{$topic}}`)
         @endforeach
     @endif
 var topicInput = document.getElementById('topics'),

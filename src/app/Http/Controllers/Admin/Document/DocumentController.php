@@ -10,6 +10,7 @@ use App\Models\DocumentModel;
 use App\Models\LanguageModel;
 use App\Models\DocumentLanguage;
 use App\Exports\DocumentExport;
+use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
 use Uuid;
 use App\Support\Types\UserType;
@@ -28,26 +29,10 @@ class DocumentController extends Controller
     }
 
     public function create() {
-        $tags = DocumentModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = array();
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = DocumentModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = array();
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = DocumentModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
 
         return view('pages.admin.document.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
@@ -122,26 +107,10 @@ class DocumentController extends Controller
 
     public function edit($id) {
         $data = DocumentModel::findOrFail($id);
-        $tags = DocumentModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = [];
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = DocumentModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = [];
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = DocumentModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
         return view('pages.admin.document.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 

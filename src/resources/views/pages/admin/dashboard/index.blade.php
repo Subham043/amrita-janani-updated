@@ -4,28 +4,15 @@
 
 @section('content')
 
-           
+
 
                 <div class="page-content">
                     <div class="container-fluid">
 
-                        <!-- start page title -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Amrita Janani</h4>
-
-                                    <div class="page-title-right">
-                                        <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                            <li class="breadcrumb-item active">Amrita Janani</li>
-                                        </ol>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end page title -->
+                        @include('includes.admin.page_title', [
+                            'page_name' => "Amrita Jannai",
+                            'current_page' => "Dashboard",
+                        ])
 
                         <div class="row project-wrapper">
                             <div class="col-xxl-12">
@@ -92,7 +79,7 @@
                                         </div>
                                     </div><!-- end col -->
 
-                                    
+
 
                                 </div><!-- end row -->
 
@@ -103,7 +90,7 @@
                                                 <h4 class="card-title mb-0 flex-grow-1">Monthly Enquiries</h4>
                                             </div><!-- end card header -->
 
-                                            
+
                                             <div class="card-body p-0 pb-2">
                                                 <div>
                                                     <div id="projects-overview-chart" data-colors='["--vz-primary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
@@ -114,17 +101,17 @@
                                 </div><!-- end row -->
                             </div><!-- end col -->
 
-                            
+
                         </div><!-- end row -->
 
-                        
-                    </div>  
+
+                    </div>
                     <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
 
-      @stop          
-           
+      @stop
+
 
       @section('javascript')
 

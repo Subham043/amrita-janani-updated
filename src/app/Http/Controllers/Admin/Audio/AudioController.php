@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Admin\Audio;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\AudioModel;
 use App\Models\AudioLanguage;
 use App\Models\LanguageModel;
 use App\Exports\AudioExport;
+use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
-use Uuid;
 use App\Support\Types\UserType;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Storage;
 use App\Support\Mp3\MP3File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AudioController extends Controller
 {
@@ -29,26 +29,10 @@ class AudioController extends Controller
     }
 
     public function create() {
-        $tags = AudioModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = array();
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = AudioModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = array();
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = AudioModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
 
         return view('pages.admin.audio.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
@@ -128,26 +112,11 @@ class AudioController extends Controller
 
     public function edit($id) {
         $data = AudioModel::findOrFail($id);
-        $tags = AudioModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = [];
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = AudioModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = [];
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = AudioModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
+
         return view('pages.admin.audio.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 

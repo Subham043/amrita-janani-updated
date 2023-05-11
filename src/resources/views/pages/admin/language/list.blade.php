@@ -7,23 +7,10 @@
 <div class="page-content">
     <div class="container-fluid">
 
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Languages</h4>
-
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Languages</a></li>
-                            <li class="breadcrumb-item active">List</li>
-                        </ol>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- end page title -->
+        @include('includes.admin.page_title', [
+            'page_name' => "Language",
+            'current_page' => "List",
+        ])
 
         <div class="row">
             <div class="col-lg-12">
@@ -93,31 +80,11 @@
                                     </tbody>
                                 </table>
                                 @else
-                                <div class="noresult">
-                                    <div class="text-center">
-                                        <h5 class="mt-2">Sorry! No Result Found</h5>
-                                    </div>
-                                </div>
+                                    @include('includes.admin.no_result')
                                 @endif
                             </div>
 
-                            @if($country->total() > 0)
-                            <div class="d-flex justify-content-end">
-                                <div class="pagination-wrap hstack gap-2">
-                                    <a class="page-item pagination-prev {{ $country->currentPage() > 1 ? '' : 'disabled' }} " href="{{ $country->currentPage() > 1 ? $country->previousPageUrl() : '#' }}">
-                                        Previous
-                                    </a>
-                                    <ul class="pagination listjs-pagination mb-0">
-                                        @for ($i = 1; $i <= $country->lastPage(); $i++)
-                                        <li class=" {{ $country->currentPage() == $i ? 'active' : '' }}"><a class="page" href="{{$country->url($i)}}">{{ $i }}</a></li>
-                                        @endfor
-                                    </ul>
-                                    <a class="page-item pagination-next {{ $country->currentPage() == $country->lastPage() ? 'disabled' : '' }}" href="{{ $country->currentPage() == $country->lastPage() ? '#' : $country->nextPageUrl() }}">
-                                        Next
-                                    </a>
-                                </div>
-                            </div>
-                            @endif
+                            {{$country->onEachSide(5)->links('includes.admin.pagination')}}
                         </div>
                     </div><!-- end card -->
                 </div>

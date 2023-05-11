@@ -7,7 +7,7 @@
     var tagElem = [];
     @if($tags_exist)
         @foreach($tags_exist as $tag)
-        tagElem.push("{{$tag}}")
+        tagElem.push(`{{$tag}}`)
         @endforeach
     @endif
 var availableTags = "";
@@ -32,7 +32,7 @@ tagify.addTags(availableTags.split(','))
     var topicElem = [];
     @if($topics_exist)
         @foreach($topics_exist as $topic)
-        topicElem.push("{{$topic}}")
+        topicElem.push(`{{$topic}}`)
         @endforeach
     @endif
 var availableTopics = "";

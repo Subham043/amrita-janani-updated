@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Models\ImageModel;
 use App\Exports\ImageExport;
+use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
 use Image;
 use Uuid;
@@ -27,26 +28,10 @@ class ImageController extends Controller
     }
 
     public function create() {
-        $tags = ImageModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = array();
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = ImageModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = array();
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = ImageModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
 
         return view('pages.admin.image.create')->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
@@ -112,26 +97,10 @@ class ImageController extends Controller
 
     public function edit($id) {
         $data = ImageModel::findOrFail($id);
-        $tags = ImageModel::select('tags')->whereNotNull('tags')->get();
-        $tags_exist = [];
-        foreach ($tags as $tag) {
-            $arr = explode(",",$tag->tags);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $tags_exist))){
-                    array_push($tags_exist,$i);
-                }
-            }
-        }
-        $topics = ImageModel::select('topics')->whereNotNull('topics')->get();
-        $topics_exist = [];
-        foreach ($topics as $topic) {
-            $arr = explode(",",$topic->topics);
-            foreach ($arr as $i) {
-                if (!(in_array($i, $topics_exist))){
-                    array_push($topics_exist,$i);
-                }
-            }
-        }
+        $tags = ImageModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
+        $tags_data = (new TagService)->get_tags($tags);
+        $tags_exist = $tags_data['tags_exist'];
+        $topics_exist = $tags_data['topics_exist'];
         return view('pages.admin.image.edit')->with('country',$data)->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 

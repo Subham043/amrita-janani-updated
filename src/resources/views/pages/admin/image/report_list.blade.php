@@ -24,27 +24,9 @@
                             <div class="row g-4 mb-3">
 
                                 <div class="col-sm row mt-4 justify-content-end">
-                                    <form  method="get" action="{{route('image_view_report')}}" class="col-sm-auto" onsubmit="return callSearchHandler()">
-                                        <div class="d-flex justify-content-sm-end">
-                                            <div class="search-box ms-2">
-                                                <select name="filter" id="filter" class="form-control" onchange="return callSearchHandler()">
-                                                    <option value="all" @if((app('request')->has('filter')) && (app('request')->input('filter')=='all')) selected @endif>All</option>
-                                                    <option value="0" @if(app('request')->has('filter') && (app('request')->input('filter')=='0')) selected @endif>Pending</option>
-                                                    <option value="1" @if(app('request')->has('filter') && (app('request')->input('filter')=='1')) selected @endif>In Progress</option>
-                                                    <option value="2" @if(app('request')->has('filter') && (app('request')->input('filter')=='2')) selected @endif>Completed</option>
-                                                </select>
-                                                <i class="ri-arrow-up-down-line search-icon"></i>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form  method="get" action="{{route('image_view_report')}}" class="col-sm-auto" onsubmit="return callSearchHandler()">
-                                        <div class="d-flex justify-content-sm-end">
-                                            <div class="search-box ms-2">
-                                                <input type="text" id="search" name="search" class="form-control search" placeholder="Search..." value="@if(app('request')->has('search')) {{app('request')->input('search')}} @endif">
-                                                <i class="ri-search-line search-icon"></i>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    @include('includes.admin.filter_search_report_form', [
+                                        'url' => route('image_view_report'),
+                                    ])
                                 </div>
                             </div>
                             <div class="table-responsive table-card mt-3 mb-1">

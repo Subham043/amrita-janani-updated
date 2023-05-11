@@ -44,6 +44,7 @@ class ContentSecurityPolicy extends Basic
         ->addDirective(Directive::FONT, 'at.alicdn.com')
         ->addDirective(Directive::FONT, 'fonts.gstatic.com')
         ->addDirective(Directive::SCRIPT, 'player.vimeo.com')
+        ->addDirective(Directive::SCRIPT, 'cdnjs.cloudflare.com')
         ->addDirective(Directive::STYLE, 'use.fontawesome.com')
         ->addDirective(Directive::STYLE, 'fonts.googleapis.com')
         ->addDirective(Directive::FRAME, 'www.google.com')

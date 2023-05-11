@@ -1,4 +1,12 @@
 <script nonce="{{ csp_nonce() }}">
+    document.querySelectorAll('.search-handler').forEach(el => {
+        el.addEventListener('submit', function(){
+            callSearchHandler()
+        })
+        el.addEventListener('change', function(){
+            callSearchHandler()
+        })
+    });
     function callSearchHandler(){
         var str= "";
         var arr = [];

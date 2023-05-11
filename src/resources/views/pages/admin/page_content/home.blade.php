@@ -22,7 +22,7 @@
 
             @include('includes.admin.page_title', [
                 'page_name' => "Page",
-                'current_page' => {{$page_name}},
+                'current_page' => $page_name,
             ])
 
             <div class="row">

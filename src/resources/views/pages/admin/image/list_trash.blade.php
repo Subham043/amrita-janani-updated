@@ -24,7 +24,7 @@
                             <div class="row g-4 mb-3">
                                 <div class="col-sm-auto">
                                     <div>
-                                    <button onclick="deleteHandler('{{route('image_restore_all_trash')}}')" type="button" class="btn btn-info add-btn" id="create-btn"><i class="ri-save-line align-bottom me-1"></i> Restore All</button>
+                                    <button type="button" class="btn btn-info add-btn remove-item-btn" data-link="{{route('image_restore_all_trash')}}" id="create-btn"><i class="ri-save-line align-bottom me-1"></i> Restore All</button>
                                     </div>
                                 </div>
                                 <div class="col-sm">

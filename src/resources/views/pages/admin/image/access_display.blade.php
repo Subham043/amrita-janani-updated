@@ -2,7 +2,6 @@
 
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('admin/css/image-previewer.css')}}" type="text/css" />
 <style nonce="{{ csp_nonce() }}">
 
     .max-width-30{
@@ -58,7 +57,7 @@
                                     <a href="{{route('image_toggle_access', $country->id)}}" type="button" class="btn btn-success add-btn me-2" id="create-btn"> Grant Access</a>
                                     @endif
                                     @endif
-                                    <button onclick="deleteHandler('{{route('image_delete_access', $country->id)}}')" type="button" class="btn btn-danger add-btn" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('image_delete_access', $country->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -153,29 +152,6 @@
 @stop
 
 @section('javascript')
-<script src="{{ asset('admin/js/pages/img-previewer.min.js') }}"></script>
 @include('includes.admin.delete_handler')
-<script nonce="{{ csp_nonce() }}">
-    const myViewer = new ImgPreviewer('#image-container',{
-      // aspect ratio of image
-        fillRatio: 0.9,
-        // attribute that holds the image
-        dataUrlKey: 'src',
-        // additional styles
-        style: {
-            modalOpacity: 0.6,
-            headerOpacity: 0,
-            zIndex: 99
-        },
-        // zoom options
-        imageZoom: {
-            min: 0.1,
-            max: 5,
-            step: 0.1
-        },
-        // detect whether the parent element of the image is hidden by the css style
-        bubblingLevel: 0,
-
-    });
-</script>
+@include('includes.admin.image_previewer_script')
 @stop

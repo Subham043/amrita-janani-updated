@@ -109,7 +109,7 @@
                                                         <a href="{{route('video_display', $item->VideoModel->id)}}" class="btn btn-sm btn-warning edit-item-btn">Go To Video</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('video_delete_report', $item->id)}}')">Delete</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('video_delete_report', $item->id)}}">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

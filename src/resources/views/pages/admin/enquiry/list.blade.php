@@ -77,7 +77,7 @@
                                                         <a href="{{route('enquiry_display', $item->id)}}" class="btn btn-sm btn-info edit-item-btn">View</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('enquiry_delete', $item->id)}}')">Delete</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('enquiry_delete', $item->id)}}">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

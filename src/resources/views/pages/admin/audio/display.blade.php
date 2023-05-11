@@ -38,8 +38,8 @@
                                     <a href="{{route('audio_edit', $country->id)}}" type="button"
                                         class="btn btn-success add-btn me-2" id="create-btn"><i
                                             class="ri-edit-line align-bottom me-1"></i> Edit</a>
-                                    <button onclick="deleteHandler('{{route('audio_delete', $country->id)}}')"
-                                        type="button" class="btn btn-danger add-btn" id="create-btn"><i
+                                    <button data-link="{{route('audio_delete', $country->id)}}"
+                                        type="button" class="btn btn-danger add-btn remove-item-btn" id="create-btn"><i
                                             class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
                                 </div>
                             </div>

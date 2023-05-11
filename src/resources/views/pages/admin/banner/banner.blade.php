@@ -2,7 +2,6 @@
 
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('admin/css/image-previewer.css')}}" type="text/css" />
 <style nonce="{{ csp_nonce() }}">
     .p-relative{
         position: relative;
@@ -92,7 +91,7 @@
                                                 <div class="d-flex align-items-center mt-1">
                                                     <div class="flex-shrink-0">
                                                         <div class="d-flex gap-3">
-                                                            <button type="button" class="btn btn-sm fs-18 btn-link text-body text-decoration-none px-0 text-danger" onclick="deleteHandler('{{route('banner_delete', $item->id)}}')">
+                                                            <button type="button" class="btn btn-sm fs-18 btn-link text-body text-decoration-none px-0 text-danger remove-item-btn" data-link="{{route('banner_delete', $item->id)}}">
                                                                 <i class="ri-delete-bin-fill text-danger fs-18 align-bottom me-1"></i> Delete
                                                             </button>
                                                         </div>
@@ -126,7 +125,6 @@
 
 
 @section('javascript')
-<script src="{{ asset('admin/js/pages/img-previewer.min.js') }}"></script>
 <script src="{{ asset('admin/js/pages/axios.min.js') }}"></script>
 
 
@@ -196,29 +194,6 @@ validation
 
 
 @include('includes.admin.delete_handler')
-
-<script nonce="{{ csp_nonce() }}">
-    const myViewer = new ImgPreviewer('#image-container',{
-      // aspect ratio of image
-        fillRatio: 0.9,
-        // attribute that holds the image
-        dataUrlKey: 'src',
-        // additional styles
-        style: {
-            modalOpacity: 0.6,
-            headerOpacity: 0,
-            zIndex: 99
-        },
-        // zoom options
-        imageZoom: {
-            min: 0.1,
-            max: 5,
-            step: 0.1
-        },
-        // detect whether the parent element of the image is hidden by the css style
-        bubblingLevel: 0,
-
-    });
-</script>
+@include('includes.admin.image_previewer_script')
 
 @stop

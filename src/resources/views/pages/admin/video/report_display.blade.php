@@ -42,7 +42,7 @@
                                             <option value="2" {{ $country->status==2 ? 'selected':''}}>Completed</option>
                                         </select>
                                     </form>
-                                    <button onclick="deleteHandler('{{route('video_delete_report', $country->id)}}')" type="button" class="btn btn-danger add-btn" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
+                                    <button type="button" class="btn btn-danger add-btn remove-item-btn" data-link="{{route('video_delete_report', $country->id)}}" id="create-btn"><i class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
                                 </div>
                             </div>
                         </div>

@@ -89,7 +89,7 @@
                                                         <a href="{{route('edit_dynamic_page', $item->id)}}" class="btn btn-sm btn-success edit-item-btn">Edit</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('deletePage', $item->id)}}')">Remove</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('deletePage', $item->id)}}">Remove</button>
                                                     </div>
                                                 </div>
                                             </td>

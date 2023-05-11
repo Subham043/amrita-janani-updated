@@ -95,10 +95,10 @@
                                                         <a href="{{route('document_display_trash', $item->id)}}" class="btn btn-sm btn-info edit-item-btn">View</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-warning remove-item-btn" onclick="deleteHandler('{{route('document_restore_trash', $item->id)}}')">Restore</button>
+                                                        <button class="btn btn-sm btn-warning remove-item-btn" data-link="{{route('document_restore_trash', $item->id)}}">Restore</button>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('document_delete_trash', $item->id)}}')">Remove</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('document_delete_trash', $item->id)}}">Remove</button>
                                                     </div>
                                                 </div>
                                             </td>

@@ -166,7 +166,6 @@
 
 
 @section('javascript')
-<script src="{{ asset('admin/js/pages/choices.min.js') }}"></script>
 <script src="{{ asset('admin/js/pages/axios.min.js') }}"></script>
 
 @include('includes.admin.quill')

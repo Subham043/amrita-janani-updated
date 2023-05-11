@@ -83,7 +83,7 @@
                                                         <a href="{{route('language_edit', $item->id)}}" class="btn btn-sm btn-success edit-item-btn">Edit</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('language_delete', $item->id)}}')">Delete</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('language_delete', $item->id)}}">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -133,12 +133,6 @@
 @stop
 
 @section('javascript')
-
-{{-- <script src="{ asset('admin/libs/list.js/list.min.js') }}"></script> --}}
-{{-- <script src="{ asset('admin/libs/list.pagination.js/list.pagination.min.js') }}"></script> --}}
-
-<!-- listjs init -->
-{{-- <script src="{ asset('admin/js/pages/listjs.init.js') }}"></script> --}}
 
 @include('includes.admin.delete_handler')
 

@@ -30,9 +30,9 @@
                         <div class="row g-4 mb-3">
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                <button onclick="deleteHandler('{{route('audio_restore_trash', $country->id)}}')" type="button" class="btn btn-info add-btn me-2" id="create-btn"><i class="ri-save-line align-bottom me-1"></i> Restore</button>
-                                    <button onclick="deleteHandler('{{route('audio_delete_trash', $country->id)}}')"
-                                        type="button" class="btn btn-danger add-btn" id="create-btn"><i
+                                <button type="button" class="btn btn-info add-btn me-2 remove-item-btn" data-link="{{route('audio_restore_trash', $country->id)}}" id="create-btn"><i class="ri-save-line align-bottom me-1"></i> Restore</button>
+                                    <button data-link="{{route('audio_delete_trash', $country->id)}}"
+                                        type="button" class="btn btn-danger remove-item-btn" id="create-btn"><i
                                             class="ri-delete-bin-line align-bottom me-1"></i> Delete</button>
                                 </div>
                             </div>

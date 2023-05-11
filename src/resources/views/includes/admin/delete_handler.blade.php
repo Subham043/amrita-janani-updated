@@ -1,4 +1,9 @@
 <script nonce="{{ csp_nonce() }}">
+    document.querySelectorAll('.remove-item-btn').forEach(el => {
+        el.addEventListener('click', function(){
+            deleteHandler(event.target.getAttribute('data-link'))
+        })
+    });
     function deleteHandler(url){
         iziToast.question({
             timeout: 20000,

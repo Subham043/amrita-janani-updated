@@ -18,7 +18,7 @@
                             <label for="reasonForAccess">Captcha</label>
                             <div class="d-flex align-items-center gap-2">
                                 <p id="captcha_container2">{!!captcha_img()!!} </p>
-                                <span class="btn-captcha" title="reload captcha"><i class="fas fa-redo"></i></span>
+                                <span class="btn-captcha" data-id="captcha_container2" title="reload captcha"><i class="fas fa-redo" data-id="captcha_container2"></i></span>
                             </div>
                             <input type="text" class="form-control" id="captcha2" />
                         </div>

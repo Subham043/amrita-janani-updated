@@ -1,11 +1,6 @@
 @extends('layouts.admin.dashboard')
 
 
-@section('css')
-
-@stop
-
-
 @section('content')
 
 <div class="page-content">
@@ -91,7 +86,7 @@
                                                     <td>
                                                         <div class="d-flex gap-2">
                                                             <div class="remove">
-                                                                <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('banner_quote_delete', $item->id)}}')">Remove</button>
+                                                                <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('banner_quote_delete', $item->id)}}">Remove</button>
                                                             </div>
                                                         </div>
                                                     </td>

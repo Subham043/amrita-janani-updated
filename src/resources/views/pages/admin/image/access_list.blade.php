@@ -117,7 +117,7 @@
                                                     @endif
                                                     @endif
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('image_delete_access', $item->id)}}')">Delete</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('image_delete_access', $item->id)}}">Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

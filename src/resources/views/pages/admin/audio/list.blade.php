@@ -101,7 +101,7 @@
                                                         <a href="{{route('audio_edit', $item->id)}}" class="btn btn-sm btn-success edit-item-btn">Edit</a>
                                                     </div>
                                                     <div class="remove">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('audio_delete', $item->id)}}')">Delete</button>
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('audio_delete', $item->id)}}" >Delete</button>
                                                     </div>
                                                 </div>
                                             </td>

@@ -77,7 +77,7 @@
                                                                 <button data-bs-toggle="modal" data-bs-target="#myModalUpdate" onclick="editHandler('{{$item->id}}', '{{$item->question}}', '{!!$item->answer!!}')" class="btn btn-sm btn-success edit-item-btn">Edit</button>
                                                             </div>
                                                             <div class="remove">
-                                                                <button class="btn btn-sm btn-danger remove-item-btn" onclick="deleteHandler('{{route('faq_delete', $item->id)}}')">Remove</button>
+                                                                <button class="btn btn-sm btn-danger remove-item-btn" data-link="{{route('faq_delete', $item->id)}}">Remove</button>
                                                             </div>
                                                         </div>
                                                     </td>

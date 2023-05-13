@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\FAQ;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\FAQModel;
 use App\Support\Types\UserType;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Stevebauman\Purify\Facades\Purify;
 
 class FAQController extends Controller
 {
@@ -20,28 +20,15 @@ class FAQController extends Controller
         ]);
     }
 
-    public function store(Request $req) {
-        $rules = array(
-            'question' => ['required'],
-            'answer' => ['required'],
-        );
-        $messages = array(
-            'question.required' => 'Please enter the question !',
-            'answer.required' => 'Please enter the answer !',
-        );
+    public function store(FaqCreateRequest $req) {
 
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data = new FAQModel;
-        $data->question = $req->question;
-        $data->answer = $req->answer;
-        $data->user_id = Auth::user()->id;
+        $data = FAQModel::create([
+            ...$req->validated(),
+            'user_id' => Auth::user()->id,
+        ]);
 
         $result = $data->save();
-        
+
         if($result){
             return response()->json(["url"=>empty($req->refreshUrl)?route('faq_view'):$req->refreshUrl, "message" => "Data Stored successfully.", "data" => $data], 201);
         }else{
@@ -49,30 +36,17 @@ class FAQController extends Controller
         }
     }
 
-    public function update(Request $req) {
-        
-        $rules = array(
-            'id' => ['required'],
-            'question' => ['required'],
-            'answer' => ['required'],
-        );
-        $messages = array(
-            'question.required' => 'Please enter the question !',
-            'answer.required' => 'Please enter the answer !',
-        );
-        
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-        
+    public function update(FaqUpdateRequest $req) {
+
         $data = FAQModel::findOrFail($req->id);
-        $data->question = $req->question;
-        $data->answer = $req->answer;
-        $data->user_id = Auth::user()->id;
+
+        $data->update([
+            ...$req->except(['id']),
+            'user_id' => Auth::user()->id,
+        ]);
 
         $result = $data->save();
-        
+
         if($result){
             return response()->json(["url"=>empty($req->refreshUrl)?route('faq_view'):$req->refreshUrl, "message" => "Data Stored successfully.", "data" => $data], 201);
         }else{
@@ -93,4 +67,78 @@ class FAQController extends Controller
 
 
 
+}
+
+class FaqCreateRequest extends FormRequest
+{
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return Auth::check();
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'question' => ['required'],
+            'answer' => ['required'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'question.required' => 'Please enter the question !',
+            'answer.required' => 'Please enter the answer !',
+        ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $this->replace(
+            Purify::clean(
+                $this->all()
+            )
+        );
+    }
+
+}
+
+
+class FaqUpdateRequest extends FaqCreateRequest
+{
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'id' => ['required'],
+            'question' => ['required'],
+            'answer' => ['required'],
+        ];
+    }
 }

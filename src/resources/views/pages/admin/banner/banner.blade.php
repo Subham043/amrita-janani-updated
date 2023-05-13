@@ -166,8 +166,8 @@ validation
             }, 1000);
         } catch (error) {
             console.log(error);
-            if(error?.response?.data?.form_error?.image){
-                errorToast(error?.response?.data?.form_error?.image[0])
+            if(error?.response?.data?.errors?.image){
+                errorToast(error?.response?.data?.errors?.image[0])
             }
         } finally {
             submitBtn.innerHTML = `

@@ -15,6 +15,7 @@
         "mews/captcha": "^3.3",
         "rap2hpoutre/fast-excel": "^5.2",
         "spatie/laravel-csp": "^2.8",
+        "stevebauman/purify": "^6.0",
         "webpatser/laravel-uuid": "^4.0"
     },
     "require-dev": {

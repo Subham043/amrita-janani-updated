@@ -7,15 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Models\ImageModel;
 use App\Exports\ImageExport;
+use App\Services\FileService;
 use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
 use Image;
-use Uuid;
 use App\Support\Types\UserType;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Storage;
+use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Webpatser\Uuid\Uuid;
 
 class ImageController extends Controller
 {
@@ -36,54 +40,17 @@ class ImageController extends Controller
         return view('pages.admin.image.create')->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 
-    public function store(Request $req) {
-        $rules = array(
-            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'year' => ['nullable','regex:/^[0-9]*$/'],
-            'image' => ['required','image','mimes:jpeg,png,jpg,webp'],
-        );
-        $messages = array(
-            'title.required' => 'Please enter the title !',
-            'title.regex' => 'Please enter the valid title !',
-            'deity.regex' => 'Please enter the valid deity !',
-            'version.regex' => 'Please enter the valid version !',
-            'year.regex' => 'Please enter the valid year !',
-            'image.image' => 'Please enter a valid image !',
-            'image.mimes' => 'Please enter a valid image !',
-        );
+    public function store(ImageCreateRequest $req) {
 
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data = new ImageModel;
-        $data->title = $req->title;
-        $data->year = $req->year;
-        $data->deity = $req->deity;
-        $data->tags = $req->tags;
-        $data->topics = $req->topics;
-        $data->version = $req->version;
-        $data->description = $req->description;
-        $data->description_unformatted = $req->description_unformatted;
-        $data->status = $req->status == "on" ? 1 : 0;
-        $data->restricted = $req->restricted == "on" ? 1 : 0;
-        $data->user_id = Auth::user()->id;
+        $data = ImageModel::create([
+            ...$req->except(['status', 'restricted', 'image']),
+            'status' => $req->status == "on" ? 1 : 0,
+            'restricted' => $req->restricted == "on" ? 1 : 0,
+            'user_id' => Auth::user()->id,
+        ]);
 
         if($req->hasFile('image')){
-            $uuid = Uuid::generate(4)->string;
-            $newImage = $uuid.'-'.$req->image->getClientOriginalName();
-
-
-            $img = Image::make($req->file('image')->getRealPath());
-            $img->resize(300, 200, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save(storage_path('app/public/upload/images').'/'.'compressed-'.$newImage);
-
-            $req->image->storeAs('public/upload/images',$newImage);
-            $data->image = $newImage;
+            $data->image = (new FileService)->save_image('image', 'public/upload/images');
         }
 
         $result = $data->save();
@@ -104,59 +71,20 @@ class ImageController extends Controller
         return view('pages.admin.image.edit')->with('country',$data)->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 
-    public function update(Request $req, $id) {
+    public function update(ImageUpdateRequest $req, $id) {
         $data = ImageModel::findOrFail($id);
 
-        $rules = array(
-            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'year' => ['nullable','regex:/^[0-9]*$/'],
-            'image' => ['nullable','image','mimes:jpeg,png,jpg,webp'],
-        );
-        $messages = array(
-            'title.required' => 'Please enter the title !',
-            'title.regex' => 'Please enter the valid title !',
-            'deity.regex' => 'Please enter the valid deity !',
-            'version.regex' => 'Please enter the valid version !',
-            'year.regex' => 'Please enter the valid year !',
-            'image.image' => 'Please enter a valid image !',
-            'image.mimes' => 'Please enter a valid image !',
-        );
-
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data->title = $req->title;
-        $data->year = $req->year;
-        $data->deity = $req->deity;
-        $data->tags = $req->tags;
-        $data->topics = $req->topics;
-        $data->version = $req->version;
-        $data->description = $req->description;
-        $data->description_unformatted = $req->description_unformatted;
-        $data->status = $req->status == "on" ? 1 : 0;
-        $data->restricted = $req->restricted == "on" ? 1 : 0;
-        $data->user_id = Auth::user()->id;
+        $data->update([
+            ...$req->except(['status', 'restricted', 'image']),
+            'status' => $req->status == "on" ? 1 : 0,
+            'restricted' => $req->restricted == "on" ? 1 : 0,
+            'user_id' => Auth::user()->id,
+        ]);
 
         if($req->hasFile('image')){
-            $uuid = Uuid::generate(4)->string;
-            $newImage = $uuid.'-'.$req->image->getClientOriginalName();
-
-            if($data->image!=null && file_exists(storage_path('app/public/upload/images').'/'.$data->image)){
-                unlink(storage_path('app/public/upload/images/'.$data->image));
-                unlink(storage_path('app/public/upload/images/compressed-'.$data->image));
-            }
-
-            $img = Image::make($req->file('image')->getRealPath());
-            $img->resize(300, 200, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save(storage_path('app/public/upload/images').'/'.'compressed-'.$newImage);
-
-            $req->image->storeAs('public/upload/images',$newImage);
-            $data->image = $newImage;
+            (new FileService)->remove_file($data->image, 'app/public/upload/images/');
+            (new FileService)->remove_file('compressed-'.$data->image, 'app/public/upload/images/');
+            $data->image = (new FileService)->save_image('image', 'public/upload/images');
         }
 
         $result = $data->save();
@@ -175,7 +103,7 @@ class ImageController extends Controller
     }
 
     public function restoreAllTrash(){
-        $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->restore();
+        ImageModel::withTrashed()->whereNotNull('deleted_at')->restore();
         return redirect()->intended(route('image_view_trash'))->with('success_status', 'Data Restored successfully.');
     }
 
@@ -187,46 +115,39 @@ class ImageController extends Controller
 
     public function deleteTrash($id){
         $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        if($data->image!=null && file_exists(storage_path('app/public/upload/images').'/'.$data->image)){
-            unlink(storage_path('app/public/upload/images/'.$data->image));
-            unlink(storage_path('app/public/upload/images/compressed-'.$data->image));
-        }
+        (new FileService)->remove_file($data->image, 'app/public/upload/images/');
+        (new FileService)->remove_file('compressed-'.$data->image, 'app/public/upload/images/');
         $data->forceDelete();
         return redirect()->intended(route('image_view_trash'))->with('success_status', 'Data Deleted permanently.');
     }
 
-    public function view(Request $request) {
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $data = ImageModel::where('title', 'like', '%' . $search . '%')
-            ->orWhere('year', 'like', '%' . $search . '%')
-            ->orWhere('deity', 'like', '%' . $search . '%')
-            ->orWhere('version', 'like', '%' . $search . '%')
-            ->orWhere('tags', 'like', '%' . $search . '%')
-            ->orWhere('uuid', 'like', '%' . $search . '%')
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-        }else{
-            $data = ImageModel::orderBy('id', 'DESC')->paginate(10);
-        }
+    public function view() {
+        $query = ImageModel::with(['User'])->orderBy('id', 'DESC');
+        $data = $this->pagination_query($query)->paginate(10);
         return view('pages.admin.image.list')->with('country', $data);
     }
 
-    public function viewTrash(Request $request) {
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->where('title', 'like', '%' . $search . '%')
-            ->orWhere('year', 'like', '%' . $search . '%')
-            ->orWhere('deity', 'like', '%' . $search . '%')
-            ->orWhere('version', 'like', '%' . $search . '%')
-            ->orWhere('tags', 'like', '%' . $search . '%')
-            ->orWhere('uuid', 'like', '%' . $search . '%')
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-        }else{
-            $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->orderBy('id', 'DESC')->paginate(10);
-        }
+    public function viewTrash() {
+        $query = ImageModel::withTrashed()->whereNotNull('deleted_at')->with(['User'])->orderBy('id', 'DESC');
+        $data = $this->pagination_query($query)->paginate(10);
         return view('pages.admin.image.list_trash')->with('country', $data);
+    }
+
+    private function pagination_query(Builder $query): Builder
+    {
+        if (request()->has('search')) {
+            $search = request()->input('search');
+            return $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                ->orWhere('year', 'like', '%' . $search . '%')
+                ->orWhere('deity', 'like', '%' . $search . '%')
+                ->orWhere('version', 'like', '%' . $search . '%')
+                ->orWhere('tags', 'like', '%' . $search . '%')
+                ->orWhere('uuid', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query;
     }
 
     public function display($id) {
@@ -330,4 +251,88 @@ class ImageController extends Controller
 
 
 
+}
+
+
+class ImageCreateRequest extends FormRequest
+{
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return Auth::check();
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'year' => ['nullable','regex:/^[0-9]*$/'],
+            'image' => ['nullable','image','mimes:jpeg,png,jpg,webp'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Please enter the title !',
+            'title.regex' => 'Please enter the valid title !',
+            'deity.regex' => 'Please enter the valid deity !',
+            'version.regex' => 'Please enter the valid version !',
+            'year.regex' => 'Please enter the valid year !',
+            'image.image' => 'Please enter a valid image !',
+            'image.mimes' => 'Please enter a valid image !',
+        ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $this->replace(
+            Purify::clean(
+                $this->all()
+            )
+        );
+    }
+
+}
+
+class ImageUpdateRequest extends ImageCreateRequest
+{
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'year' => ['nullable','regex:/^[0-9]*$/'],
+            'image' => ['nullable','image','mimes:jpeg,png,jpg,webp'],
+        ];
+    }
 }

@@ -6,16 +6,40 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
-use Uuid;
-use File;
-use Auth;
 use App\Models\ImageAccess;
 use App\Models\ImageFavourite;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Webpatser\Uuid\Uuid;
 
 class ImageModel extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table="images";
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'uuid',
+        'description',
+        'description_unformatted',
+        'tags',
+        'year',
+        'version',
+        'language_id',
+        'deity',
+        'views',
+        'favourites',
+        'image',
+        'topics',
+        'status',
+        'restricted',
+        'user_id',
+    ];
 
     public static function boot()
     {
@@ -27,7 +51,7 @@ class ImageModel extends Model
 
     public function User()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User')->withDefault();
     }
 
     public function getAdminName(){
@@ -41,12 +65,12 @@ class ImageModel extends Model
     {
         return $this->hasMany('App\Models\ImageFavourite', 'image_id');
     }
-    
+
     public function ImageAccess()
     {
         return $this->hasMany('App\Models\ImageAccess', 'image_id');
     }
-    
+
     public function ImageReport()
     {
         return $this->hasMany('App\Models\ImageReport', 'image_id');
@@ -55,7 +79,7 @@ class ImageModel extends Model
     public function file_format(){
         return File::extension($this->image);
     }
-    
+
     public function time_elapsed(){
 
         $dt = Carbon::parse($this->created_at);

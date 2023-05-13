@@ -5,18 +5,43 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Uuid;
-use File;
 use Carbon\Carbon;
-use Auth;
 use App\Models\DocumentAccess;
 use App\Models\DocumentFavourite;
 use App\Models\LanguageModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Webpatser\Uuid\Uuid;
 
 class DocumentModel extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table="documents";
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'uuid',
+        'description',
+        'description_unformatted',
+        'tags',
+        'year',
+        'version',
+        'page_number',
+        'language_id',
+        'deity',
+        'views',
+        'favourites',
+        'document',
+        'topics',
+        'status',
+        'restricted',
+        'user_id',
+    ];
 
     public static function boot()
     {
@@ -28,7 +53,7 @@ class DocumentModel extends Model
 
     public function User()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User')->withDefault();
     }
 
     public function getAdminName(){
@@ -55,12 +80,12 @@ class DocumentModel extends Model
     {
         return $this->hasMany('App\Models\DocumentFavourite', 'document_id');
     }
-    
+
     public function DocumentAccess()
     {
         return $this->hasMany('App\Models\DocumentAccess', 'document_id');
     }
-    
+
     public function DocumentReport()
     {
         return $this->hasMany('App\Models\DocumentReport', 'document_id');
@@ -69,7 +94,7 @@ class DocumentModel extends Model
     public function file_format(){
         return File::extension($this->document);
     }
-    
+
     public function time_elapsed(){
 
         $dt = Carbon::parse($this->created_at);

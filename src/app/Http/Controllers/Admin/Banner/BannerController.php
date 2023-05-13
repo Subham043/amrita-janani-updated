@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin\Banner;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
-use URL;
-use Uuid;
-use Image;
 use Illuminate\Support\Facades\View;
 use App\Support\Types\UserType;
 use App\Models\BannerModel;
-use Illuminate\Support\Facades\Validator;
+use App\Services\FileService;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
+use Stevebauman\Purify\Facades\Purify;
+use Webpatser\Uuid\Uuid;
 
 class BannerController extends Controller
 {
@@ -27,57 +27,88 @@ class BannerController extends Controller
         return view('pages.admin.banner.banner')->with('images', BannerModel::all());
     }
 
-    public function storeBanner(Request $req){
+    public function storeBanner(BannerCreateRequest $req){
 
-        $rules = array(
-            'image' => ['required','image','mimes:jpeg,png,jpg,webp'],
-        );
-        $messages = array(
-            'image.image' => 'Please enter a valid image !',
-            'image.mimes' => 'Please enter a valid image !',
-        );
-
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data = new BannerModel;
-        $data->user_id = Auth::user()->id;
+        $data = BannerModel::create([
+            ...$req->except(['image']),
+            'user_id' => Auth::user()->id,
+        ]);
 
         if($req->hasFile('image')){
-            $uuid = Uuid::generate(4)->string;
-            $newImage = $uuid.'-'.$req->image->getClientOriginalName();
-            
-            
-            $img = Image::make($req->file('image')->getRealPath());
-            $img->resize(300, 200, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save(storage_path('app/public/upload/banners').'/'.'compressed-'.$newImage);
-
-            $req->image->storeAs('public/upload/banners',$newImage);
-            $data->image = $newImage;
+            $data->image = (new FileService)->save_image('image', 'public/upload/banners');
         }
 
         $result = $data->save();
-        
+
         if($result){
             return response()->json(["url"=>empty($req->refreshUrl)?route('banner_view'):$req->refreshUrl, "message" => "Data updated successfully.", "data" => $data], 201);
         }else{
             return response()->json(["error"=>"something went wrong. Please try again"], 400);
         }
     }
-    
+
 
     public function deleteBanner($id){
         $data = BannerModel::findOrFail($id);
-        if($data->image!=null && file_exists(storage_path('app/public/upload/banners').'/'.$data->image)){
-            unlink(storage_path('app/public/upload/banners/'.$data->image)); 
-            unlink(storage_path('app/public/upload/banners/compressed-'.$data->image)); 
-        }
+        (new FileService)->remove_file($data->image, 'app/public/upload/banners/');
+        (new FileService)->remove_file('compressed-'.$data->image, 'app/public/upload/banners/');
         $data->forceDelete();
         return redirect()->intended(URL::previous())->with('success_status', 'Data Deleted permanently.');
     }
 
-    
+
+}
+
+class BannerCreateRequest extends FormRequest
+{
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return Auth::check();
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'image' => ['required','image','mimes:jpeg,png,jpg,webp'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'image.image' => 'Please enter a valid image !',
+            'image.mimes' => 'Please enter a valid image !',
+        ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $this->replace(
+            Purify::clean(
+                $this->all()
+            )
+        );
+    }
+
 }

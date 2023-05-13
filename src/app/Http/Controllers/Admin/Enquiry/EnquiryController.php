@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Enquiry;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Support\Types\UserType;
 use App\Models\Enquiry;
@@ -12,6 +11,7 @@ use App\Exports\EnquiryExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\SendAdminEnquiryReplyEmailJob;
+use Illuminate\Database\Eloquent\Builder;
 
 class EnquiryController extends Controller
 {
@@ -29,26 +29,32 @@ class EnquiryController extends Controller
         return redirect()->intended(route('enquiry_view'))->with('success_status', 'Data Deleted successfully.');
     }
 
-    public function view(Request $request) {
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $country = Enquiry::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('phone', 'like', '%' . $search . '%')
-                      ->orWhere('subject', 'like', '%' . $search . '%')
-                      ->orWhere('email', 'like', '%' . $search . '%');
-            })->paginate(10);
-        }else{
-            $country = Enquiry::orderBy('id', 'DESC')->paginate(10);
-        }
+    public function view() {
+        $query = Enquiry::orderBy('id', 'DESC');
+        $country = $this->pagination_query($query)->paginate(10);
         return view('pages.admin.enquiry.list')->with('country', $country);
+    }
+
+    private function pagination_query(Builder $query): Builder
+    {
+        if (request()->has('search')) {
+            $search = request()->input('search');
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('phone', 'like', '%' . $search . '%')
+                ->orWhere('subject', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query;
     }
 
     public function display($id) {
         $country = Enquiry::findOrFail($id);
         return view('pages.admin.enquiry.display')->with('country',$country);
     }
-    
+
     public function reply(Request $req, $id) {
         $country = Enquiry::findOrFail($id);
         $rules = array(

@@ -14,25 +14,36 @@ class LanguageModel extends Model
     use HasFactory, SoftDeletes;
     protected $table="languages";
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'status',
+        'user_id',
+    ];
+
     public function User()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User')->withDefault();
     }
 
     public function Audios()
     {
         return $this->belongsToMany(AudioModel::class, 'audio_languages', 'audio_id', 'language_id');
     }
-    
+
     public function Videos()
     {
         return $this->belongsToMany(VideoModel::class, 'video_languages', 'video_id', 'language_id');
     }
-    
+
     public function Documents()
     {
         return $this->belongsToMany(DocumentModel::class, 'document_languages', 'document_id', 'language_id');
     }
-    
+
 
 }

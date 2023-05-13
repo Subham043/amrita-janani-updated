@@ -5,18 +5,43 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Uuid;
 use Carbon\Carbon;
-use File;
-use Auth;
 use App\Models\AudioAccess;
 use App\Models\AudioFavourite;
 use App\Models\LanguageModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Webpatser\Uuid\Uuid;
 
 class AudioModel extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table="audios";
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'uuid',
+        'description',
+        'description_unformatted',
+        'tags',
+        'year',
+        'version',
+        'duration',
+        'language_id',
+        'deity',
+        'views',
+        'favourites',
+        'audio',
+        'topics',
+        'status',
+        'restricted',
+        'user_id',
+    ];
 
     public static function boot()
     {
@@ -28,7 +53,7 @@ class AudioModel extends Model
 
     public function User()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User')->withDefault();
     }
 
     public function getAdminName(){
@@ -42,12 +67,12 @@ class AudioModel extends Model
     {
         return $this->hasMany('App\Models\AudioFavourite', 'audio_id');
     }
-    
+
     public function AudioAccess()
     {
         return $this->hasMany('App\Models\AudioAccess', 'audio_id');
     }
-    
+
     public function AudioReport()
     {
         return $this->hasMany('App\Models\AudioReport', 'audio_id');
@@ -69,7 +94,7 @@ class AudioModel extends Model
     public function file_format(){
         return File::extension($this->audio);
     }
-    
+
     public function time_elapsed(){
 
         $dt = Carbon::parse($this->created_at);

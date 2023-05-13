@@ -262,23 +262,23 @@ validation
         }, 1000);
       } catch (error) {
         //   console.log(error.response);
-        if(error?.response?.data?.form_error?.title){
-            errorToast(error?.response?.data?.form_error?.title[0])
+        if(error?.response?.data?.errors?.title){
+            errorToast(error?.response?.data?.errors?.title[0])
         }
-        if(error?.response?.data?.form_error?.year){
-            errorToast(error?.response?.data?.form_error?.year[0])
+        if(error?.response?.data?.errors?.year){
+            errorToast(error?.response?.data?.errors?.year[0])
         }
-        if(error?.response?.data?.form_error?.deity){
-            errorToast(error?.response?.data?.form_error?.deity[0])
+        if(error?.response?.data?.errors?.deity){
+            errorToast(error?.response?.data?.errors?.deity[0])
         }
-        if(error?.response?.data?.form_error?.version){
-            errorToast(error?.response?.data?.form_error?.version[0])
+        if(error?.response?.data?.errors?.version){
+            errorToast(error?.response?.data?.errors?.version[0])
         }
-        if(error?.response?.data?.form_error?.description){
-            errorToast(error?.response?.data?.form_error?.description[0])
+        if(error?.response?.data?.errors?.description){
+            errorToast(error?.response?.data?.errors?.description[0])
         }
-        if(error?.response?.data?.form_error?.image){
-            errorToast(error?.response?.data?.form_error?.image[0])
+        if(error?.response?.data?.errors?.image){
+            errorToast(error?.response?.data?.errors?.image[0])
         }
       } finally{
             submitBtn.innerHTML =  `

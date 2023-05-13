@@ -174,8 +174,8 @@ validation
             }, 1000);
         } catch (error) {
             console.log(error);
-            if(error?.response?.data?.form_error?.quote){
-                errorToast(error?.response?.data?.form_error?.quote[0])
+            if(error?.response?.data?.errors?.quote){
+                errorToast(error?.response?.data?.errors?.quote[0])
             }
         } finally {
             submitBtn.innerHTML = `

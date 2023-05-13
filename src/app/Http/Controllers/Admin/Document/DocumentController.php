@@ -4,19 +4,23 @@ namespace App\Http\Controllers\Admin\Document;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\DocumentModel;
 use App\Models\LanguageModel;
 use App\Models\DocumentLanguage;
 use App\Exports\DocumentExport;
+use App\Services\FileService;
 use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
-use Uuid;
 use App\Support\Types\UserType;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Storage;
+use Webpatser\Uuid\Uuid;
+use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Database\Eloquent\Builder;
 
 class DocumentController extends Controller
 {
@@ -37,66 +41,24 @@ class DocumentController extends Controller
         return view('pages.admin.document.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 
-    public function store(Request $req) {
-        $rules = array(
-            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'year' => ['nullable','regex:/^[0-9]*$/'],
-            'language' => ['required','array','min:1'],
-            'language.*' => ['required','regex:/^[0-9]*$/'],
-            'document' => ['required','mimes:pdf'],
-        );
-        $messages = array(
-            'title.required' => 'Please enter the title !',
-            'title.regex' => 'Please enter the valid title !',
-            'deity.regex' => 'Please enter the valid deity !',
-            'version.regex' => 'Please enter the valid version !',
-            'year.regex' => 'Please enter the valid year !',
-            'document.mimes' => 'Please enter a valid document !',
-        );
+    public function store(DocumentCreateRequest $req) {
 
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data = new DocumentModel;
-        $data->title = $req->title;
-        $data->year = $req->year;
-        $data->deity = $req->deity;
-        $data->tags = $req->tags;
-        $data->topics = $req->topics;
-        $data->version = $req->version;
-        $data->description = $req->description;
-        $data->description_unformatted = $req->description_unformatted;
-        $data->status = $req->status == "on" ? 1 : 0;
-        $data->restricted = $req->restricted == "on" ? 1 : 0;
-        $data->user_id = Auth::user()->id;
+        $data = DocumentModel::create([
+            ...$req->except(['status', 'restricted', 'document']),
+            'status' => $req->status == "on" ? 1 : 0,
+            'restricted' => $req->restricted == "on" ? 1 : 0,
+            'user_id' => Auth::user()->id,
+        ]);
 
         if($req->hasFile('document')){
-            $uuid = Uuid::generate(4)->string;
-            $newImage = $uuid.'-'.$req->document->getClientOriginalName();
-
-
-            $req->document->storeAs('public/upload/documents',$newImage);
-            $data->document = $newImage;
-
-            $pdftext = file_get_contents(storage_path('app/public/upload/documents/'.$newImage));
-
-            $num_page = preg_match_all("/\/Page\W/", $pdftext,$dummy);
-
-            $data->page_number = $num_page;
+            $data->document = (new FileService)->save_file('document', 'public/upload/documents');
+            $data->page_number = (new FileService)->document_page_number($data->document);
         }
 
         $result = $data->save();
 
-        for($i=0; $i < count($req->language); $i++) {
-            $language = new DocumentLanguage;
-            $language->document_id = $data->id;
-            $language->language_id = $req->language[$i];
-            $language->save();
-        }
+        $data->Languages()->sync($req->language);
+
 
         if($result){
             return response()->json(["url"=>empty($req->refreshUrl)?route('document_view'):$req->refreshUrl, "message" => "Data Stored successfully.", "data" => $data], 201);
@@ -114,71 +76,25 @@ class DocumentController extends Controller
         return view('pages.admin.document.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
     }
 
-    public function update(Request $req, $id) {
+    public function update(DocumentUpdateRequest $req, $id) {
         $data = DocumentModel::findOrFail($id);
 
-        $rules = array(
-            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
-            'year' => ['nullable','regex:/^[0-9]*$/'],
-            'language' => ['required','array','min:1'],
-            'language.*' => ['required','regex:/^[0-9]*$/'],
-            'document' => ['nullable','mimes:pdf'],
-        );
-        $messages = array(
-            'title.required' => 'Please enter the title !',
-            'title.regex' => 'Please enter the valid title !',
-            'deity.regex' => 'Please enter the valid deity !',
-            'version.regex' => 'Please enter the valid version !',
-            'year.regex' => 'Please enter the valid year !',
-            'document.mimes' => 'Please enter a valid document !',
-        );
-
-        $validator = Validator::make($req->all(), $rules, $messages);
-        if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
-        }
-
-        $data->title = $req->title;
-        $data->year = $req->year;
-        $data->deity = $req->deity;
-        $data->tags = $req->tags;
-        $data->topics = $req->topics;
-        $data->version = $req->version;
-        $data->description = $req->description;
-        $data->description_unformatted = $req->description_unformatted;
-        $data->status = $req->status == "on" ? 1 : 0;
-        $data->restricted = $req->restricted == "on" ? 1 : 0;
-        $data->user_id = Auth::user()->id;
+        $data->update([
+            ...$req->except(['status', 'restricted', 'document']),
+            'status' => $req->status == "on" ? 1 : 0,
+            'restricted' => $req->restricted == "on" ? 1 : 0,
+            'user_id' => Auth::user()->id,
+        ]);
 
         if($req->hasFile('document')){
-            $uuid = Uuid::generate(4)->string;
-            $newImage = $uuid.'-'.$req->document->getClientOriginalName();
-
-            if($data->document!=null && file_exists(storage_path('app/public/upload/documents').'/'.$data->document)){
-                unlink(storage_path('app/public/upload/documents/'.$data->document));
-            }
-
-            $req->document->storeAs('public/upload/documents',$newImage);
-            $data->document = $newImage;
-
-            $pdftext = file_get_contents(storage_path('app/public/upload/documents/'.$newImage));
-
-            $num_page = preg_match_all("/\/Page\W/", $pdftext,$dummy);
-
-            $data->page_number = $num_page;
+            (new FileService)->remove_file($data->document, 'app/public/upload/documents/');
+            $data->document = (new FileService)->save_file('document', 'public/upload/documents');
+            $data->page_number = (new FileService)->document_page_number($data->document);
         }
 
         $result = $data->save();
 
-        $DocumentLanguage = DocumentLanguage::where('document_id',$data->id)->delete();
-        for($i=0; $i < count($req->language); $i++) {
-            $language = new DocumentLanguage;
-            $language->document_id = $data->id;
-            $language->language_id = $req->language[$i];
-            $language->save();
-        }
+        $data->Languages()->sync($req->language);
 
         if($result){
             return response()->json(["url"=>empty($req->refreshUrl)?route('document_view'):$req->refreshUrl, "message" => "Data Stored successfully.", "data" => $data], 201);
@@ -194,7 +110,7 @@ class DocumentController extends Controller
     }
 
     public function restoreAllTrash(){
-        $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->restore();
+        DocumentModel::withTrashed()->whereNotNull('deleted_at')->restore();
         return redirect()->intended(route('document_view_trash'))->with('success_status', 'Data Restored successfully.');
     }
 
@@ -206,45 +122,38 @@ class DocumentController extends Controller
 
     public function deleteTrash($id){
         $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        if($data->document!=null && file_exists(storage_path('app/public/upload/documents').'/'.$data->document)){
-            unlink(storage_path('app/public/upload/documents/'.$data->document));
-        }
+        (new FileService)->remove_file($data->document, 'app/public/upload/documents/');
         $data->forceDelete();
         return redirect()->intended(route('document_view_trash'))->with('success_status', 'Data Deleted permanently.');
     }
 
-    public function view(Request $request) {
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $data = DocumentModel::where('title', 'like', '%' . $search . '%')
-            ->orWhere('year', 'like', '%' . $search . '%')
-            ->orWhere('deity', 'like', '%' . $search . '%')
-            ->orWhere('version', 'like', '%' . $search . '%')
-            ->orWhere('tags', 'like', '%' . $search . '%')
-            ->orWhere('uuid', 'like', '%' . $search . '%')
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-        }else{
-            $data = DocumentModel::orderBy('id', 'DESC')->paginate(10);
-        }
+    public function view() {
+        $query = DocumentModel::with(['Languages','User'])->orderBy('id', 'DESC');
+        $data = $this->pagination_query($query)->paginate(10);
         return view('pages.admin.document.list')->with('country', $data)->with('languages', LanguageModel::all());
     }
 
-    public function viewTrash(Request $request) {
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->where('title', 'like', '%' . $search . '%')
-            ->orWhere('year', 'like', '%' . $search . '%')
-            ->orWhere('deity', 'like', '%' . $search . '%')
-            ->orWhere('version', 'like', '%' . $search . '%')
-            ->orWhere('tags', 'like', '%' . $search . '%')
-            ->orWhere('uuid', 'like', '%' . $search . '%')
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-        }else{
-            $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->orderBy('id', 'DESC')->paginate(10);
-        }
+    public function viewTrash() {
+        $query = DocumentModel::withTrashed()->whereNotNull('deleted_at')->with(['Languages','User'])->orderBy('id', 'DESC');
+        $data = $this->pagination_query($query)->paginate(10);
         return view('pages.admin.document.list_trash')->with('country', $data)->with('languages', LanguageModel::all());
+    }
+
+    private function pagination_query(Builder $query): Builder
+    {
+        if (request()->has('search')) {
+            $search = request()->input('search');
+            return $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                ->orWhere('year', 'like', '%' . $search . '%')
+                ->orWhere('deity', 'like', '%' . $search . '%')
+                ->orWhere('version', 'like', '%' . $search . '%')
+                ->orWhere('tags', 'like', '%' . $search . '%')
+                ->orWhere('uuid', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query;
     }
 
     public function display($id) {
@@ -359,4 +268,90 @@ class DocumentController extends Controller
 
 
 
+}
+
+class DocumentCreateRequest extends FormRequest
+{
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return Auth::check();
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'year' => ['nullable','regex:/^[0-9]*$/'],
+            'language' => ['required','array','min:1'],
+            'language.*' => ['required','regex:/^[0-9]*$/'],
+            'document' => ['required','mimes:pdf'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Please enter the title !',
+            'title.regex' => 'Please enter the valid title !',
+            'deity.regex' => 'Please enter the valid deity !',
+            'version.regex' => 'Please enter the valid version !',
+            'year.regex' => 'Please enter the valid year !',
+            'document.mimes' => 'Please enter a valid document !',
+        ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $this->replace(
+            Purify::clean(
+                $this->all()
+            )
+        );
+    }
+
+}
+
+class DocumentUpdateRequest extends DocumentCreateRequest
+{
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'title' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'deity' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'year' => ['nullable','regex:/^[0-9]*$/'],
+            'language' => ['required','array','min:1'],
+            'language.*' => ['required','regex:/^[0-9]*$/'],
+            'audio' => ['nullable','mimes:wav,mp3,aac'],
+        ];
+    }
 }

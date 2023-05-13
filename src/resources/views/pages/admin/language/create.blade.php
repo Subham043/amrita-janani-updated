@@ -156,8 +156,8 @@ validation
         }, 1000);
       } catch (error) {
           console.log(error);
-        if(error?.response?.data?.form_error?.name){
-            errorToast(error?.response?.data?.form_error?.name[0])
+        if(error?.response?.data?.errors?.name){
+            errorToast(error?.response?.data?.errors?.name[0])
         }
       } finally{
             submitBtn.innerHTML =  `

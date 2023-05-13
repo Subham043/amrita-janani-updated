@@ -75,11 +75,11 @@
             }, 1000);
           } catch (error) {
               console.log(error);
-            if(error?.response?.data?.form_error?.question){
-                errorToast(error?.response?.data?.form_error?.question[0])
+            if(error?.response?.data?.errors?.question){
+                errorToast(error?.response?.data?.errors?.question[0])
             }
-            if(error?.response?.data?.form_error?.answer){
-                errorToast(error?.response?.data?.form_error?.answer[0])
+            if(error?.response?.data?.errors?.answer){
+                errorToast(error?.response?.data?.errors?.answer[0])
             }
           } finally{
                 submitBtn.innerHTML =  `

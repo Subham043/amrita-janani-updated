@@ -18,7 +18,7 @@
 
 <div class="main-content-wrapper">
     @if($image->contentVisible())
-    <div class="main-image-container major-image-wrappermajor-bg-backend" id="image-container">
+    <div class="main-image-container major-image-wrapper major-bg-backend" id="image-container">
         <div class="blur-bg">
             <img src="{{route('content_image_file',$image->uuid)}}" />
         </div>

@@ -1,6 +1,8 @@
 <script nonce="{{ csp_nonce() }}">
     document.getElementById('search_form_sub_menu').addEventListener('submit', callSearchHandler)
-    function callSearchHandler(){
+    document.getElementById('sort').addEventListener('input', callSearchHandler)
+    document.getElementById('filter_button').addEventListener('click', callSearchHandler)
+    function callSearchHandler(event){
         event.preventDefault();
         var str= "";
         var arr = [];

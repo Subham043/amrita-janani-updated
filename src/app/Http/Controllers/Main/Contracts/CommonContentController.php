@@ -51,7 +51,7 @@ class CommonContentController extends Controller
         return $this->query()->orderBy('id', 'DESC');
     }
 
-    protected function index_base(string $view, string $breadcrumb, string $key){
+    protected function index_base(string $view, string $breadcrumb, string $key, string $with_fav){
 
         $data = $this->sort_query();
 
@@ -83,8 +83,8 @@ class CommonContentController extends Controller
         }
 
         if(request()->has('filter')){
-            $data->with([$this->with_favourite_model]);
-            $data->whereHas($this->with_favourite_model, function($q) {
+            $data->with([$with_fav]);
+            $data->whereHas($with_fav, function($q) {
                 $q->where('user_id', Auth::user()->id);
             });
         }

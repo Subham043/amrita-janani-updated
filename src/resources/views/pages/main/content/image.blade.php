@@ -37,7 +37,7 @@
                     <div class="row sort-row">
                         <div class="col-lg-2 col-md-12 mb-3 sort-div">
                             <i class="fas fa-sort-amount-down"></i>
-                            <select name="sort" id="sort"  oninput="return callSearchHandler()">
+                            <select name="sort" id="sort">
                                 <option value="newest" @if(app('request')->has('sort') && app('request')->input('sort')=="newest") selected @endif>Sort by Newest</option>
                                 <option value="oldest" @if(app('request')->has('sort') && app('request')->input('sort')=='oldest') selected @endif>Sort by Oldest</option>
                                 <option value="a-z" @if(app('request')->has('sort') && app('request')->input('sort')=="a-z") selected @endif> Sort by A-Z</option>
@@ -69,7 +69,7 @@
 
                     </div>
                     <div class="text-left">
-                        <button onclick="callSearchHandler()" class="filter_button"> Apply </button>
+                        <button id="filter_button" class="filter_button"> Apply </button>
                         <a href="{{route('content_image')}}" class="filter_button"> Clear </a>
                     </div>
 
@@ -137,7 +137,11 @@
 @include('pages.main.content.common.accordian_js')
 
 <script nonce="{{ csp_nonce() }}">
-    function callSearchHandler(){
+    document.getElementById('search_form_sub_menu').addEventListener('submit', callSearchHandler)
+    document.getElementById('sort').addEventListener('input', callSearchHandler)
+    document.getElementById('filter_button').addEventListener('click', callSearchHandler)
+    function callSearchHandler(event){
+        event.preventDefault();
         var str= "";
         var arr = [];
 

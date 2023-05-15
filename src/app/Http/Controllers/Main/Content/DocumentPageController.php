@@ -19,7 +19,7 @@ class DocumentPageController extends CommonContentController
     }
 
     public function index(){
-        return parent::index_base('pages.main.content.document', 'Document', 'document');
+        return parent::index_base('pages.main.content.document', 'Document', 'document', 'DocumentFavourite');
     }
 
     public function view($uuid){

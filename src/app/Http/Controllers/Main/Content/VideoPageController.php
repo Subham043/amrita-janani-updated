@@ -17,7 +17,7 @@ class VideoPageController extends CommonContentController
     }
 
     public function index(){
-        return parent::index_base('pages.main.content.video', 'Video', 'video');
+        return parent::index_base('pages.main.content.video', 'Video', 'video', 'VideoFavourite');
     }
 
     public function view($uuid){

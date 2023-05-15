@@ -19,7 +19,7 @@ class AudioPageController extends CommonContentController
     }
 
     public function index(){
-        return parent::index_base('pages.main.content.audio', 'Audio', 'audio');
+        return parent::index_base('pages.main.content.audio', 'Audio', 'audio', 'AudioFavourite');
     }
 
     public function view($uuid){

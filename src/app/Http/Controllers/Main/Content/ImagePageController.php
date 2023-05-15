@@ -19,7 +19,7 @@ class ImagePageController extends CommonContentController
     }
 
     public function index(){
-        return parent::index_base('pages.main.content.image', 'Image', 'image');
+        return parent::index_base('pages.main.content.image', 'Image', 'image', 'ImageFavourite');
     }
 
     public function view($uuid){

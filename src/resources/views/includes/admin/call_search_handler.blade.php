@@ -1,6 +1,7 @@
 <script nonce="{{ csp_nonce() }}">
     document.querySelectorAll('.search-handler').forEach(el => {
-        el.addEventListener('submit', function(){
+        el.addEventListener('submit', function(event){
+            event.preventDefault();
             callSearchHandler()
         })
         el.addEventListener('change', function(){

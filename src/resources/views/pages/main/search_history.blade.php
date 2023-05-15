@@ -51,7 +51,7 @@
                     @endif
                 </tbody>
             </table>
-            <div style="display:flex;justify-content:center;">
+            <div class="d-flex justify-content-center">
                 {{ $search_history->links('pagination::bootstrap-4') }}
             </div>
 

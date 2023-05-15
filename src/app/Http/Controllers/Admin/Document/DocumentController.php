@@ -12,9 +12,9 @@ use App\Services\FileService;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Storage;
 use Webpatser\Uuid\Uuid;
 use Stevebauman\Purify\Facades\Purify;
 
@@ -32,9 +32,7 @@ class DocumentController extends ContentController
     public function store(DocumentCreateRequest $req) {
 
         $data = DocumentModel::create([
-            ...$req->except(['status', 'restricted', 'document']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->except(['document']),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -63,9 +61,7 @@ class DocumentController extends ContentController
         $data = DocumentModel::findOrFail($id);
 
         $data->update([
-            ...$req->except(['status', 'restricted', 'document']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->except(['document']),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -251,6 +247,8 @@ class DocumentCreateRequest extends FormRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'document' => ['required','mimes:pdf'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 
@@ -305,6 +303,8 @@ class DocumentUpdateRequest extends DocumentCreateRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'audio' => ['nullable','mimes:wav,mp3,aac'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 }

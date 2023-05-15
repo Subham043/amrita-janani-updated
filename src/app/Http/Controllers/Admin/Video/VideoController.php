@@ -29,9 +29,7 @@ class VideoController extends ContentController
     public function store(VideoCreateRequest $req) {
 
         $data = VideoModel::create([
-            ...$req->except(['status', 'restricted']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->validated(),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -50,13 +48,11 @@ class VideoController extends ContentController
         return parent::edit_base('pages.admin.video.edit', $id)->with('languages', LanguageModel::all());
     }
 
-    public function update(Request $req, $id) {
+    public function update(VideoUpdateRequest $req, $id) {
         $data = VideoModel::findOrFail($id);
 
         $data->update([
-            ...$req->except(['status', 'restricted']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->validated(),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -223,6 +219,8 @@ class VideoCreateRequest extends FormRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'video' => ['required'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 
@@ -276,6 +274,8 @@ class VideoUpdateRequest extends VideoCreateRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'video' => ['required'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 }

@@ -31,9 +31,7 @@ class ImageController extends ContentController
     public function store(ImageCreateRequest $req) {
 
         $data = ImageModel::create([
-            ...$req->except(['status', 'restricted', 'image']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->except(['image']),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -58,9 +56,7 @@ class ImageController extends ContentController
         $data = ImageModel::findOrFail($id);
 
         $data->update([
-            ...$req->except(['status', 'restricted', 'image']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
+            ...$req->except(['image']),
             'user_id' => Auth::user()->id,
         ]);
 
@@ -233,6 +229,8 @@ class ImageCreateRequest extends FormRequest
             'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
             'year' => ['nullable','regex:/^[0-9]*$/'],
             'image' => ['nullable','image','mimes:jpeg,png,jpg,webp'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 
@@ -286,6 +284,8 @@ class ImageUpdateRequest extends ImageCreateRequest
             'version' => ['nullable','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
             'year' => ['nullable','regex:/^[0-9]*$/'],
             'image' => ['nullable','image','mimes:jpeg,png,jpg,webp'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 }

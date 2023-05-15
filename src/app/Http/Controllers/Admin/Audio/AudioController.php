@@ -33,10 +33,8 @@ class AudioController extends ContentController
     public function store(AudioCreateRequest $req) {
 
         $data = AudioModel::create([
-            ...$req->except(['status', 'restricted', 'audio']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
-            'user_id' => Auth::user()->id,
+            ...$req->except(['audio']),
+            'user_id' => Auth::user()->id
         ]);
 
         if($req->hasFile('audio')){
@@ -64,10 +62,8 @@ class AudioController extends ContentController
         $data = AudioModel::findOrFail($id);
 
         $data->update([
-            ...$req->except(['status', 'restricted', 'audio']),
-            'status' => $req->status == "on" ? 1 : 0,
-            'restricted' => $req->restricted == "on" ? 1 : 0,
-            'user_id' => Auth::user()->id,
+            ...$req->except(['audio']),
+            'user_id' => Auth::user()->id
         ]);
 
         if($req->hasFile('audio')){
@@ -254,6 +250,8 @@ class AudioCreateRequest extends FormRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'audio' => ['required','mimes:wav,mp3,aac'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 
@@ -310,6 +308,8 @@ class AudioUpdateRequest extends AudioCreateRequest
             'language' => ['required','array','min:1'],
             'language.*' => ['required','regex:/^[0-9]*$/'],
             'audio' => ['nullable','mimes:wav,mp3,aac'],
+            'status' => ['nullable'],
+            'restricted' => ['nullable'],
         ];
     }
 }

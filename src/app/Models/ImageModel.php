@@ -11,6 +11,7 @@ use App\Models\ImageFavourite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ImageModel extends Model
 {
@@ -41,12 +42,38 @@ class ImageModel extends Model
         'user_id',
     ];
 
+    protected $attributes = [
+        'status' => 1,
+        'restricted' => 0,
+    ];
+
     public static function boot()
     {
         parent::boot();
         self::creating(function ($model) {
             $model->uuid = (string) Uuid::generate(4);
         });
+    }
+
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => $value == "on" ? 1 : 0,
+        );
+    }
+
+    protected function restricted(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => $value == "on" ? 1 : 0,
+        );
+    }
+
+    protected function userId(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => Auth::user()->id,
+        );
     }
 
     public function User()

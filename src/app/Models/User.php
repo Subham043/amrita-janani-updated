@@ -28,6 +28,7 @@ class User extends Authenticatable
         'otp',
         'status',
         'password',
+        'darkMode',
     ];
 
     /**

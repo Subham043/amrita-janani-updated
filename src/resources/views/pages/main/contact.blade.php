@@ -263,6 +263,8 @@ validationModal
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)
         }
+        await reload_captcha()
+        document.getElementById('captcha').value='';
     } finally{
         submitBtn.innerHTML =  `
             Submit

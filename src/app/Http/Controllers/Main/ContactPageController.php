@@ -2,29 +2,66 @@
 
 namespace App\Http\Controllers\Main;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Main\Contracts\CommonController;
 use App\Models\Enquiry;
-use App\Jobs\SendUserThankYouEmailJob;
-use App\Jobs\SendAdminEnquiryEmailJob;
+use Illuminate\Foundation\Http\FormRequest;
+use Stevebauman\Purify\Facades\Purify;
 
-class ContactPageController extends Controller
+class ContactPageController extends CommonController
 {
     public function index(){
-        return view('pages.main.contact')->with('breadcrumb','Contact');
+        return parent::index_base('pages.main.contact', 'Contact');
     }
 
-    public function contact_ajax(Request $req){
-        $rules = array(
+    public function contact_ajax(EnquiryRequest $req){
+
+        $result = Enquiry::create($req->validated());
+        if($result){
+            return response()->json(["message" => "Message sent successfully."], 201);
+        }else{
+            return response()->json(["error"=>"something went wrong. Please try again"], 400);
+        }
+    }
+}
+
+class EnquiryRequest extends FormRequest
+{
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
             'name' => ['required','string','regex:/^[a-zA-Z\s]*$/'],
             'email' => ['required','email'],
             'phone' => ['nullable','regex:/^[0-9]*$/'],
             'subject' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
             'message' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
             'captcha' => ['required','captcha']
-        );
-        $messages = array(
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
             'name.required' => 'Please enter the name !',
             'name.string' => 'Please enter the valid name !',
             'name.regex' => 'Please enter the valid name !',
@@ -37,34 +74,21 @@ class ContactPageController extends Controller
             'message.required' => 'Please enter the message !',
             'message.regex' => 'Please enter the valid message !',
             'captcha.captcha' => 'Please enter the valid captcha !',
-        );
-
-        $validator = Validator::make($req->all(), $rules, $messages);
-
-        if($validator->fails()){
-            return response()->json(["errors"=>$validator->errors()], 400);
-        }
-
-        $enquiry = new Enquiry;
-        $enquiry->name = $req->name;
-        $enquiry->subject = $req->subject;
-        $enquiry->email = $req->email;
-        $enquiry->phone = $req->phone;
-        $enquiry->message = $req->message;
-        $result = $enquiry->save();
-        if($result){
-            $details['name'] = $enquiry->name;
-            $details['email'] = $enquiry->email;
-            $details['phone'] = $enquiry->phone;
-            $details['subject'] = $enquiry->subject;
-            $details['message'] = $enquiry->message;
-
-            dispatch(new SendUserThankYouEmailJob($details));
-            dispatch(new SendAdminEnquiryEmailJob($details));
-
-            return response()->json(["message" => "Message sent successfully."], 201);
-        }else{
-            return response()->json(["error"=>"something went wrong. Please try again"], 400);
-        }
+        ];
     }
+
+    /**
+     * Handle a passed validation attempt.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $this->replace(
+            Purify::clean(
+                $this->all()
+            )
+        );
+    }
+
 }

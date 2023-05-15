@@ -3,23 +3,19 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
-use URL;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class DarkModePageController extends Controller
 {
     public function index(){
         $user = User::where('id',Auth::user()->id)->firstOrFail();
-        if($user->darkMode == 0){
-            $user->darkmode = 1;
-            $user->save();
-            return redirect(URL::previous());
-        }else{
-            $user->darkmode =  0;
-            $user->save();
-            return redirect(URL::previous());
-        }
+        $user->update(
+            [
+                'darkMode' => $user->darkMode == 0 ? 1 : 0,
+            ]
+        );
+        return redirect(URL::previous());
     }
 }

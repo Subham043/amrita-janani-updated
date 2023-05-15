@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Main;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
+use App\Http\Controllers\Main\Contracts\CommonController;
 
-class PrivacyPolicyPageController extends Controller
+class PrivacyPolicyPageController extends CommonController
 {
     public function index(){
-        return view('pages.main.privacy_policy')->with('breadcrumb','Privacy Policy');
+        return parent::index_base('pages.main.privacy_policy', 'Privacy Policy');
     }
 }

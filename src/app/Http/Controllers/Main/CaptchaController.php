@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CaptchaController extends Controller
 {
@@ -13,5 +11,5 @@ class CaptchaController extends Controller
     {
         return response()->json(['captcha'=> captcha_img()]);
     }
-    
+
 }

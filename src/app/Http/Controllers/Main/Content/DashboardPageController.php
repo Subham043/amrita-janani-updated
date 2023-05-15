@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Main\Content;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use App\Models\AudioModel;
 use App\Models\ImageModel;
 use App\Models\DocumentModel;
 use App\Models\VideoModel;
 use App\Models\SearchHistory;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardPageController extends Controller
 {
@@ -28,7 +28,7 @@ class DashboardPageController extends Controller
             ->orWhere('tags', 'like', '%' . $search . '%')
             ->orWhere('description_unformatted', 'like', '%' . $search . '%')
             ->orWhere('uuid', 'like', '%' . $search . '%');
-            
+
             $images->where('title', 'like', '%' . $search . '%')
             ->orWhere('year', 'like', '%' . $search . '%')
             ->orWhere('deity', 'like', '%' . $search . '%')
@@ -36,7 +36,7 @@ class DashboardPageController extends Controller
             ->orWhere('tags', 'like', '%' . $search . '%')
             ->orWhere('description_unformatted', 'like', '%' . $search . '%')
             ->orWhere('uuid', 'like', '%' . $search . '%');
-            
+
             $documents->where('title', 'like', '%' . $search . '%')
             ->orWhere('year', 'like', '%' . $search . '%')
             ->orWhere('deity', 'like', '%' . $search . '%')
@@ -44,7 +44,7 @@ class DashboardPageController extends Controller
             ->orWhere('tags', 'like', '%' . $search . '%')
             ->orWhere('description_unformatted', 'like', '%' . $search . '%')
             ->orWhere('uuid', 'like', '%' . $search . '%');
-            
+
             $videos->where('title', 'like', '%' . $search . '%')
             ->orWhere('year', 'like', '%' . $search . '%')
             ->orWhere('deity', 'like', '%' . $search . '%')
@@ -72,7 +72,7 @@ class DashboardPageController extends Controller
         ->with('videos', $videos)
         ->with('documents', $documents);
     }
-    
+
     public function search_query(Request $request){
 
         $search  = $request->phrase;
@@ -101,7 +101,7 @@ class DashboardPageController extends Controller
                 }
             }
         }
-        
+
         $images = ImageModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')
@@ -126,7 +126,7 @@ class DashboardPageController extends Controller
                 }
             }
         }
-        
+
         $documents = DocumentModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')
@@ -151,7 +151,7 @@ class DashboardPageController extends Controller
                 }
             }
         }
-        
+
         $videos = VideoModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')
@@ -176,7 +176,7 @@ class DashboardPageController extends Controller
                 }
             }
         }
-        
+
         $searchHistory = SearchHistory::where('screen', 1)->where('search', 'like', '%' . $search . '%')->get();
 
         foreach ($searchHistory as $value) {

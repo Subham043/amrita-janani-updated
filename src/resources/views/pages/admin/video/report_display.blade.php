@@ -24,7 +24,7 @@
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
                                     <form action="{{route('video_toggle_report', $country->id)}}" method="get" class="mr-3">
-                                        <select class="form-control mr-2" name="status" onchange="this.form.submit()">
+                                        <select class="form-control status-handler mr-2" name="status">
                                             <option value="0" {{ $country->status==0 ? 'selected':''}}>Pending</option>
                                             <option value="1" {{ $country->status==1 ? 'selected':''}}>In progress</option>
                                             <option value="2" {{ $country->status==2 ? 'selected':''}}>Completed</option>
@@ -137,5 +137,6 @@
 
 @include('includes.admin.video_player_script')
 @include('includes.admin.delete_handler')
+@include('includes.admin.call_status_handler')
 
 @stop

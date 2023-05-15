@@ -63,7 +63,7 @@
                                                 <div class="d-flex gap-2 align-items-center">
                                                     <div class="search-box edit">
                                                         <form action="{{route('image_toggle_report', $item->id)}}" method="get">
-                                                            <select class="form-control" name="status" onchange="this.form.submit()" class="w-100">
+                                                            <select class="form-control status-handler" name="status" class="w-100">
                                                                 <option value="0" {{ $item->status==0 ? 'selected':''}}>Pending</option>
                                                                 <option value="1" {{ $item->status==1 ? 'selected':''}}>In progress</option>
                                                                 <option value="2" {{ $item->status==2 ? 'selected':''}}>Completed</option>
@@ -111,5 +111,6 @@
 
 @include('includes.admin.delete_handler')
 @include('includes.admin.call_search_handler', ['url'=>route('image_view_report')])
+@include('includes.admin.call_status_handler')
 
 @stop

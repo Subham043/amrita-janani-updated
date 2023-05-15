@@ -25,6 +25,6 @@ class VideoAccessController extends ContentAccessController
     }
 
     public function displayAccess($id) {
-        return parent::delete_access_base('pages.admin.video.access_display', $id);
+        return parent::display_access_base('pages.admin.video.access_display', $id);
     }
 }

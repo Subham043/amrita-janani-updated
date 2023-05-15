@@ -25,6 +25,6 @@ class ImageAccessController extends ContentAccessController
     }
 
     public function displayAccess($id) {
-        return parent::delete_access_base('pages.admin.image.access_display', $id);
+        return parent::display_access_base('pages.admin.image.access_display', $id);
     }
 }

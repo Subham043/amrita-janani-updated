@@ -25,7 +25,7 @@ class AudioReportController extends ContentReportController
     }
 
     public function displayReport($id) {
-        return parent::delete_access_base('pages.admin.audio.report_display', $id);
+        return parent::display_report_base('pages.admin.audio.report_display', $id);
     }
 
 }

@@ -37,8 +37,9 @@ class UserController extends Controller
     public function store(UserCreateRequest $req) {
 
         $result = User::create([
-            ...$req->validated(),
-            'otp' => rand(1000,9999)
+            ...$req->except('phone'),
+            'otp' => rand(1000,9999),
+            'phone' => !empty($req->phone) ? $req->phone : null
         ]);
         if($result){
             return redirect()->intended(route('subadmin_view'))->with('success_status', 'Data Stored successfully.');
@@ -56,8 +57,9 @@ class UserController extends Controller
         $country = User::findOrFail($id);
 
         $result = $country->update([
-            ...$req->except('password'),
-            'otp' => rand(1000,9999)
+            ...$req->except(['password', 'phone']),
+            'otp' => rand(1000,9999),
+            'phone' => !empty($req->phone) ? $req->phone : null
         ]);
 
         if($result){

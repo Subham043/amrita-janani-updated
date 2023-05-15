@@ -1,5 +1,7 @@
 <script nonce="{{ csp_nonce() }}">
+    document.getElementById('search_form_sub_menu').addEventListener('submit', callSearchHandler)
     function callSearchHandler(){
+        event.preventDefault();
         var str= "";
         var arr = [];
 
@@ -31,6 +33,5 @@
 
         str = arr.join('&');
         window.location.replace('{{$search_url}}?'+str)
-        return false;
     }
 </script>

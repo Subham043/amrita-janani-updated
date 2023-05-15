@@ -134,7 +134,7 @@ class CommonContentController extends Controller
             }
         }else{
             $dataFav = new $this->with_favourite_model;
-            $dataFav->audio_id = $data->id;
+            $dataFav[$key.'_id'] = $data->id;
             $dataFav->user_id = Auth::user()->id;
             $dataFav->status = 1;
             $dataFav->save();
@@ -146,8 +146,7 @@ class CommonContentController extends Controller
 
     }
 
-    protected function request_access_base(string $key, $uuid){
-        $req = new ContentRequest;
+    protected function request_access_base(ContentRequest $req, string $key, $uuid){
         $data = $this->query()->where('uuid', $uuid)->firstOrFail();
 
         $dataFav = $this->with_access_model::where($key.'_id', $data->id)->where('user_id', Auth::user()->id)->get();
@@ -161,7 +160,7 @@ class CommonContentController extends Controller
 
         }else{
             $dataFav = new $this->with_access_model;
-            $dataFav->audio_id = $data->id;
+            $dataFav[$key.'_id'] = $data->id;
             $dataFav->user_id = Auth::user()->id;
             $dataFav->status = 0;
             $dataFav->message=$req->message;
@@ -179,8 +178,7 @@ class CommonContentController extends Controller
         return response()->json(["message" => "Access requested successfully."], 201);
     }
 
-    protected function report_base(string $key, $uuid){
-        $req = new ContentRequest;
+    protected function report_base(ContentRequest $req, string $key, $uuid){
         $data = $this->query()->where('uuid', $uuid)->firstOrFail();
 
         $dataFav = $this->with_report_model::where($key.'_id', $data->id)->where('user_id', Auth::user()->id)->get();
@@ -193,7 +191,7 @@ class CommonContentController extends Controller
 
         }else{
             $dataFav = new $this->with_report_model;
-            $dataFav->audio_id = $data->id;
+            $dataFav[$key.'_id'] = $data->id;
             $dataFav->user_id = Auth::user()->id;
             $dataFav->status = 0;
             $dataFav->message=$req->message;

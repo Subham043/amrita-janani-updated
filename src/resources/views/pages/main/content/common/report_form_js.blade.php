@@ -58,6 +58,7 @@ validationModal2
         formData.append('captcha',document.getElementById('captcha2').value)
         const response = await axios.post('{{$url}}', formData)
         successToast(response.data.message)
+        await reload_captcha('captcha_container2')
         event.target.reset()
         setTimeout(()=>{
             location.reload()
@@ -72,6 +73,8 @@ validationModal2
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)
         }
+        await reload_captcha('captcha_container2')
+        document.getElementById('captcha2').value = '';
     } finally{
         submitBtn.innerHTML =  `
             Report

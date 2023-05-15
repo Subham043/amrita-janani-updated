@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main\Content;
 
 use App\Http\Controllers\Main\Contracts\CommonContentController;
+use App\Http\Controllers\Main\Contracts\ContentRequest;
 use Illuminate\Support\Facades\Response;
 use App\Models\ImageModel;
 use App\Models\ImageFavourite;
@@ -52,12 +53,12 @@ class ImagePageController extends CommonContentController
         return parent::make_favourite_base('content_image_view', 'image', $uuid);
     }
 
-    public function requestAccess($uuid){
-        return parent::request_access_base('image', $uuid);
+    public function requestAccess(ContentRequest $req, $uuid){
+        return parent::request_access_base($req, 'image', $uuid);
     }
 
-    public function report($uuid){
-        return parent::report_base('image', $uuid);
+    public function report(ContentRequest $req, $uuid){
+        return parent::report_base($req, 'image', $uuid);
     }
 
     public function search_query(){

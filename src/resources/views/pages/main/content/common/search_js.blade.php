@@ -23,7 +23,7 @@ autocomplete({
         var itemElement = document.createElement("div");
         if (charsAllowed(value)) {
             var regex = new RegExp(value, 'gi');
-            var inner = item.name.replace(regex, function(match) { return "<span style='font-weight: bold !important'>" + match + "</span>" });
+            var inner = item.name.replace(regex, function(match) { return "<span class='font-weight-bold'>" + match + "</span>" });
             itemElement.innerHTML = inner;
         } else {
             itemElement.textContent = item.name;

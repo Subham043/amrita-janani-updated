@@ -11,19 +11,6 @@
         width: 100%;
         font-style: italic;
     }
-
-    .btn-captcha{
-        background: #ffcc00;
-        color: #000;
-        border-radius: 5px;
-        padding: 5px 15px;
-        border: 1px solid #ddd;
-        font-size: 10px;
-        cursor: pointer;
-    }
-    .gap-2{
-        gap: 20px;
-    }
 </style>
 @stop
 

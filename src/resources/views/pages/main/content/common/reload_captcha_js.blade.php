@@ -7,7 +7,6 @@
     async function reload_captcha(id){
         try {
             const response = await axios.get('{{route('captcha_ajax')}}')
-            console.log(id);
             document.getElementById(id).innerHTML = response.data.captcha
         } catch (error) {
             console.log(error);

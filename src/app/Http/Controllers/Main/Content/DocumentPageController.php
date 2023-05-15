@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main\Content;
 
 use App\Http\Controllers\Main\Contracts\CommonContentController;
+use App\Http\Controllers\Main\Contracts\ContentRequest;
 use App\Models\DocumentModel;
 use App\Models\DocumentFavourite;
 use App\Models\DocumentAccess;
@@ -43,12 +44,12 @@ class DocumentPageController extends CommonContentController
         return parent::make_favourite_base('content_document_view', 'document', $uuid);
     }
 
-    public function requestAccess($uuid){
-        return parent::request_access_base('document', $uuid);
+    public function requestAccess(ContentRequest $req, $uuid){
+        return parent::request_access_base($req, 'document', $uuid);
     }
 
-    public function report($uuid){
-        return parent::report_base('document', $uuid);
+    public function report(ContentRequest $req, $uuid){
+        return parent::report_base($req, 'document', $uuid);
     }
 
     public function search_query(){

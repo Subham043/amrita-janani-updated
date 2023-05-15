@@ -59,6 +59,7 @@ validationModal
         const response = await axios.post('{{$url}}', formData)
         successToast(response.data.message)
         event.target.reset()
+        await reload_captcha('captcha_container1')
         setTimeout(()=>{
             location.reload()
         }, 1000)
@@ -72,6 +73,8 @@ validationModal
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)
         }
+        await reload_captcha('captcha_container1')
+        document.getElementById('captcha1').value = ''
     } finally{
         submitBtn.innerHTML =  `
             Request

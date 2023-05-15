@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main\Content;
 
 use App\Http\Controllers\Main\Contracts\CommonContentController;
+use App\Http\Controllers\Main\Contracts\ContentRequest;
 use App\Models\VideoModel;
 use App\Models\VideoFavourite;
 use App\Models\VideoAccess;
@@ -27,12 +28,12 @@ class VideoPageController extends CommonContentController
         return parent::make_favourite_base('content_video_view', 'video', $uuid);
     }
 
-    public function requestAccess($uuid){
-        return parent::request_access_base('video', $uuid);
+    public function requestAccess(ContentRequest $req, $uuid){
+        return parent::request_access_base($req, 'video', $uuid);
     }
 
-    public function report($uuid){
-        return parent::report_base('video', $uuid);
+    public function report(ContentRequest $req, $uuid){
+        return parent::report_base($req, 'video', $uuid);
     }
 
     public function search_query(){

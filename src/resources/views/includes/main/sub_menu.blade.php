@@ -20,12 +20,12 @@
                     @else
                     <a href="{{route('darkmode')}}"><i id="darkModeToggleBtn" class="fas fa-moon"></i></a>
                     @endif --}}
-                    <form  method="get" class="col-sm-auto" onsubmit="return callSearchHandler()">
+                    <form  method="get" class="col-sm-auto" id="search_form_sub_menu">
                         <label for="search">
                             {{-- <span><i class="fas fa-search"></i></span> --}}
                             <input type="search" id="search"  autocomplete="off" value="@if(app('request')->has('search') && !empty(app('request')->has('search'))){{app('request')->input('search')}}@endif" />
                         </label>
-                        <button><i class="fas fa-search"></i></button>
+                        <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
             </div>

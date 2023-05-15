@@ -120,8 +120,8 @@ validationModal
         const response = await axios.post('{{route('update_userprofile')}}', formData)
         successToast(response.data.message)
     } catch (error) {
-        if(error?.response?.data?.form_error?.name){
-            errorToast(error?.response?.data?.form_error?.name[0])
+        if(error?.response?.data?.errors?.name){
+            errorToast(error?.response?.data?.errors?.name[0])
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)

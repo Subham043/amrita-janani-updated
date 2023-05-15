@@ -124,14 +124,14 @@ validationModal
         successToast(response.data.message)
         event.target.reset()
     } catch (error) {
-        if(error?.response?.data?.form_error?.opassword){
-            errorToast(error?.response?.data?.form_error?.opassword[0])
+        if(error?.response?.data?.errors?.opassword){
+            errorToast(error?.response?.data?.errors?.opassword[0])
         }
-        if(error?.response?.data?.form_error?.password){
-            errorToast(error?.response?.data?.form_error?.password[0])
+        if(error?.response?.data?.errors?.password){
+            errorToast(error?.response?.data?.errors?.password[0])
         }
-        if(error?.response?.data?.form_error?.cpassword){
-            errorToast(error?.response?.data?.form_error?.cpassword[0])
+        if(error?.response?.data?.errors?.cpassword){
+            errorToast(error?.response?.data?.errors?.cpassword[0])
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)

@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Admin\Profile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Support\Types\UserType;
-use URL;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
@@ -36,7 +35,7 @@ class ProfileController extends Controller
         );
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
         $user = User::findOrFail(Auth::user()->id);
         $user->name = $req->name;
@@ -62,7 +61,7 @@ class ProfileController extends Controller
         );
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
         $user = User::findOrFail(Auth::user()->id);
         if(!Hash::check($req->opassword, $user->getPassword())){

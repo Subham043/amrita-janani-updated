@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Response;
 class AudioPageController extends Controller
 {
     public function index(Request $request){
-        
+
         if($request->has('sort')){
             if($request->input('sort')=="oldest"){
                 $audio = AudioModel::orderBy('id', 'ASC');
@@ -66,9 +66,9 @@ class AudioPageController extends Controller
                 $q->where('user_id', Auth::user()->id);
             });
         }
-        
+
         $audios = $audio->where('status', 1)->paginate(6)->withQueryString();
-        
+
         return view('pages.main.content.audio')->with('breadcrumb','Audio')
         ->with('audios',$audios)
         ->with('languages',LanguageModel::all());
@@ -155,7 +155,7 @@ class AudioPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $audioFav = AudioAccess::where('audio_id', $audio->id)->where('user_id', Auth::user()->id)->get();
@@ -166,7 +166,7 @@ class AudioPageController extends Controller
             $audioFav->message=$req->message;
             $audioFav->save();
 
-            
+
         }else{
             $audioFav = new AudioAccess;
             $audioFav->audio_id = $audio->id;
@@ -174,7 +174,7 @@ class AudioPageController extends Controller
             $audioFav->status = 0;
             $audioFav->message=$req->message;
             $audioFav->save();
-            
+
             $details['name'] = Auth::user()->name;
             $details['email'] = Auth::user()->email;
             $details['filename'] = $audio->title;
@@ -203,7 +203,7 @@ class AudioPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $audioFav = AudioReport::where('audio_id', $audio->id)->where('user_id', Auth::user()->id)->get();
@@ -213,7 +213,7 @@ class AudioPageController extends Controller
             $audioFav->status = 0;
             $audioFav->message=$req->message;
             $audioFav->save();
-            
+
         }else{
             $audioFav = new AudioReport;
             $audioFav->audio_id = $audio->id;

@@ -184,11 +184,11 @@ validationModal
         event.target.reset()
         await reload_captcha()
     } catch (error) {
-        if(error?.response?.data?.form_error?.subject){
-            errorToast(error?.response?.data?.form_error?.subject[0])
+        if(error?.response?.data?.errors?.subject){
+            errorToast(error?.response?.data?.errors?.subject[0])
         }
-        if(error?.response?.data?.form_error?.message){
-            errorToast(error?.response?.data?.form_error?.message[0])
+        if(error?.response?.data?.errors?.message){
+            errorToast(error?.response?.data?.errors?.message[0])
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)

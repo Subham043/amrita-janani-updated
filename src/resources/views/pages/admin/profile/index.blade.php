@@ -184,8 +184,8 @@ validation
             window.location.replace(response.data.url);
         }, 1000);
     }catch (error){
-        if(error?.response?.data?.form_error?.name){
-            errorToast(error?.response?.data?.form_error?.name[0])
+        if(error?.response?.data?.errors?.name){
+            errorToast(error?.response?.data?.errors?.name[0])
         }
     }finally{
         submitBtn.innerHTML =  `
@@ -258,14 +258,14 @@ validationPassword
             window.location.replace(response.data.url);
         }, 1000);
     }catch (error){
-        if(error?.response?.data?.form_error?.opassword){
-            errorToast(error?.response?.data?.form_error?.opassword[0])
+        if(error?.response?.data?.errors?.opassword){
+            errorToast(error?.response?.data?.errors?.opassword[0])
         }
-        if(error?.response?.data?.form_error?.password){
-            errorToast(error?.response?.data?.form_error?.password[0])
+        if(error?.response?.data?.errors?.password){
+            errorToast(error?.response?.data?.errors?.password[0])
         }
-        if(error?.response?.data?.form_error?.cpassword){
-            errorToast(error?.response?.data?.form_error?.cpassword[0])
+        if(error?.response?.data?.errors?.cpassword){
+            errorToast(error?.response?.data?.errors?.cpassword[0])
         }
         if(error?.response?.data?.message){
             errorToast(error?.response?.data?.message)

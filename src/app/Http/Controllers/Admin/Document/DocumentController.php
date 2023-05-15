@@ -140,7 +140,7 @@ class DocumentController extends ContentController
 
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $path = $req->file('excel')->getRealPath();
@@ -148,10 +148,10 @@ class DocumentController extends ContentController
 
         if($data->count() == 0)
         {
-            return response()->json(["form_error"=>"Please enter atleast one row of data in the excel."], 400);
+            return response()->json(["errors"=>"Please enter atleast one row of data in the excel."], 400);
         }elseif($data->count() > 30)
         {
-            return response()->json(["form_error"=>"Maximum 30 rows of data in the excel are allowed."], 400);
+            return response()->json(["errors"=>"Maximum 30 rows of data in the excel are allowed."], 400);
         }else{
             foreach ($data as $key => $value) {
 

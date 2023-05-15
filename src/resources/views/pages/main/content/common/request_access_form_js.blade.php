@@ -63,11 +63,11 @@ validationModal
             location.reload()
         }, 1000)
     } catch (error) {
-        if(error?.response?.data?.form_error?.message){
-            errorToast(error?.response?.data?.form_error?.message[0])
+        if(error?.response?.data?.errors?.message){
+            errorToast(error?.response?.data?.errors?.message[0])
         }
-        if(error?.response?.data?.form_error?.captcha){
-            errorToast(error?.response?.data?.form_error?.captcha[0])
+        if(error?.response?.data?.errors?.captcha){
+            errorToast(error?.response?.data?.errors?.captcha[0])
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)

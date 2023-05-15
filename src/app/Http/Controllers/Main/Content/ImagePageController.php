@@ -20,7 +20,7 @@ use File;
 class ImagePageController extends Controller
 {
     public function index(Request $request){
-        
+
         if($request->has('sort')){
             if($request->input('sort')=="oldest"){
                 $image = ImageModel::orderBy('id', 'ASC');
@@ -58,9 +58,9 @@ class ImagePageController extends Controller
                 $q->where('user_id', Auth::user()->id);
             });
         }
-        
+
         $images = $image->where('status', 1)->paginate(6)->withQueryString();
-        
+
         return view('pages.main.content.image')->with('breadcrumb','Images')
         ->with('images',$images)
         ->with('languages',LanguageModel::all());
@@ -91,7 +91,7 @@ class ImagePageController extends Controller
         $response->header('Cache-Control', 'public, max_age=3600');
         return $response;
     }
-    
+
     public function imageFile($uuid){
         $image = ImageModel::where('uuid', $uuid)->where('status', 1)->firstOrFail();
 
@@ -156,7 +156,7 @@ class ImagePageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $imageFav = ImageAccess::where('image_id', $image->id)->where('user_id', Auth::user()->id)->get();
@@ -166,7 +166,7 @@ class ImagePageController extends Controller
             $imageFav->status=0;
             $imageFav->message=$req->message;
             $imageFav->save();
-            
+
         }else{
             $imageFav = new ImageAccess;
             $imageFav->image_id = $image->id;
@@ -203,7 +203,7 @@ class ImagePageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $imageFav = ImageReport::where('image_id', $image->id)->where('user_id', Auth::user()->id)->get();
@@ -213,7 +213,7 @@ class ImagePageController extends Controller
             $imageFav->status=0;
             $imageFav->message=$req->message;
             $imageFav->save();
-            
+
         }else{
             $imageFav = new ImageReport;
             $imageFav->image_id = $image->id;
@@ -238,7 +238,7 @@ class ImagePageController extends Controller
 
         $search  = $request->phrase;
         $data = [];
-        
+
         $images = ImageModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')

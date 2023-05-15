@@ -214,14 +214,14 @@
                     }, 1000);
                 } catch (error) {
                     console.log(error);
-                    if (error?.response?.data?.form_error?.title) {
-                        errorToast(error?.response?.data?.form_error?.title[0])
+                    if (error?.response?.data?.errors?.title) {
+                        errorToast(error?.response?.data?.errors?.title[0])
                     }
-                    if (error?.response?.data?.form_error?.year) {
-                        errorToast(error?.response?.data?.form_error?.year[0])
+                    if (error?.response?.data?.errors?.year) {
+                        errorToast(error?.response?.data?.errors?.year[0])
                     }
-                    if (error?.response?.data?.form_error?.deity) {
-                        errorToast(error?.response?.data?.form_error?.deity[0])
+                    if (error?.response?.data?.errors?.deity) {
+                        errorToast(error?.response?.data?.errors?.deity[0])
                     }
                 } finally {
                     submitBtn.innerHTML = `

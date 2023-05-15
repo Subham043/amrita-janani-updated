@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -21,6 +23,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'userType',
+        'otp',
+        'status',
         'password',
     ];
 
@@ -43,6 +49,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $attributes = [
+        'userType' => 2,
+        'status' => 0,
+        'allowPasswordChange' => 0,
+    ];
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => Hash::make($value),
+        );
+    }
+
+    protected function otp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => rand(1000,9999),
+        );
+    }
+
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => $value == "on" ? 1 : 2,
+        );
+    }
+
     public function getPassword(){
         return $this->password;
     }
@@ -51,17 +84,17 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\ImageModel', 'user_id');
     }
-    
+
     public function DocumentModel()
     {
         return $this->hasMany('App\Models\DocumentModel', 'user_id');
     }
-    
+
     public function AudioModel()
     {
         return $this->hasMany('App\Models\AudioModel', 'user_id');
     }
-    
+
     public function VideoModel()
     {
         return $this->hasMany('App\Models\VideoModel', 'user_id');
@@ -71,17 +104,17 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\ImageFavourite', 'image_id');
     }
-    
+
     public function DocumentFavourite()
     {
         return $this->hasMany('App\Models\DocumentFavourite', 'document_id');
     }
-    
+
     public function AudioFavourite()
     {
         return $this->hasMany('App\Models\AudioFavourite', 'audio_id');
     }
-    
+
     public function VideoFavourite()
     {
         return $this->hasMany('App\Models\VideoFavourite', 'video_id');

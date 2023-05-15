@@ -42,7 +42,7 @@ class ContactPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $enquiry = new Enquiry;

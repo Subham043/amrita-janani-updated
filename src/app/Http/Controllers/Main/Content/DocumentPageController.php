@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Response;
 class DocumentPageController extends Controller
 {
     public function index(Request $request){
-        
+
         if($request->has('sort')){
             if($request->input('sort')=="oldest"){
                 $document = DocumentModel::orderBy('id', 'ASC');
@@ -65,9 +65,9 @@ class DocumentPageController extends Controller
                 $q->where('user_id', Auth::user()->id);
             });
         }
-        
+
         $documents = $document->where('status', 1)->paginate(6)->withQueryString();
-        
+
         return view('pages.main.content.document')->with('breadcrumb','Documents')
         ->with('documents',$documents)
         ->with('languages',LanguageModel::all());
@@ -154,7 +154,7 @@ class DocumentPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $documentFav = DocumentAccess::where('document_id', $document->id)->where('user_id', Auth::user()->id)->get();
@@ -164,7 +164,7 @@ class DocumentPageController extends Controller
             $documentFav->status=0;
             $documentFav->message=$req->message;
             $documentFav->save();
-            
+
         }else{
             $documentFav = new DocumentAccess;
             $documentFav->document_id = $document->id;
@@ -201,7 +201,7 @@ class DocumentPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $documentFav = DocumentReport::where('document_id', $document->id)->where('user_id', Auth::user()->id)->get();
@@ -211,7 +211,7 @@ class DocumentPageController extends Controller
             $documentFav->status=0;
             $documentFav->message=$req->message;
             $documentFav->save();
-            
+
         }else{
             $documentFav = new DocumentReport;
             $documentFav->document_id = $document->id;
@@ -236,7 +236,7 @@ class DocumentPageController extends Controller
 
         $search  = $request->phrase;
         $data = [];
-        
+
         $documents = DocumentModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')

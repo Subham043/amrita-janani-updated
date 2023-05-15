@@ -1,6 +1,12 @@
 @extends('layouts.admin.dashboard')
 
-
+@section('css')
+<style nonce="{{ csp_nonce() }}">
+    .w-130{
+        width: 130px;
+    }
+</style>
+@stop
 
 @section('content')
 
@@ -62,7 +68,7 @@
                                             <td class="date">{{$item->created_at}}</td>
                                             <td>
                                                 <div class="d-flex gap-2 align-items-center">
-                                                    <div class="search-box edit">
+                                                    <div class="search-box edit w-130">
                                                         <form action="{{route('audio_toggle_report', $item->id)}}" method="get">
                                                             <select class="form-control status-handler" name="status" class="w-100">
                                                                 <option value="0" {{ $item->status==0 ? 'selected':''}}>Pending</option>

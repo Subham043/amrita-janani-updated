@@ -49,7 +49,7 @@ class ProfilePageController extends Controller
         }
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
         $user = User::findOrFail(Auth::user()->id);
         $user->name = $req->name;
@@ -81,7 +81,7 @@ class ProfilePageController extends Controller
         );
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
         $user = User::findOrFail(Auth::user()->id);
         if(!Hash::check($req->opassword, $user->getPassword())){

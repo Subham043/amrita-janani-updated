@@ -18,7 +18,7 @@ use App\Jobs\SendAdminReportEmailJob;
 class VideoPageController extends Controller
 {
     public function index(Request $request){
-        
+
         if($request->has('sort')){
             if($request->input('sort')=="oldest"){
                 $video = VideoModel::orderBy('id', 'ASC');
@@ -64,9 +64,9 @@ class VideoPageController extends Controller
                 $q->where('user_id', Auth::user()->id);
             });
         }
-        
+
         $videos = $video->where('status', 1)->paginate(6)->withQueryString();
-        
+
         return view('pages.main.content.video')->with('breadcrumb','Videos')
         ->with('videos',$videos)
         ->with('languages',LanguageModel::all());
@@ -139,7 +139,7 @@ class VideoPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $videoFav = VideoAccess::where('video_id', $video->id)->where('user_id', Auth::user()->id)->get();
@@ -149,7 +149,7 @@ class VideoPageController extends Controller
             $videoFav->status=0;
             $videoFav->message=$req->message;
             $videoFav->save();
-            
+
         }else{
             $videoFav = new VideoAccess;
             $videoFav->video_id = $video->id;
@@ -186,7 +186,7 @@ class VideoPageController extends Controller
         $validator = Validator::make($req->all(), $rules, $messages);
 
         if($validator->fails()){
-            return response()->json(["form_error"=>$validator->errors()], 400);
+            return response()->json(["errors"=>$validator->errors()], 400);
         }
 
         $videoFav = VideoReport::where('video_id', $video->id)->where('user_id', Auth::user()->id)->get();
@@ -196,7 +196,7 @@ class VideoPageController extends Controller
             $videoFav->status=0;
             $videoFav->message=$req->message;
             $videoFav->save();
-            
+
         }else{
             $videoFav = new VideoReport;
             $videoFav->video_id = $video->id;
@@ -221,7 +221,7 @@ class VideoPageController extends Controller
 
         $search  = $request->phrase;
         $data = [];
-        
+
         $videos = VideoModel::where('status', 1)->where('title', 'like', '%' . $search . '%')
         ->orWhere('year', 'like', '%' . $search . '%')
         ->orWhere('deity', 'like', '%' . $search . '%')

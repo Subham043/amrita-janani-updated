@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                             <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
+                                <div class="d-flex justify-content-sm-end gap-2">
                                     <form action="{{route('audio_toggle_report', $country->id)}}" method="get" class="mr-3">
                                         <select class="form-control status-handler mr-2" name="status">
                                             <option value="0" {{ $country->status==0 ? 'selected':''}}>Pending</option>

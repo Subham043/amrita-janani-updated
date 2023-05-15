@@ -86,14 +86,23 @@
             }, 1000);
           } catch (error) {
               console.log(error);
-            if(error?.response?.data?.form_error?.heading){
-                errorToast(error?.response?.data?.form_error?.heading[0])
+            if(error?.response?.data?.errors?.heading){
+                errorToast(error?.response?.data?.errors?.heading[0])
             }
-            if(error?.response?.data?.form_error?.description_unformatted){
-                errorToast(error?.response?.data?.form_error?.description_unformatted[0])
+            if(error?.response?.data?.errors?.description_unformatted){
+                errorToast(error?.response?.data?.errors?.description_unformatted[0])
             }
-            if(error?.response?.data?.form_error?.audio){
-                errorToast(error?.response?.data?.form_error?.audio[0])
+            if(error?.response?.data?.errors?.description){
+                errorToast(error?.response?.data?.errors?.description[0])
+            }
+            if(error?.response?.data?.errors?.image_position){
+                errorToast(error?.response?.data?.errors?.image_position[0])
+            }
+            if(error?.response?.data?.errors?.page_id){
+                errorToast(error?.response?.data?.errors?.page_id[0])
+            }
+            if(error?.response?.data?.errors?.image){
+                errorToast(error?.response?.data?.errors?.image[0])
             }
           } finally{
                 submitBtn.innerHTML =  `

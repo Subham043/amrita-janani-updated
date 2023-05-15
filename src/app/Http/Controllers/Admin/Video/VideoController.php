@@ -2,41 +2,28 @@
 
 namespace App\Http\Controllers\Admin\Video;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use App\Models\VideoModel;
 use App\Models\LanguageModel;
 use App\Models\VideoLanguage;
 use App\Exports\VideoExport;
-use App\Services\TagService;
+use App\Http\Controllers\Admin\Contracts\ContentController;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Support\Types\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class VideoController extends Controller
+class VideoController extends ContentController
 {
     public function __construct()
     {
-
-       View::share('common', [
-         'user_type' => UserType::lists()
-        ]);
+        parent::__construct(VideoModel::class);
     }
 
     public function create() {
-
-        $tags = VideoModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-
-        return view('pages.admin.video.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::create_base('pages.admin.video.create')->with('languages', LanguageModel::all());
     }
 
     public function store(VideoCreateRequest $req) {
@@ -60,12 +47,7 @@ class VideoController extends Controller
     }
 
     public function edit($id) {
-        $data = VideoModel::findOrFail($id);
-        $tags = VideoModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-        return view('pages.admin.video.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::edit_base('pages.admin.video.edit', $id)->with('languages', LanguageModel::all());
     }
 
     public function update(Request $req, $id) {
@@ -90,20 +72,15 @@ class VideoController extends Controller
     }
 
     public function restoreTrash($id){
-        $data = VideoModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $data->restore();
-        return redirect()->intended(route('video_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_trash_base('video_view_trash', $id);
     }
 
     public function restoreAllTrash(){
-        VideoModel::withTrashed()->whereNotNull('deleted_at')->restore();
-        return redirect()->intended(route('video_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_all_trash_base('video_view_trash');
     }
 
     public function delete($id){
-        $data = VideoModel::findOrFail($id);
-        $data->delete();
-        return redirect()->intended(route('video_view'))->with('success_status', 'Data Deleted successfully.');
+        return parent::delete_base('video_view', $id);
     }
 
     public function deleteTrash($id){
@@ -113,44 +90,19 @@ class VideoController extends Controller
     }
 
     public function view() {
-        $query = VideoModel::with(['User', 'Languages'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.video.list')->with('country', $data)->with('languages', LanguageModel::all());
+        return parent::view_base('pages.admin.video.list');
     }
 
     public function viewTrash() {
-        $query = VideoModel::withTrashed()->whereNotNull('deleted_at')->with(['User', 'Languages'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.video.list_trash')->with('country', $data)->with('languages', LanguageModel::all());
-    }
-
-    private function pagination_query(Builder $query): Builder
-    {
-        if (request()->has('search')) {
-            $search = request()->input('search');
-            return $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                ->orWhere('year', 'like', '%' . $search . '%')
-                ->orWhere('deity', 'like', '%' . $search . '%')
-                ->orWhere('version', 'like', '%' . $search . '%')
-                ->orWhere('tags', 'like', '%' . $search . '%')
-                ->orWhere('uuid', 'like', '%' . $search . '%');
-            });
-        }
-
-        return $query;
+        return parent::view_trash_base('pages.admin.video.list_trash');
     }
 
     public function display($id) {
-        $data = VideoModel::findOrFail($id);
-        $url = "";
-        return view('pages.admin.video.display')->with('country',$data)->with('languages', LanguageModel::all())->with('url',$url);
+        return parent::display_base('pages.admin.video.display', $id);
     }
 
     public function displayTrash($id) {
-        $data = VideoModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $url = "";
-        return view('pages.admin.video.display_trash')->with('country',$data)->with('languages', LanguageModel::all())->with('url',$url);
+        return parent::display_trash_base('pages.admin.video.display_trash', $id);
     }
 
     public function excel(){

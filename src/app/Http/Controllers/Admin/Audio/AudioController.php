@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Audio;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use App\Models\AudioModel;
 use App\Models\AudioLanguage;
 use App\Models\LanguageModel;
 use App\Exports\AudioExport;
+use App\Http\Controllers\Admin\Contracts\ContentController;
 use App\Services\FileService;
-use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Support\Types\UserType;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Support\Mp3\MP3File;
@@ -21,25 +18,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Database\Eloquent\Builder;
 
-class AudioController extends Controller
+class AudioController extends ContentController
 {
     public function __construct()
     {
-
-       View::share('common', [
-         'user_type' => UserType::lists()
-        ]);
+        parent::__construct(AudioModel::class);
     }
 
     public function create() {
-        $tags = AudioModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-
-        return view('pages.admin.audio.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::create_base('pages.admin.audio.create')->with('languages', LanguageModel::all());
     }
 
     public function store(AudioCreateRequest $req) {
@@ -69,13 +57,7 @@ class AudioController extends Controller
     }
 
     public function edit($id) {
-        $data = AudioModel::findOrFail($id);
-        $tags = AudioModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-
-        return view('pages.admin.audio.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::edit_base('pages.admin.audio.edit', $id)->with('languages', LanguageModel::all());
     }
 
     public function update(AudioUpdateRequest $req, $id) {
@@ -106,20 +88,15 @@ class AudioController extends Controller
     }
 
     public function restoreTrash($id){
-        $data = AudioModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $data->restore();
-        return redirect()->intended(route('audio_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_trash_base('audio_view_trash', $id);
     }
 
     public function restoreAllTrash(){
-        AudioModel::withTrashed()->whereNotNull('deleted_at')->restore();
-        return redirect()->intended(route('audio_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_all_trash_base('audio_view_trash');
     }
 
     public function delete($id){
-        $data = AudioModel::findOrFail($id);
-        $data->delete();
-        return redirect()->intended(route('audio_view'))->with('success_status', 'Data Deleted successfully.');
+        return parent::delete_base('audio_view', $id);
     }
 
     public function deleteTrash($id){
@@ -130,42 +107,19 @@ class AudioController extends Controller
     }
 
     public function view() {
-        $query = AudioModel::with(['Languages','User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.audio.list')->with('country', $data)->with('languages', LanguageModel::all());
+        return parent::view_base('pages.admin.audio.list');
     }
 
     public function viewTrash() {
-        $query = AudioModel::withTrashed()->whereNotNull('deleted_at')->with(['Languages','User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.audio.list_trash')->with('country', $data)->with('languages', LanguageModel::all());
-    }
-
-    private function pagination_query(Builder $query): Builder
-    {
-        if (request()->has('search')) {
-            $search = request()->input('search');
-            return $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                ->orWhere('year', 'like', '%' . $search . '%')
-                ->orWhere('deity', 'like', '%' . $search . '%')
-                ->orWhere('version', 'like', '%' . $search . '%')
-                ->orWhere('tags', 'like', '%' . $search . '%')
-                ->orWhere('uuid', 'like', '%' . $search . '%');
-            });
-        }
-
-        return $query;
+        return parent::view_trash_base('pages.admin.audio.list_trash');
     }
 
     public function display($id) {
-        $data = AudioModel::with(['Languages','User'])->findOrFail($id);
-        return view('pages.admin.audio.display')->with('country',$data)->with('languages', LanguageModel::all());
+        return parent::display_base('pages.admin.audio.display', $id);
     }
 
     public function displayTrash($id) {
-        $data = AudioModel::withTrashed()->whereNotNull('deleted_at')->with(['Languages','User'])->findOrFail($id);
-        return view('pages.admin.audio.display_trash')->with('country',$data)->with('languages', LanguageModel::all());
+        return parent::display_trash_base('pages.admin.audio.display_trash', $id);
     }
 
     public function excel(){

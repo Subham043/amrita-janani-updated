@@ -22,7 +22,7 @@
 
             @include('includes.admin.page_title', [
                 'page_name' => "Page",
-                'current_page' => {{$page_name}},
+                'current_page' => $page_name,
             ])
 
             <div class="row">
@@ -234,14 +234,14 @@
                     }, 1000);
                 } catch (error) {
                     console.log(error);
-                    if (error?.response?.data?.form_error?.title) {
-                        errorToast(error?.response?.data?.form_error?.title[0])
+                    if (error?.response?.data?.errors?.title) {
+                        errorToast(error?.response?.data?.errors?.title[0])
                     }
-                    if (error?.response?.data?.form_error?.year) {
-                        errorToast(error?.response?.data?.form_error?.year[0])
+                    if (error?.response?.data?.errors?.page_name) {
+                        errorToast(error?.response?.data?.errors?.page_name[0])
                     }
-                    if (error?.response?.data?.form_error?.deity) {
-                        errorToast(error?.response?.data?.form_error?.deity[0])
+                    if (error?.response?.data?.errors?.url) {
+                        errorToast(error?.response?.data?.errors?.url[0])
                     }
                 } finally {
                     submitBtn.innerHTML = `

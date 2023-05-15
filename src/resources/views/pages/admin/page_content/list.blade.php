@@ -174,14 +174,14 @@
                 }, 1000);
             } catch (error) {
                 console.log(error);
-                if (error?.response?.data?.form_error?.title) {
-                    errorToast(error?.response?.data?.form_error?.title[0])
+                if (error?.response?.data?.errors?.title) {
+                    errorToast(error?.response?.data?.errors?.title[0])
                 }
-                if (error?.response?.data?.form_error?.page_name) {
-                    errorToast(error?.response?.data?.form_error?.page_name[0])
+                if (error?.response?.data?.errors?.page_name) {
+                    errorToast(error?.response?.data?.errors?.page_name[0])
                 }
-                if (error?.response?.data?.form_error?.url) {
-                    errorToast(error?.response?.data?.form_error?.url[0])
+                if (error?.response?.data?.errors?.url) {
+                    errorToast(error?.response?.data?.errors?.url[0])
                 }
             } finally {
                 submitBtn.innerHTML = `

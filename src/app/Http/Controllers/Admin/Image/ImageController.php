@@ -2,42 +2,30 @@
 
 namespace App\Http\Controllers\Admin\Image;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use App\Models\ImageModel;
 use App\Exports\ImageExport;
+use App\Http\Controllers\Admin\Contracts\ContentController;
 use App\Services\FileService;
-use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
-use Image;
-use App\Support\Types\UserType;
+use Intervention\Image\Facades\Image;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
-class ImageController extends Controller
+class ImageController extends ContentController
 {
     public function __construct()
     {
-
-       View::share('common', [
-         'user_type' => UserType::lists()
-        ]);
+        parent::__construct(ImageModel::class);
     }
 
     public function create() {
-        $tags = ImageModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-
-        return view('pages.admin.image.create')->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::create_base('pages.admin.image.create');
     }
 
     public function store(ImageCreateRequest $req) {
@@ -63,12 +51,7 @@ class ImageController extends Controller
     }
 
     public function edit($id) {
-        $data = ImageModel::findOrFail($id);
-        $tags = ImageModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-        return view('pages.admin.image.edit')->with('country',$data)->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::edit_base('pages.admin.image.edit', $id);
     }
 
     public function update(ImageUpdateRequest $req, $id) {
@@ -97,20 +80,15 @@ class ImageController extends Controller
     }
 
     public function restoreTrash($id){
-        $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $data->restore();
-        return redirect()->intended(route('image_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_trash_base('image_view_trash', $id);
     }
 
     public function restoreAllTrash(){
-        ImageModel::withTrashed()->whereNotNull('deleted_at')->restore();
-        return redirect()->intended(route('image_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_all_trash_base('image_view_trash');
     }
 
     public function delete($id){
-        $data = ImageModel::findOrFail($id);
-        $data->delete();
-        return redirect()->intended(route('image_view'))->with('success_status', 'Data Deleted successfully.');
+        return parent::delete_base('image_view', $id);
     }
 
     public function deleteTrash($id){
@@ -122,44 +100,19 @@ class ImageController extends Controller
     }
 
     public function view() {
-        $query = ImageModel::with(['User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.image.list')->with('country', $data);
+        return parent::view_base('pages.admin.image.list');
     }
 
     public function viewTrash() {
-        $query = ImageModel::withTrashed()->whereNotNull('deleted_at')->with(['User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.image.list_trash')->with('country', $data);
-    }
-
-    private function pagination_query(Builder $query): Builder
-    {
-        if (request()->has('search')) {
-            $search = request()->input('search');
-            return $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                ->orWhere('year', 'like', '%' . $search . '%')
-                ->orWhere('deity', 'like', '%' . $search . '%')
-                ->orWhere('version', 'like', '%' . $search . '%')
-                ->orWhere('tags', 'like', '%' . $search . '%')
-                ->orWhere('uuid', 'like', '%' . $search . '%');
-            });
-        }
-
-        return $query;
+        return parent::view_trash_base('pages.admin.image.list_trash');
     }
 
     public function display($id) {
-        $data = ImageModel::findOrFail($id);
-        $url = "";
-        return view('pages.admin.image.display')->with('country',$data)->with('url',$url);
+        return parent::display_base('pages.admin.image.display', $id);
     }
 
     public function displayTrash($id) {
-        $data = ImageModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $url = "";
-        return view('pages.admin.image.display_trash')->with('country',$data)->with('url',$url);
+        return parent::display_trash_base('pages.admin.image.display_trash', $id);
     }
 
     public function excel(){

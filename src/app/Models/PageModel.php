@@ -15,10 +15,22 @@ class PageModel extends Model
     use HasFactory, SoftDeletes;
     protected $table="pages";
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'page_name',
+        'url',
+        'user_id',
+    ];
+
 
     public function User()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User')->withDefault();
     }
 
     public function PageContentModel()

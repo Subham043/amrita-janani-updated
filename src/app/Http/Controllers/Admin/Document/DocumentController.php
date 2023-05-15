@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Document;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use App\Models\DocumentModel;
 use App\Models\LanguageModel;
 use App\Models\DocumentLanguage;
 use App\Exports\DocumentExport;
+use App\Http\Controllers\Admin\Contracts\ContentController;
 use App\Services\FileService;
-use App\Services\TagService;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Support\Types\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -20,25 +17,16 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use Storage;
 use Webpatser\Uuid\Uuid;
 use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Database\Eloquent\Builder;
 
-class DocumentController extends Controller
+class DocumentController extends ContentController
 {
     public function __construct()
     {
-
-       View::share('common', [
-         'user_type' => UserType::lists()
-        ]);
+        parent::__construct(DocumentModel::class);
     }
 
     public function create() {
-        $tags = DocumentModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-
-        return view('pages.admin.document.create')->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::create_base('pages.admin.document.create')->with('languages', LanguageModel::all());
     }
 
     public function store(DocumentCreateRequest $req) {
@@ -68,12 +56,7 @@ class DocumentController extends Controller
     }
 
     public function edit($id) {
-        $data = DocumentModel::findOrFail($id);
-        $tags = DocumentModel::select('tags', 'topics')->whereNotNull('tags')->orWhereNotNull('topics')->get();
-        $tags_data = (new TagService)->get_tags($tags);
-        $tags_exist = $tags_data['tags_exist'];
-        $topics_exist = $tags_data['topics_exist'];
-        return view('pages.admin.document.edit')->with('country',$data)->with('languages', LanguageModel::all())->with("tags_exist",$tags_exist)->with("topics_exist",$topics_exist);
+        return parent::edit_base('pages.admin.document.edit', $id)->with('languages', LanguageModel::all());
     }
 
     public function update(DocumentUpdateRequest $req, $id) {
@@ -104,20 +87,15 @@ class DocumentController extends Controller
     }
 
     public function restoreTrash($id){
-        $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $data->restore();
-        return redirect()->intended(route('document_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_trash_base('document_view_trash', $id);
     }
 
     public function restoreAllTrash(){
-        DocumentModel::withTrashed()->whereNotNull('deleted_at')->restore();
-        return redirect()->intended(route('document_view_trash'))->with('success_status', 'Data Restored successfully.');
+        return parent::restore_all_trash_base('document_view_trash');
     }
 
     public function delete($id){
-        $data = DocumentModel::findOrFail($id);
-        $data->delete();
-        return redirect()->intended(route('document_view'))->with('success_status', 'Data Deleted successfully.');
+        return parent::delete_base('document_view', $id);
     }
 
     public function deleteTrash($id){
@@ -128,44 +106,19 @@ class DocumentController extends Controller
     }
 
     public function view() {
-        $query = DocumentModel::with(['Languages','User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.document.list')->with('country', $data)->with('languages', LanguageModel::all());
+        return parent::view_base('pages.admin.document.list');
     }
 
     public function viewTrash() {
-        $query = DocumentModel::withTrashed()->whereNotNull('deleted_at')->with(['Languages','User'])->orderBy('id', 'DESC');
-        $data = $this->pagination_query($query)->paginate(10);
-        return view('pages.admin.document.list_trash')->with('country', $data)->with('languages', LanguageModel::all());
-    }
-
-    private function pagination_query(Builder $query): Builder
-    {
-        if (request()->has('search')) {
-            $search = request()->input('search');
-            return $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                ->orWhere('year', 'like', '%' . $search . '%')
-                ->orWhere('deity', 'like', '%' . $search . '%')
-                ->orWhere('version', 'like', '%' . $search . '%')
-                ->orWhere('tags', 'like', '%' . $search . '%')
-                ->orWhere('uuid', 'like', '%' . $search . '%');
-            });
-        }
-
-        return $query;
+        return parent::view_trash_base('pages.admin.document.list_trash');
     }
 
     public function display($id) {
-        $data = DocumentModel::findOrFail($id);
-        $url = "";
-        return view('pages.admin.document.display')->with('country',$data)->with('languages', LanguageModel::all())->with('url',$url);
+        return parent::display_base('pages.admin.document.display', $id);
     }
 
     public function displayTrash($id) {
-        $data = DocumentModel::withTrashed()->whereNotNull('deleted_at')->findOrFail($id);
-        $url = "";
-        return view('pages.admin.document.display_trash')->with('country',$data)->with('languages', LanguageModel::all())->with('url',$url);
+        return parent::display_trash_base('pages.admin.document.display_trash', $id);
     }
 
     public function excel(){

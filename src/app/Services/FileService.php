@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Support\Mp3\MP3File;
 use Webpatser\Uuid\Uuid;
-use Image;
+use Intervention\Image\Facades\Image;
 
 class FileService
 {

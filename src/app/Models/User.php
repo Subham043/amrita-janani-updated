@@ -62,13 +62,6 @@ class User extends Authenticatable
         );
     }
 
-    protected function otp(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => rand(1000,9999),
-        );
-    }
-
     protected function status(): Attribute
     {
         return Attribute::make(

@@ -26,6 +26,10 @@ class PageController extends Controller
         ]);
     }
 
+    protected function page_model_query(){
+        return PageModel::where('id', '!=',1)->where('id', '!=',2)->orderBy('id', 'DESC');
+    }
+
     public function home_page(){
         return view('pages.admin.page_content.home')->with('page_detail', PageModel::find(1))->with('page_content_detail', PageContentModel::where('page_id',1)->get())->with('page_name', 'Home');
     }
@@ -56,16 +60,18 @@ class PageController extends Controller
     }
 
     public function dynamic_page_list(Request $request){
+        $data = $this->page_model_query();
+
         if ($request->has('search') && !empty($request->input('search'))) {
             $search = $request->input('search');
-            $data = PageModel::where('id', '!=',1)->where('id', '!=',2)->where('title', 'like', '%' . $search . '%')
-            ->orWhere('page_name', 'like', '%' . $search . '%')
-            ->orWhere('url', 'like', '%' . $search . '%')
-            ->orderBy('id', 'DESC');
-            $data = $data->paginate(10);
-        }else{
-            $data = PageModel::where('id', '!=',1)->where('id', '!=',2)->orderBy('id', 'DESC')->paginate(10);
+            $data = $this->page_model_query()->where(function($query) use($search){
+                $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('page_name', 'like', '%' . $search . '%')
+                ->orWhere('url', 'like', '%' . $search . '%');
+            });
         }
+
+        $data = $data->paginate(10);
         return view('pages.admin.page_content.list')->with('country', $data);
     }
 
@@ -103,7 +109,7 @@ class PageController extends Controller
     }
 
     public function deletePage($id){
-        $data = PageModel::where('id', '!=',1)->where('id', '!=',2)->findOrFail($id);
+        $data = $this->page_model_query()->findOrFail($id);
         $data->forceDelete();
         return redirect()->intended(URL::previous())->with('success_status', 'Data Deleted permanently.');
     }

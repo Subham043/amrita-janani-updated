@@ -36,7 +36,10 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $req) {
 
-        $result = User::create($req->validated());
+        $result = User::create([
+            ...$req->validated(),
+            'otp' => rand(1000,9999)
+        ]);
         if($result){
             return redirect()->intended(route('subadmin_view'))->with('success_status', 'Data Stored successfully.');
         }else{
@@ -52,7 +55,10 @@ class UserController extends Controller
     public function update(UserUpdateRequest $req, $id) {
         $country = User::findOrFail($id);
 
-        $result = $country->update($req->except('password'));
+        $result = $country->update([
+            ...$req->except('password'),
+            'otp' => rand(1000,9999)
+        ]);
 
         if($result){
             return redirect()->intended(route('subadmin_edit',$country->id))->with('success_status', 'Data Updated successfully.');
@@ -187,7 +193,7 @@ class UserUpdateRequest extends UserCreateRequest
             'name' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'userType' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'email' => ['required','email','unique:users,email,'.$this->route('id')],
-            'phone' => ['nullable','regex:/^[0-9]*$/','unique:users,phone,'.$this->route('id')],
+            'phone' => empty($this->phone) ? ['nullable'] : ['nullable','regex:/^[0-9]*$/','unique:users,phone,'.$this->route('id')],
             'password' => ['nullable'],
             'cpassword' => ['nullable'],
             'status' => ['nullable'],

@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
 use App\Jobs\SendForgotPasswordEmailJob;
+use Illuminate\Support\Facades\Auth;
 
 class ForgotPasswordPageController extends Controller
 {
@@ -23,8 +22,8 @@ class ForgotPasswordPageController extends Controller
         if (Auth::check()) {
             return redirect(route('index'));
         }
-        
-        $validator = $request->validate([
+
+        $request->validate([
             'email' => ['required','email'],
         ],
         [

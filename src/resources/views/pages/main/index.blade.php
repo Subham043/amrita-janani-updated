@@ -1,8 +1,6 @@
 @extends('layouts.main.index')
 
 @section('css')
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
-        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <style nonce="{{ csp_nonce() }}">
         .about-tai-content img {
             height: 235px;

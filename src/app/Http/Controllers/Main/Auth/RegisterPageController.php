@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendVerificationEmailJob;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
+use Stevebauman\Purify\Facades\Purify;
 
 class RegisterPageController extends Controller
 {
@@ -21,7 +21,7 @@ class RegisterPageController extends Controller
     }
 
     public function store(Request $req) {
-        $validator = $req->validate([
+        $req->validate([
             'name' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'email' => ['required','email','unique:users'],
             'phone' => ['nullable','regex:/^[0-9]*$/','unique:users'],
@@ -42,11 +42,11 @@ class RegisterPageController extends Controller
         ]);
 
         $country = new User;
-        $country->name = $req->name;
-        $country->email = $req->email;
-        $country->phone = $req->phone;
+        $country->name = Purify::clean($req->name);
+        $country->email = Purify::clean($req->email);
+        $country->phone = Purify::clean($req->phone);
         $country->userType = 2;
-        $country->password = Hash::make($req->password);
+        $country->password = Hash::make(Purify::clean($req->password));
         $country->otp = rand(1000,9999);
         $country->status = 0;
         $result = $country->save();

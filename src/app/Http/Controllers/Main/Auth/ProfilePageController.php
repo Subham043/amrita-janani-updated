@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use Illuminate\Support\Facades\View;
 use App\Support\Types\UserType;
-use URL;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\SearchHistory;
+use Illuminate\Support\Facades\Auth;
+use Stevebauman\Purify\Facades\Purify;
 
 class ProfilePageController extends Controller
 {
@@ -52,9 +52,9 @@ class ProfilePageController extends Controller
             return response()->json(["errors"=>$validator->errors()], 400);
         }
         $user = User::findOrFail(Auth::user()->id);
-        $user->name = $req->name;
-        $user->email = $req->email;
-        $user->phone = $req->phone;
+        $user->name = Purify::clean($req->name);
+        $user->email = Purify::clean($req->email);
+        $user->phone = Purify::clean($req->phone);
         $result = $user->save();
         if($result){
             return response()->json(["message" => "Profile Updated successfully."], 201);
@@ -87,7 +87,7 @@ class ProfilePageController extends Controller
         if(!Hash::check($req->opassword, $user->getPassword())){
             return response()->json(["error"=>"Please enter the correct old password"], 400);
         }
-        $user->password = Hash::make($req->password);
+        $user->password = Hash::make(Purify::clean($req->password));
         $result = $user->save();
         if($result){
             return response()->json(["message" => "Password Updated successfully."], 201);

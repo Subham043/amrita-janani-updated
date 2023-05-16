@@ -11,7 +11,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Stevebauman\Purify\Facades\Purify;
-use Webpatser\Uuid\Uuid;
 
 class BannerController extends Controller
 {

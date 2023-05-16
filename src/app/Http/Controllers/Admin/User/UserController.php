@@ -11,7 +11,6 @@ use App\Exports\UserExport;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Stevebauman\Purify\Facades\Purify;
 

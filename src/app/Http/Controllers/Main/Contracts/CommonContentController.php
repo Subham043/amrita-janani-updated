@@ -75,21 +75,25 @@ class CommonContentController extends Controller
         }
 
         if(request()->has('language')){
-            $arr = array_map('intval', explode(',', request()->input('language')));
+            $arr = array_map('intval', explode('_', request()->input('language')));
             $data->with(['Languages']);
-            $data->whereHas('Languages', function($q) use($arr) {
-                $q->whereIn('language_id', $arr);
+            $data->where(function($query) use($arr){
+                $query->whereHas('Languages', function($q) use($arr) {
+                    $q->whereIn('language_id', $arr);
+                });
             });
         }
 
         if(request()->has('filter')){
             $data->with([$with_fav]);
-            $data->whereHas($with_fav, function($q) {
-                $q->where('user_id', Auth::user()->id);
+            $data->where(function($query) use($with_fav){
+                $query->whereHas($with_fav, function($q) {
+                    $q->where('user_id', Auth::user()->id);
+                });
             });
         }
 
-        $data = $data->where('status', 1)->paginate(6)->withQueryString();
+        $data = $data->paginate(6)->withQueryString();
 
         return view($view)->with('breadcrumb',$breadcrumb)
         ->with($key.'s',$data)

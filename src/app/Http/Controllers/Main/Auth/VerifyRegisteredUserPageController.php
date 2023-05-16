@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyRegisteredUserPageController extends Controller
 {
@@ -41,7 +40,7 @@ class VerifyRegisteredUserPageController extends Controller
         if(count($user)<1){
             return redirect(route('signin'))->with('error_status', 'Oops! You have entered invalid link');
         }
-        $validator = $request->validate([
+        $request->validate([
             'otp' => 'required|integer',
         ],[
             'otp.required' => 'Please enter your otp !',
@@ -53,6 +52,7 @@ class VerifyRegisteredUserPageController extends Controller
         }else{
             $user = User::where('id', $decryptedId)->where('status', 0)->where('userType', '!=', 1)->where('otp', $request->otp)->first();
             $user->status = 1;
+            $user->otp = rand(1000,9999);
             $user->save();
             return redirect(route('signin'))->with('success_status', 'User Verification Successful.');
         }

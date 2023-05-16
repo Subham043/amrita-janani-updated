@@ -21,6 +21,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ Vite::asset('resources/images/fav/apple-icon-180x180.png')}}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ Vite::asset('resources/images/fav/android-icon-192x192.png')}}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ Vite::asset('resources/images/fav/favicon-16x16.png')}}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
 
     @cspMetaTag(App\Http\Policies\ContentSecurityPolicy::class)
     <!-- CSS

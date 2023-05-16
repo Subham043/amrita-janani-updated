@@ -23,7 +23,7 @@
             }
         }
         if(languageArr.length > 0){
-            languageStr = languageArr.join(';');
+            languageStr = languageArr.join('_');
             arr.push("language="+languageStr)
         }
 

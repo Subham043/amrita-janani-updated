@@ -15,11 +15,6 @@
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 search-col">
                 <div class="right-submenu-holder">
-                    {{-- @if(Auth::check() && Auth::user()->darkMode==1)
-                    <a href="{{route('darkmode')}}"><i id="darkModeToggleBtn" class="fas fa-sun"></i></a>
-                    @else
-                    <a href="{{route('darkmode')}}"><i id="darkModeToggleBtn" class="fas fa-moon"></i></a>
-                    @endif --}}
                     <form  method="get" class="col-sm-auto" id="search_form_sub_menu">
                         <label for="search">
                             {{-- <span><i class="fas fa-search"></i></span> --}}

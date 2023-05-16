@@ -53,17 +53,11 @@ class ContentAccessController extends Controller
             $filter = request()->input('filter');
             if($filter==0){
                 $data->where(function($query) {
-                    $query->whereHas('User', function($q){
-                        $q->where('userType', 2);
-                    })
-                    ->orWhere('status',0);
+                    $query->where('status',0);
                 });
             }else{
                 $data->where(function($query) {
-                    $query->where('status',1)
-                    ->orWhereHas('User', function($q){
-                        $q->where('userType', '!=', 2);
-                    });
+                    $query->where('status',1);
                 });
             }
         }

@@ -13,7 +13,7 @@
 <form  method="get" action="{{$url}}" class="col-sm-auto search-handler">
     <div class="d-flex justify-content-sm-end">
         <div class="search-box ms-2">
-            <input type="text" id="search" name="search" class="form-control search" placeholder="Search..." value="@if(app('request')->has('search')) {{app('request')->input('search')}} @endif">
+            <input type="text" id="search" name="search" class="form-control search" placeholder="Search..." value="@if(app('request')->has('search')){{app('request')->input('search')}}@endif">
             <i class="ri-search-line search-icon"></i>
         </div>
     </div>

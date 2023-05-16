@@ -1,8 +1,6 @@
 @extends('layouts.main.index')
 
 @section('css')
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
-        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
 <style nonce="{{ csp_nonce() }}">
     .contact-form__one .contact-input .contact-inner textarea {
         border-radius: 25px;
@@ -249,6 +247,9 @@ validationModal
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)
+        }
+        if(error?.response?.data?.message){
+            errorToast(error?.response?.data?.message)
         }
         await reload_captcha()
         document.getElementById('captcha').value='';

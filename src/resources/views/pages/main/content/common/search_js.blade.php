@@ -9,6 +9,7 @@ function charsAllowed(value) {
 autocomplete({
     input: document.getElementById('search'),
     minLength: 1,
+    debounceWaitMs: 500,
     onSelect: function (item, inputfield) {
         inputfield.value = item.name
     },

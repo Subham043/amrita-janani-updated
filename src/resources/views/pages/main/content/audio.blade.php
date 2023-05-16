@@ -1,8 +1,6 @@
 @extends('layouts.main.index')
 
 @section('css')
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
-    integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <style nonce="{{ csp_nonce() }}">
         .panel{
             max-height: 100%;
@@ -72,7 +70,7 @@
                                 @foreach($languages as $languages)
                                 <li>
                                     <label for="language{{$languages->id}}">
-                                        <input type="checkbox" name="language" id="language{{$languages->id}}" value="{{$languages->id}}" @if(app('request')->has('language') && in_array($languages->id, explode(',', app('request')->input('language'))) ) checked @endif>
+                                        <input type="checkbox" name="language" id="language{{$languages->id}}" value="{{$languages->id}}" @if(app('request')->has('language') && in_array($languages->id, explode('_', app('request')->input('language'))) ) checked @endif>
                                         {{$languages->name}}
                                     </label>
                                 </li>

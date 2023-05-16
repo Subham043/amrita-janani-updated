@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
+use Stevebauman\Purify\Facades\Purify;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordPageController extends Controller
@@ -41,7 +42,7 @@ class ResetPasswordPageController extends Controller
         if(count($user)<1){
             return redirect(route('forgot_password'))->with('error_status', 'Oops! You have entered invalid link');
         }
-        $validator = $request->validate([
+        $request->validate([
             'otp' => 'required|integer',
             'password' => 'required',
             'cpassword' => 'required_with:password|same:password',
@@ -59,7 +60,7 @@ class ResetPasswordPageController extends Controller
             $user = User::where('id', $decryptedId)->where('status', 1)->where('allowPasswordChange', 1)->where('userType', '!=', 1)->where('otp', $request->otp)->first();
             $user->allowPasswordChange = 0;
             $user->otp = rand(1000,9999);
-            $user->password = Hash::make($request->password);
+            $user->password = Hash::make(Purify::clean($request->password));
             $user->save();
             return redirect(route('signin'))->with('success_status', 'Password Reset Successful.');
         }

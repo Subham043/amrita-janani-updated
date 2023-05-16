@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
+use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Http\Request;
-use Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 
 class LoginPageController extends Controller
 {
@@ -23,7 +21,7 @@ class LoginPageController extends Controller
             return redirect(route('index'));
         }
 
-        $validator = $request->validate([
+        $request->validate([
             'email' => ['required','email'],
             'password' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
         ],
@@ -34,10 +32,11 @@ class LoginPageController extends Controller
             'password.regex' => 'Please enter the valid password !',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = Purify::clean($request->only('email', 'password'));
         $credentials['status'] = 1;
 
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             return redirect()->intended(route('content_dashboard'))->with('success_status', 'Logged in successfully.');
         }
 

@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Mail\SendUserThankYouEmail;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class SendUserThankYouEmailJob implements ShouldQueue
 {

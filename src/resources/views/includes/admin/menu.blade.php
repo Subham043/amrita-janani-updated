@@ -141,7 +141,18 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </li> <!-- end Dashboard Menu -->
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{strpos(url()->current(),'telescope') !== false ? 'active' : ''}}" href="/admin/telescope" target="_blank">
+                                    <i class="ri-tv-line"></i> <span data-key="t-widgets">Telescope</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{strpos(url()->current(),'horizon') !== false ? 'active' : ''}}" href="/admin/horizon" target="_blank">
+                                    <i class="ri-mail-settings-line"></i> <span data-key="t-widgets">Horizon</span>
+                                </a>
+                            </li>
+                            <!-- end Dashboard Menu -->
                         </ul>
                     </div>
                     <!-- Sidebar -->

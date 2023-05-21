@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
-use App\Jobs\SendForgotPasswordEmailJob;
 use App\Services\RateLimitService;
 use Illuminate\Support\Facades\Password;
 

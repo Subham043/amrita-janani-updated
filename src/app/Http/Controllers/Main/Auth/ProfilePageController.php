@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Support\Types\UserType;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\SearchHistory;
 use Illuminate\Support\Facades\Auth;

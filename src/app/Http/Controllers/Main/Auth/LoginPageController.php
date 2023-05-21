@@ -11,16 +11,10 @@ use Illuminate\Support\Facades\Auth;
 class LoginPageController extends Controller
 {
     public function index(){
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
         return view('pages.main.auth.login')->with('breadcrumb','Sign In');
     }
 
     public function authenticate(Request $request){
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
 
         (new RateLimitService($request))->ensureIsNotRateLimited(3);
 
@@ -36,6 +30,7 @@ class LoginPageController extends Controller
         ]);
 
         $credentials = Purify::clean($request->only('email', 'password', 'remember'));
+        $credentials['status'] = 1;
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();

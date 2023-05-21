@@ -7,41 +7,31 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use App\Jobs\SendForgotPasswordEmailJob;
-use Illuminate\Support\Facades\Auth;
+use App\Services\RateLimitService;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
     public function index(){
-        if (Auth::check()) {
-            return redirect(route('dashboard'));
-        }
         return view('pages.admin.auth.forgotpassword');
     }
 
     public function requestForgotPassword(Request $request) {
-        if (Auth::check()) {
-            return redirect(route('dashboard'));
-        }
+
+        (new RateLimitService($request))->ensureIsNotRateLimited(3);
+
         $request->validate([
-            'email' => 'required|email',
+            'email' => ['required','string','email','max:255','exists:App\Models\User,email'],
         ]);
 
-        $user = User::where('email', $request->email)->where('status', 1)->get();
-        if(count($user)<1){
-            return redirect(route('forgotPassword'))->with('error_status', 'Oops! You have entered invalid credentials');
-        }else{
-            $user = User::where('email', $request->email)->where('status', 1)->first();
-            $user->allowPasswordChange = 1;
-            $user->otp = rand(1000,9999);
-            $user->save();
-            $encryptedId = Crypt::encryptString($user->id);
-
-            $details['name'] = $user->name;
-            $details['email'] = $user->email;
-            $details['otp'] = $user->otp;
-
-            dispatch(new SendForgotPasswordEmailJob($details));
-            return redirect(route('reset_password',$encryptedId))->with('success_status', 'Kindly check your mail, we have sent you the otp.');
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        if($status === Password::RESET_LINK_SENT){
+            (new RateLimitService($request))->clearRateLimit();
+            return redirect(route('forgotPassword'))->with(['success_status' => __($status)]);
         }
+        return redirect(route('forgotPassword'))->with(['error_status' => __($status)]);
+
     }
 }

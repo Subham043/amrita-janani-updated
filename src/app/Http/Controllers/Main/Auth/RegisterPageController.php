@@ -14,9 +14,6 @@ use Illuminate\Auth\Events\Registered;
 class RegisterPageController extends Controller
 {
     public function index(){
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
         return view('pages.main.auth.register')->with('breadcrumb','Sign Up');
     }
 

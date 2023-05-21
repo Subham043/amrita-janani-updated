@@ -5,22 +5,15 @@ namespace App\Http\Controllers\Main\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\RateLimitService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordPageController extends Controller
 {
     public function index(){
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
         return view('pages.main.auth.forgot_password')->with('breadcrumb','Forgot Password');
     }
 
     public function requestForgotPassword(Request $request) {
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
 
         (new RateLimitService($request))->ensureIsNotRateLimited(3);
 

@@ -14,12 +14,12 @@
                     <p class="text-muted">Enter the following details to reset password.</p>
                 </div>
                 <div class="p-2 mt-4">
-                    <form id="loginForm" method="post" action="{{route('requestResetPassword', $encryptedId)}}">
+                    <form id="loginForm" method="post" action="{{Request::getRequestUri()}}">
                     @csrf
-                        <div class="mb-3">
-                            <label for="otp" class="form-label">OTP</label>
-                            <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter otp">
-                            @error('otp')
+                        <div class="mb-4">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{old('email')}}" placeholder="Enter Email">
+                            @error('email')
                                 <div class="invalid-message">{{ $message }}</div>
                             @enderror
                         </div>
@@ -36,9 +36,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="cpassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Enter the password again">
-                            @error('cpassword')
+                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Enter the password again">
+                            @error('password_confirmation')
                                 <div class="invalid-message">{{ $message }}</div>
                             @enderror
                         </div>
@@ -76,23 +76,15 @@ const validation = new JustValidate('#loginForm', {
 });
 // apply rules to form fields
 validation
-  .addField('#otp', [
-    {
-      rule: 'required',
-      errorMessage: 'OTP is required',
-    },
-    {
-      rule: 'number',
-      errorMessage: 'OTP must be a number!',
-    },
-    {
-      rule: 'minLength',
-      value: 4,
-    },
-    {
-      rule: 'maxLength',
-      value: 4,
-    },
+    .addField('#email', [
+        {
+        rule: 'required',
+        errorMessage: 'Email is required',
+        },
+        {
+        rule: 'email',
+        errorMessage: 'Email is invalid!',
+        },
   ])
   .addField('#password', [
     {
@@ -100,7 +92,7 @@ validation
       errorMessage: 'Password is required',
     }
   ])
-  .addField('#cpassword', [
+  .addField('#password_confirmation', [
     {
       rule: 'required',
       errorMessage: 'Confirm Password is required',

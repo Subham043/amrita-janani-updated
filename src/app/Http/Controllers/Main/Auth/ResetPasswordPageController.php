@@ -7,7 +7,6 @@ use App\Services\RateLimitService;
 use Illuminate\Http\Request;
 use Stevebauman\Purify\Facades\Purify;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -17,18 +16,11 @@ use Illuminate\Validation\Rules\Password as PasswordValidation;
 class ResetPasswordPageController extends Controller
 {
     public function index($token){
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
-
         return view('pages.main.auth.reset_password')->with('breadcrumb','Reset Password');
 
     }
 
     public function requestResetPassword(Request $request, $token) {
-        if (Auth::check()) {
-            return redirect(route('index'));
-        }
 
         (new RateLimitService($request))->ensureIsNotRateLimited(3);
 

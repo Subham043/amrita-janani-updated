@@ -124,16 +124,17 @@ class VideoModel extends Model
     }
 
     public function contentVisible(){
-        try {
-            $videoAccess = VideoAccess::where('video_id', $this->id)->where('user_id', Auth::user()->id)->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-            $videoAccess = null;
-        }
 
         if($this->restricted==0 || Auth::user()->userType!=2){
             return true;
         }else{
+            try {
+                $videoAccess = VideoAccess::where('video_id', $this->id)->where('user_id', Auth::user()->id)->first();
+            } catch (\Throwable $th) {
+                //throw $th;
+                $videoAccess = null;
+            }
+
             if(empty($videoAccess) || $videoAccess->status==0){
                 return false;
             }else{

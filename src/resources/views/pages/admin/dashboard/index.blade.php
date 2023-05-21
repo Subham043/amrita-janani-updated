@@ -83,7 +83,7 @@
 
                                 </div><!-- end row -->
 
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-xl-12">
                                         <div class="card">
                                             <div class="card-header border-0 align-items-center d-flex">
@@ -98,7 +98,7 @@
                                             </div><!-- end card body -->
                                         </div><!-- end card -->
                                     </div><!-- end col -->
-                                </div><!-- end row -->
+                                </div><!-- end row --> --}}
                             </div><!-- end col -->
 
 
@@ -115,9 +115,9 @@
 
       @section('javascript')
 
-      <!-- apexcharts -->
+      {{-- <!-- apexcharts -->
       <script src="{{ asset('admin/libs/apexcharts/apexcharts.min.js') }}"></script>
       <!-- projects js -->
-      <script src="{{ asset('admin/js/pages/dashboard-projects.init.js') }}"></script>
+      <script src="{{ asset('admin/js/pages/dashboard-projects.init.js') }}"></script> --}}
 
       @stop

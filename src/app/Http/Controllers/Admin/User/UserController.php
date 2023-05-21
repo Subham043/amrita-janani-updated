@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\URL;
 use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password as PasswordValidation;
 
 class UserController extends Controller
 {
@@ -36,10 +39,14 @@ class UserController extends Controller
     public function store(UserCreateRequest $req) {
 
         $result = User::create([
-            ...$req->except('phone'),
+            ...$req->except('phone', 'password'),
             'otp' => rand(1000,9999),
+            'password' => Hash::make($req->password),
             'phone' => !empty($req->phone) ? $req->phone : null
         ]);
+
+        event(new Registered($result));
+
         if($result){
             return redirect()->intended(route('subadmin_view'))->with('success_status', 'Data Stored successfully.');
         }else{
@@ -55,11 +62,17 @@ class UserController extends Controller
     public function update(UserUpdateRequest $req, $id) {
         $country = User::findOrFail($id);
 
-        $result = $country->update([
+        $result = $country->fill([
             ...$req->except(['password', 'phone']),
             'otp' => rand(1000,9999),
             'phone' => !empty($req->phone) ? $req->phone : null
         ]);
+
+        if ($country->isDirty('email')) {
+            $country->email_verified_at = null;
+            $country->sendEmailVerificationNotification();
+            $country->save();
+        }
 
         if($result){
             return redirect()->intended(route('subadmin_edit',$country->id))->with('success_status', 'Data Updated successfully.');
@@ -135,7 +148,15 @@ class UserCreateRequest extends FormRequest
             'userType' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'email' => ['required','email','unique:users'],
             'phone' => ['nullable','regex:/^[0-9]*$/','unique:users'],
-            'password' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'password' => ['required',
+                'string',
+                PasswordValidation::min(8)
+                        ->letters()
+                        ->mixedCase()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+            ],
             'cpassword' => ['required_with:password|same:password'],
             'status' => ['nullable'],
         ];
@@ -195,8 +216,6 @@ class UserUpdateRequest extends UserCreateRequest
             'userType' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'email' => ['required','email','unique:users,email,'.$this->route('id')],
             'phone' => empty($this->phone) ? ['nullable'] : ['nullable','regex:/^[0-9]*$/','unique:users,phone,'.$this->route('id')],
-            'password' => ['nullable'],
-            'cpassword' => ['nullable'],
             'status' => ['nullable'],
         ];
     }

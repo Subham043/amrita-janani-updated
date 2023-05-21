@@ -28,12 +28,19 @@ class ContentSecurityPolicy extends Basic
         ->addNonceForDirective(Directive::STYLE)
         ->addNonceForDirective(Directive::SCRIPT);
 
+        if(request()->is('admin/document/view/*') || request()->is('content/document/*')){
+            $this
+            ->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE)
+            ->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
+        }
+
         //end of basic policy
 
         //start of custom policy
         $this
         //start of
         ->addDirective(Directive::IMG, 'data:')
+        ->addDirective(Directive::IMG, 'blob:')
         ->addDirective(Directive::FONT, 'data:') //remove as this and above belongs for development template of welcome page
 
         //start of common

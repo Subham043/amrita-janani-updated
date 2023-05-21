@@ -130,16 +130,17 @@ class AudioModel extends Model
     }
 
     public function contentVisible(){
-        try {
-            $audioAccess = AudioAccess::where('audio_id', $this->id)->where('user_id', Auth::user()->id)->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-            $audioAccess = null;
-        }
 
         if($this->restricted==0 || Auth::user()->userType!=2){
             return true;
         }else{
+            try {
+                $audioAccess = AudioAccess::where('audio_id', $this->id)->where('user_id', Auth::user()->id)->first();
+            } catch (\Throwable $th) {
+                //throw $th;
+                $audioAccess = null;
+            }
+
             if(empty($audioAccess) || $audioAccess->status==0){
                 return false;
             }else{

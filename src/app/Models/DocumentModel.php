@@ -130,17 +130,18 @@ class DocumentModel extends Model
     }
 
     public function contentVisible(){
-        try {
-            $documenetAccess = DocumentAccess::where('documenet_id', $this->id)->where('user_id', Auth::user()->id)->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-            $documenetAccess = null;
-        }
 
         if($this->restricted==0 || Auth::user()->userType!=2){
             return true;
         }else{
-            if(empty($documenetAccess) || $documenetAccess->status==0){
+            try {
+                $documentAccess = DocumentAccess::where('document_id', $this->id)->where('user_id', Auth::user()->id)->first();
+            } catch (\Throwable $th) {
+                throw $th;
+                $documentAccess = null;
+            }
+
+            if(empty($documentAccess) || $documentAccess->status==0){
                 return false;
             }else{
                 return true;

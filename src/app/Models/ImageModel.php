@@ -115,16 +115,17 @@ class ImageModel extends Model
     }
 
     public function contentVisible(){
-        try {
-            $imageAccess = ImageAccess::where('image_id', $this->id)->where('user_id', Auth::user()->id)->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-            $imageAccess = null;
-        }
 
         if($this->restricted==0 || Auth::user()->userType!=2){
             return true;
         }else{
+            try {
+                $imageAccess = ImageAccess::where('image_id', $this->id)->where('user_id', Auth::user()->id)->first();
+            } catch (\Throwable $th) {
+                //throw $th;
+                $imageAccess = null;
+            }
+
             if(empty($imageAccess) || $imageAccess->status==0){
                 return false;
             }else{

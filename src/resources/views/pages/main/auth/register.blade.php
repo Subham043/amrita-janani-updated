@@ -27,7 +27,7 @@
   <div class="page-links">
     <a href="{{route('signin')}}">Login</a><a href="{{route('index')}}" class="active">Register</a>
   </div>
-  <h3>Register to get access to AmritaJanani</h3><br/>
+  <h3>Register to get access to Amrita Janani</h3><br/>
     <form action="{{route('signup_store')}}" method="post" id="loginForm">
         @csrf
         <div class="mb-2">

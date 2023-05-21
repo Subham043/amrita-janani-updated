@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\SendVerificationEmailJob;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Validation\Rules\Password as PasswordValidation;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterPageController extends Controller
 {
@@ -25,7 +25,15 @@ class RegisterPageController extends Controller
             'name' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
             'email' => ['required','email','unique:users'],
             'phone' => ['nullable','regex:/^[0-9]*$/','unique:users'],
-            'password' => ['required','regex:/^[a-z 0-9~%.:_\@\-\/\(\)\\\#\;\[\]\{\}\$\!\&\<\>\'\r\n+=,]+$/i'],
+            'password' => ['required',
+                'string',
+                PasswordValidation::min(8)
+                        ->letters()
+                        ->mixedCase()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+            ],
             'cpassword' => ['required_with:password|same:password'],
         ],
         [
@@ -41,28 +49,23 @@ class RegisterPageController extends Controller
             'cpassword.same' => 'password & confirm password must be the same !',
         ]);
 
-        $country = new User;
-        $country->name = Purify::clean($req->name);
-        $country->email = Purify::clean($req->email);
-        $country->phone = Purify::clean($req->phone);
-        $country->userType = 2;
-        $country->password = Hash::make(Purify::clean($req->password));
-        $country->otp = rand(1000,9999);
-        $country->status = 0;
-        $result = $country->save();
-        $encryptedId = Crypt::encryptString($country->id);
+        $user = new User;
+        $user->name = Purify::clean($req->name);
+        $user->email = Purify::clean($req->email);
+        $user->phone = Purify::clean($req->phone);
+        $user->userType = 2;
+        $user->password = Hash::make(Purify::clean($req->password));
+        $user->otp = rand(1000,9999);
+        $user->status = 0;
+        $user->save();
 
-        $details['name'] = $country->name;
-        $details['email'] = $country->email;
-        $details['otp'] = $country->otp;
 
-        dispatch(new SendVerificationEmailJob($details));
+        event(new Registered($user));
 
-        if($result){
-            return redirect(route('verifyUser', $encryptedId))->with('success_status', 'Kindly check your mail, we have sent you the otp..');
-        }else{
-            return redirect(route('signup'))->with('error_status', 'Something went wrong. Please try again');
-        }
+        Auth::login($user);
+
+        return redirect()->intended(route('content_dashboard'))->with('success_status', 'Logged in successfully.');
+
     }
 
 }

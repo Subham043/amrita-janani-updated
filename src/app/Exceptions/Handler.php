@@ -34,10 +34,12 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ThrottleRequestsException && !$request->wantsJson()) {
             return redirect()->back()->with('error_status', $exception->getMessage());
-        }else{
+        }elseif ($exception instanceof ThrottleRequestsException && $request->wantsJson()){
             return response()->json([
                 'message' => $exception->getMessage(),
             ], $exception->getStatusCode());
         }
+
+        return parent::render($request, $exception);
     }
 }

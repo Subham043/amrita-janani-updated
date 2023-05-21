@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -55,13 +55,6 @@ class User extends Authenticatable
         'status' => 0,
         'allowPasswordChange' => 0,
     ];
-
-    protected function password(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => Hash::make($value),
-        );
-    }
 
     protected function status(): Attribute
     {

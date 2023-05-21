@@ -22,14 +22,14 @@
 
 <div class="form-items">
     <h3>Reset password.</h3>
-    <p>Enter OTP sent to email and create a new password.</p>
-    <form action="{{route('resetPasswordRequest', $encryptedId)}}" method="post" id="loginForm">
+    <p>Enter the following and create a new password.</p>
+    <form action="{{Request::getRequestUri()}}" method="post" id="loginForm">
     @csrf
         <div class="mb-2">
-        <input class="form-control" type="text" name="otp" id="otp" placeholder="OTP" required>
-        @error('otp')
-            <div class="invalid-message">{{ $message }}</div>
-        @enderror
+            <input class="form-control" type="email" name="email" id="email" placeholder="E-mail Address" value="{{old('email')}}" required>
+            @error('email')
+                <div class="invalid-message">{{ $message }}</div>
+            @enderror
         </div>
         <div class="mb-2">
         <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
@@ -38,8 +38,8 @@
         @enderror
         </div>
         <div class="mb-2">
-        <input class="form-control" type="password" name="cpassword" id="cpassword" placeholder="Confirm Password" required>
-        @error('cpassword')
+        <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" required>
+        @error('password_confirmation')
             <div class="invalid-message">{{ $message }}</div>
         @enderror
         </div>
@@ -68,15 +68,14 @@ const validation = new JustValidate('#loginForm', {
 });
 // apply rules to form fields
 validation
-  .addField('#otp', [
+    .addField('#email', [
     {
       rule: 'required',
-      errorMessage: 'OTP is required',
+      errorMessage: 'Email is required',
     },
     {
-        rule: 'customRegexp',
-        value: /^[0-9]*$/,
-        errorMessage: 'OTP is invalid',
+      rule: 'email',
+      errorMessage: 'Email is invalid!',
     },
   ])
   .addField('#password', [
@@ -90,7 +89,7 @@ validation
         errorMessage: 'Password is invalid',
     },
   ])
-  .addField('#cpassword', [
+  .addField('#password_confirmation', [
     {
       rule: 'required',
       errorMessage: 'Confirm Password is required',

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\SearchHistory;
 use Illuminate\Support\Facades\Auth;
 use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Validation\Rules\Password as PasswordValidation;
 
 class ProfilePageController extends Controller
 {
@@ -30,7 +31,7 @@ class ProfilePageController extends Controller
     public function update(Request $req){
         $rules = array(
             'name' => ['required','regex:/^[a-zA-Z0-9\s]*$/'],
-            'email' => ['required','email'],
+            'email' => ['required','email','unique:users,email,'.Auth::user()->id],
             'phone' => ['nullable','regex:/^[0-9]*$/'],
         );
         $messages = array(
@@ -41,21 +42,25 @@ class ProfilePageController extends Controller
             'phone.required' => 'Please enter the phone !',
             'phone.regex' => 'Please enter the valid phone !',
         );
-        if(Auth::user()->email!==$req->email){
-            $rules['email'] = ['required','email','unique:users'];
-        }
+
         if(!empty($req->phone) && Auth::user()->phone!==$req->phone){
             $rules['phone'] = ['required','regex:/^[0-9]*$/','unique:users'];
         }
+
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
             return response()->json(["errors"=>$validator->errors()], 400);
         }
-        $user = User::findOrFail(Auth::user()->id);
-        $user->name = Purify::clean($req->name);
-        $user->email = Purify::clean($req->email);
-        $user->phone = Purify::clean($req->phone);
-        $result = $user->save();
+
+        $req->user()->fill(Purify::clean($req->only(['email', 'phone', 'name'])));
+
+        if ($req->user()->isDirty('email')) {
+            $req->user()->email_verified_at = null;
+            $req->user()->sendEmailVerificationNotification();
+        }
+
+        $result = $req->user()->save();
+
         if($result){
             return response()->json(["message" => "Profile Updated successfully."], 201);
         }else{
@@ -69,8 +74,20 @@ class ProfilePageController extends Controller
 
     public function change_profile_password(Request $req){
         $rules = array(
-            'opassword' => 'required',
-            'password' => 'required',
+            'opassword' => ['required','string', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    $fail('The Old Password entered is incorrect.');
+                }
+            }],
+            'password' => ['required',
+                'string',
+                PasswordValidation::min(8)
+                        ->letters()
+                        ->mixedCase()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+            ],
             'cpassword' => 'required_with:password|same:password',
         );
         $messages = array(
@@ -79,16 +96,18 @@ class ProfilePageController extends Controller
             'cpassword.required' => 'Please enter your confirm password !',
             'cpassword.same' => 'password & confirm password must be the same !',
         );
+
         $validator = Validator::make($req->all(), $rules, $messages);
         if($validator->fails()){
             return response()->json(["errors"=>$validator->errors()], 400);
         }
-        $user = User::findOrFail(Auth::user()->id);
-        if(!Hash::check($req->opassword, $user->getPassword())){
-            return response()->json(["error"=>"Please enter the correct old password"], 400);
-        }
-        $user->password = Hash::make(Purify::clean($req->password));
-        $result = $user->save();
+
+        $req->user()->fill($req->only([
+            'password' => Hash::make(Purify::clean($req->password))
+        ]));
+
+        $result = $req->user()->save();
+
         if($result){
             return response()->json(["message" => "Password Updated successfully."], 201);
         }else{

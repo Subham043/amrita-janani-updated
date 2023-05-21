@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Main\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\RateLimitService;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
-use App\Jobs\SendForgotPasswordEmailJob;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordPageController extends Controller
 {
@@ -23,31 +22,20 @@ class ForgotPasswordPageController extends Controller
             return redirect(route('index'));
         }
 
+        (new RateLimitService($request))->ensureIsNotRateLimited(3);
+
         $request->validate([
-            'email' => ['required','email'],
-        ],
-        [
-            'email.required' => 'Please enter the email !',
-            'email.email' => 'Please enter the valid email !',
+            'email' => ['required','string','email','max:255','exists:App\Models\User,email'],
         ]);
 
-        $user = User::where('email', $request->email)->where('status', 1)->where('userType', '!=', 1)->get();
-        if(count($user)<1){
-            return redirect(route('forgot_password'))->with('error_status', 'Oops! You have entered invalid credentials');
-        }else{
-            $user = User::where('email', $request->email)->where('status', 1)->where('userType', '!=', 1)->first();
-            $user->allowPasswordChange = 1;
-            $user->otp = rand(1000,9999);
-            $user->save();
-            $encryptedId = Crypt::encryptString($user->id);
-
-            $details['name'] = $user->name;
-            $details['email'] = $user->email;
-            $details['otp'] = $user->otp;
-
-            dispatch(new SendForgotPasswordEmailJob($details));
-
-            return redirect(route('resetPassword',$encryptedId))->with('success_status', 'Kindly check your mail, we have sent you the otp.');
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        if($status === Password::RESET_LINK_SENT){
+            (new RateLimitService($request))->clearRateLimit();
+            return redirect(route('forgot_password'))->with(['success_status' => __($status)]);
         }
+        return redirect(route('forgot_password'))->with(['error_status' => __($status)]);
+
     }
 }

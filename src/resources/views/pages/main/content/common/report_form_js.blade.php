@@ -1,5 +1,9 @@
 <script type="text/javascript" nonce="{{ csp_nonce() }}">
 
+document.getElementById("reportModalBtn").addEventListener("click", async function() {
+    await reload_captcha('captcha_container2')
+});
+
 const validationModal2 = new JustValidate('#reportForm', {
     errorFieldCssClass: 'is-invalid',
 });

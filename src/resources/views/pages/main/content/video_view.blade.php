@@ -47,7 +47,7 @@
                     <i class="far fa-heart"></i>
                     @endif
                 </a>
-                <button class="action-btn report-button" data-toggle="modal" data-target="#reportModal"><i class="far fa-flag"></i> </button>
+                <button class="action-btn report-button" data-toggle="modal" data-target="#reportModal" id="reportModalBtn"><i class="far fa-flag"></i> </button>
             </div>
         </div>
     </div>

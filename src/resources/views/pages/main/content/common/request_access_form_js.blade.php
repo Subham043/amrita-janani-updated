@@ -1,5 +1,9 @@
 <script type="text/javascript" nonce="{{ csp_nonce() }}">
 
+document.getElementById("requestAccessModalBtn").addEventListener("click", async function() {
+    await reload_captcha('captcha_container1')
+});
+
 const validationModal = new JustValidate('#requestAccessForm', {
     errorFieldCssClass: 'is-invalid',
 });

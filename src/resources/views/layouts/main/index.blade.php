@@ -3,11 +3,20 @@
 
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Amrita Janani - {{$breadcrumb}}</title>
-    <meta name="description" content="Amrita Janani">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="{{request()->url()}}" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ Vite::asset('resources/images/fav/apple-icon-144x144.png')}}">
+    <meta name="theme-color" content="#96171c">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta property="og:url" content="{{request()->url()}}" />
+    <meta property="og:site_name" content="Amrita Janani" />
+    <meta name="twitter:site" content="@devipuram">
+    <meta name="twitter:creator" content="@devipuram">
+    <meta name="keywords" content="online digital knowledge repository, Guruji Sri Amritananda Natha Saraswati, Devipuram, Amrita Janani, digital repository, Dr. N. Prahlada Sastry, Sri Amritananda Natha Saraswati" >
     <!-- Favicon -->
 
     <link rel="apple-touch-icon" sizes="57x57" href="{{ Vite::asset('resources/images/fav/apple-icon-57x57.png')}}">

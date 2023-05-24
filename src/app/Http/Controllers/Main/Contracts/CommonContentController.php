@@ -93,7 +93,7 @@ class CommonContentController extends Controller
             });
         }
 
-        $data = $data->paginate(6)->withQueryString();
+        $data = $data->paginate(12)->withQueryString();
 
         return view($view)->with('breadcrumb',$breadcrumb)
         ->with($key.'s',$data)

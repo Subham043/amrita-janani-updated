@@ -1,6 +1,34 @@
 @extends('layouts.main.auth')
 
 @section('css')
+    <meta name="description" content="Sign up with Amrita Janani"/>
+
+    <meta property="og:title" content="Sign Up - Amrita Janani" />
+    <meta property="og:description" content="Sign up with Amrita Janani" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}" />
+
+    <meta name="twitter:title" content="Sign Up - Amrita Janani">
+    <meta name="twitter:description" content="Sign up with Amrita Janani">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}">
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Amrita Janani",
+            "item": "{{url()->to('/')}}"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Sign Up"
+          }]
+        }
+    </script>
+
 <style nonce="{{ csp_nonce() }}">
     .just-validate-error-label, .invalid-message{
         color: #fff !important;

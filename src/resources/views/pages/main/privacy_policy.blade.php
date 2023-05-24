@@ -1,6 +1,34 @@
 @extends('layouts.main.index')
 
 @section('css')
+    <meta name="description" content="Amrita Janani respect the privacy of your personal information and, as such, make every effort to ensure your information is protected and remains private."/>
+
+    <meta property="og:title" content="Privacy Policy – Amrita Janani" />
+    <meta property="og:description" content="Amrita Janani respect the privacy of your personal information and, as such, make every effort to ensure your information is protected and remains private." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}" />
+
+    <meta name="twitter:title" content="Privacy Policy – Amrita Janani">
+    <meta name="twitter:description" content="Amrita Janani respect the privacy of your personal information and, as such, make every effort to ensure your information is protected and remains private.">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}">
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Amrita Janani",
+            "item": "{{url()->to('/')}}"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Privacy Policy"
+          }]
+        }
+    </script>
+
 <style nonce="{{ csp_nonce() }}">
 h5.section-title-normal{
     color:#96171c;

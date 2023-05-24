@@ -1,6 +1,53 @@
 @extends('layouts.main.index')
 
 @section('css')
+    <meta name="description" content="Welcome to frequently ask (FAQ) page. Here you found questions and answers most of the followers asked about Amrita Janani"/>
+
+    <meta property="og:title" content="FAQ – Amrita Janani" />
+    <meta property="og:description" content="Welcome to frequently ask (FAQ) page. Here you found questions and answers most of the followers asked about Amrita Janani" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}" />
+
+    <meta name="twitter:title" content="FAQ – Amrita Janani">
+    <meta name="twitter:description" content="Welcome to frequently ask (FAQ) page. Here you found questions and answers most of the followers asked about Amrita Janani">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}">
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Amrita Janani",
+            "item": "{{url()->to('/')}}"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "FAQ"
+          }]
+        }
+    </script>
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            @foreach ($faq as $key=>$value)
+            {
+                "@type": "Question",
+                "name": "{{$value->question}}",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "<p>{{$value->answer}}</p>"
+                }
+            }{{$key+1==count($faq) ? '' : ','}}
+            @endforeach
+          ]
+        }
+    </script>
+
 <style nonce="{{ csp_nonce() }}">
 h5.section-title-normal{
     color:#96171c;

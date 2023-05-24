@@ -1,6 +1,87 @@
 @extends('layouts.main.index')
 
 @section('css')
+    <meta name="description" content="Amrita Janani is an online digital knowledge repository containing the teachings of Guruji Sri Amritananda Natha Saraswati of Devipuram, Vizag, India. The teachings are in the form of lectures, practice manuals, guided meditations, etc."/>
+
+    <meta property="og:title" content="Know More About Amrita Janani" />
+    <meta property="og:description" content="Amrita Janani is an online digital knowledge repository containing the teachings of Guruji Sri Amritananda Natha Saraswati of Devipuram, Vizag, India. The teachings are in the form of lectures, practice manuals, guided meditations, etc." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ Vite::asset('resources/images/hero/banner1.jpg') }}" />
+
+    <meta name="twitter:title" content="Know More About Amrita Janani">
+    <meta name="twitter:description" content="Amrita Janani is an online digital knowledge repository containing the teachings of Guruji Sri Amritananda Natha Saraswati of Devipuram, Vizag, India. The teachings are in the form of lectures, practice manuals, guided meditations, etc.">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/hero/banner1.jpg') }}">
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org/",
+          "@type": "WebSite",
+          "name": "Amrita Janani",
+
+          "url": "{{request()->url()}}",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{request()->url()}}?s={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+    </script>
+
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+           "@context": "https://schema.org",
+           "@type": "Organization",
+           "name": "Amrita Janani",
+           "alternateName": "Amrita Janani",
+           "image": [
+                "{{ Vite::asset('resources/images/hero/banner4.jpg') }}",
+                "{{ Vite::asset('resources/images/hero/banner1.jpg') }}",
+                "{{ Vite::asset('resources/images/hero/banner9.jpg') }}"
+            ],
+           "url": "{{request()->url()}}",
+           "logo": "{{ Vite::asset('resources/images/logo/logo.png') }}",
+           "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Devipuram Via Nidanam Doddi, Sabbavaram (M), Visakhapatnam District",
+                "addressLocality": "Andhra Pradesh",
+                "addressRegion": "",
+                "postalCode": "531035",
+                "addressCountry": "India"
+            },
+            "telephone": "+919440845333",
+            "email": "admin@amrita-janani.org",
+           "sameAs": [
+             "https://www.facebook.com/srividya.devipuram/",
+             "https://twitter.com/devipuram",
+             "https://www.instagram.com/Devipuram1/",
+             "https://www.youtube.com/devipuram1"
+           ]
+        }
+    </script>
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          "name": "Guruji Sri Amritananda Natha Saraswati",
+          "description": "Learn more about Guruji Sri Amritananda Natha Saraswati from a part of the documentary on Guruji by renowned documentary filmmaker Raja Choudhury.",
+          "thumbnailUrl": "https://i3.ytimg.com/vi/5UWwNpilnz0/maxresdefault.jpg",
+          "uploadDate": "2016-01-15",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Amrita Janani",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{{ Vite::asset('resources/images/logo/logo.png') }}",
+              "width": "",
+              "height": ""
+            }
+          },
+          "contentUrl": "https://www.youtube.com/watch?v=5UWwNpilnz0"
+        }
+    </script>
+
     <style nonce="{{ csp_nonce() }}">
         .about-tai-content img {
             height: 235px;

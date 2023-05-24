@@ -1,6 +1,34 @@
 @extends('layouts.main.index')
 
 @section('css')
+    <meta name="description" content="Get in touch with Amrita Janani"/>
+
+    <meta property="og:title" content="Contact Us - Amrita Janani" />
+    <meta property="og:description" content="Get in touch with Amrita Janani" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}" />
+
+    <meta name="twitter:title" content="Contact Us - Amrita Janani">
+    <meta name="twitter:description" content="Get in touch with Amrita Janani">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/hero/banner4.jpg') }}">
+
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Amrita Janani",
+            "item": "{{url()->to('/')}}"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Contact Us"
+          }]
+        }
+    </script>
+
 <style nonce="{{ csp_nonce() }}">
     .contact-form__one .contact-input .contact-inner textarea {
         border-radius: 25px;

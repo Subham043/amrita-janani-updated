@@ -111,6 +111,8 @@
 
     @yield('javascript')
 
+    <script type="text/javascript" nonce="{{ csp_nonce() }}">!function(t,e){t.artibotApi={l:[],t:[],on:function(){this.l.push(arguments)},trigger:function(){this.t.push(arguments)}};var a=!1,i=e.createElement("script");i.async=!0,i.type="text/javascript",i.src="https://app.artibot.ai/loader.js",e.getElementsByTagName("head").item(0).appendChild(i),i.onreadystatechange=i.onload=function(){if(!(a||this.readyState&&"loaded"!=this.readyState&&"complete"!=this.readyState)){new window.ArtiBot({i:"6c3037f1-249f-4e96-9ab8-630ae8bad965"});a=!0}}}(window,document);</script>
+
 
 </body>
 

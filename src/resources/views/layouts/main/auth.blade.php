@@ -5,14 +5,13 @@
 <head>
     <title>Amrita Janani - {{$breadcrumb}}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="{{request()->getRequestUri()}}" />
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ Vite::asset('resources/images/fav/apple-icon-144x144.png')}}">
     <meta name="theme-color" content="#96171c">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:url" content="{{request()->getRequestUri()}}" />
     <meta property="og:site_name" content="Amrita Janani" />
     <meta name="twitter:site" content="@devipuram">

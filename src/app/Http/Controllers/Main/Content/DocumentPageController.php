@@ -30,11 +30,17 @@ class DocumentPageController extends CommonContentController
         $document = DocumentModel::where('uuid', $uuid)->where('status', 1)->firstOrFail();
 
         if($document->contentVisible()){
-            $file = File::get(storage_path('app/public/upload/documents/').$document->document);
-            $response = Response::make($file, 200);
-            $response->header('Content-Type', 'application/'.File::extension($document->document));
-            $response->header('Cache-Control', 'public, max_age=3600');
-            return $response;
+            try {
+                //code...
+                $file = File::get(storage_path('app/public/upload/documents/').$document->document);
+                $response = Response::make($file, 200);
+                $response->header('Content-Type', 'application/'.File::extension($document->document));
+                $response->header('Cache-Control', 'public, max_age=3600');
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                abort(404, 'file not found');
+            }
         }else{
             return redirect()->intended(route('content_document_view', $uuid));
         }

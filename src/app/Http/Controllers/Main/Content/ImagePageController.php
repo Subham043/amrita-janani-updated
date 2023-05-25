@@ -28,22 +28,34 @@ class ImagePageController extends CommonContentController
 
     public function thumbnail($uuid){
         $image = ImageModel::where('uuid', $uuid)->where('status', 1)->firstOrFail();
-        $file = File::get(storage_path('app/public/upload/images/compressed-').$image->image);
-        $response = Response::make($file, 200);
-        $response->header('Content-Type', 'image/'.File::extension($image->image));
-        $response->header('Cache-Control', 'public, max_age=3600');
-        return $response;
+        try {
+            //code...
+            $file = File::get(storage_path('app/public/upload/images/compressed-').$image->image);
+            $response = Response::make($file, 200);
+            $response->header('Content-Type', 'image/'.File::extension($image->image));
+            $response->header('Cache-Control', 'public, max_age=3600');
+            return $response;
+        } catch (\Throwable $th) {
+            //throw $th;
+            abort(404, 'file not found');
+        }
     }
 
     public function imageFile($uuid){
         $image = ImageModel::where('uuid', $uuid)->where('status', 1)->firstOrFail();
 
         if($image->contentVisible()){
-            $file = File::get(storage_path('app/public/upload/images/').$image->image);
-            $response = Response::make($file, 200);
-            $response->header('Content-Type', 'image/'.File::extension($image->image));
-            $response->header('Cache-Control', 'public, max_age=3600');
-            return $response;
+            try {
+                //code...
+                $file = File::get(storage_path('app/public/upload/images/').$image->image);
+                $response = Response::make($file, 200);
+                $response->header('Content-Type', 'image/'.File::extension($image->image));
+                $response->header('Cache-Control', 'public, max_age=3600');
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                abort(404, 'file not found');
+            }
         }else{
             return redirect()->intended(route('content_image_view', $uuid));
         }

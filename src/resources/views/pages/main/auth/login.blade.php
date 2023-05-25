@@ -54,7 +54,7 @@
 <div class="form-items">
     <!-- <p>Access to the most powerfull tool in amrita janani.</p> -->
     <div class="page-links">
-        <a href="{{route('signin')}}" class="active">Login</a><a href="{{route('signup')}}">Register</a>
+        <a aria-label="ssign in" href="{{route('signin')}}" class="active">Login</a><a aria-label="sign up" href="{{route('signup')}}">Register</a>
     </div>
     <h3>Get access to Amrita Janani by logging in</h3><br/>
     <form action="{{route('signin_authenticate')}}" method="post" id="loginForm">

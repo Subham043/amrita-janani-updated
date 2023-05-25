@@ -99,8 +99,10 @@ $(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
+@if(!$document->contentVisible())
+    @include('pages.main.content.common.request_access_form_js', ['url'=>route('content_document_requestAccess', $document->uuid)])
+@endif
 
-@include('pages.main.content.common.request_access_form_js', ['url'=>route('content_document_requestAccess', $document->uuid)])
 @include('pages.main.content.common.report_form_js', ['url'=>route('content_document_report', $document->uuid)])
 
 

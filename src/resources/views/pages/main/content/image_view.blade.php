@@ -116,7 +116,10 @@
     })
 </script>
 
-@include('pages.main.content.common.request_access_form_js', ['url'=>route('content_image_requestAccess', $image->uuid)])
+@if(!$image->contentVisible())
+    @include('pages.main.content.common.request_access_form_js', ['url'=>route('content_image_requestAccess', $image->uuid)])
+@endif
+
 @include('pages.main.content.common.report_form_js', ['url'=>route('content_image_report', $image->uuid)])
 
 

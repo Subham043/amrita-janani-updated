@@ -100,7 +100,7 @@
                         <div class="col-lg-4 col-sm-12">
                             <a class="media-href" title="{{$audio->title}}" href="{{route('content_audio_view', $audio->uuid)}}">
                                 <div class="img-holder">
-                                    <img class="icon-img" src="{{Vite::asset('resources/images/audio-book.png')}}" alt="">
+                                    <img class="icon-img" src="{{Vite::asset('resources/images/audio-book.webp')}}" alt="">
                                 </div>
                                 <div class="media-holder">
                                     <h5>{{$audio->title}}</h5>

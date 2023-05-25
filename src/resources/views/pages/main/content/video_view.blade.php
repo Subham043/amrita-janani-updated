@@ -98,7 +98,9 @@
     })
 </script>
 
-@include('pages.main.content.common.request_access_form_js', ['url'=>route('content_video_requestAccess', $video->uuid)])
+@if(!$video->contentVisible())
+    @include('pages.main.content.common.request_access_form_js', ['url'=>route('content_video_requestAccess', $video->uuid)])
+@endif
 @include('pages.main.content.common.report_form_js', ['url'=>route('content_video_report', $video->uuid)])
 @include('pages.main.content.common.reload_captcha_js')
 

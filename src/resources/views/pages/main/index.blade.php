@@ -40,7 +40,7 @@
                 "{{ Vite::asset('resources/images/hero/banner9.jpg') }}"
             ],
            "url": "{{request()->url()}}",
-           "logo": "{{ Vite::asset('resources/images/logo/logo.png') }}",
+           "logo": "{{ Vite::asset('resources/images/logo/logo.webp') }}",
            "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Devipuram Via Nidanam Doddi, Sabbavaram (M), Visakhapatnam District",
@@ -73,7 +73,7 @@
             "name": "Amrita Janani",
             "logo": {
               "@type": "ImageObject",
-              "url": "{{ Vite::asset('resources/images/logo/logo.png') }}",
+              "url": "{{ Vite::asset('resources/images/logo/logo.webp') }}",
               "width": "",
               "height": ""
             }
@@ -144,8 +144,6 @@
                         <h1 class="text-white"><i>{{$bannerQuote->quote}}</i>
                         <br/><span class="fs-20"> - Guruji Amritananda Natha Saraswati</span></h1>
 
-                        <!-- <div class="ht-btn-area section-space--mt_60"><a href="#" class="hero-btn">Explore</a></div> -->
-
                     </div>
                 </div>
             </div>
@@ -160,14 +158,14 @@
                 <div class="col-lg-12">
                     <div class="about-tai-content">
                         <img src="{{ Vite::asset('resources/images/hero/banner7.jpg') }}" class="img-fluid float-left"
-                            alt="About Images">
+                            alt="Guruji Sri Amritananda Natha Saraswati" title="Guruji Sri Amritananda Natha Saraswati">
                         <div class="section-title-wrap d-inline">
                             <h3 class="section-title--two  left-style mb-30">What is Amrita Janani?</h3>
                             <p>Amrita Janani is an online digital knowledge repository containing the teachings of Guruji
                                 Sri Amritananda Natha Saraswati of Devipuram, Vizag, India. The teachings are in the form of
                                 lectures, practice manuals, guided meditations, etc.</p>
                             <div class="text-left">
-                                <a href="{{ route('about') }}" class="submit-btn">Learn More</a>
+                                <a aria-label="about page" href="{{ route('about') }}" class="submit-btn">Learn More</a>
                             </div>
                         </div>
                     </div>
@@ -191,7 +189,7 @@
                                     @if ($item->image)
                                         <img src="{{ asset('storage/upload/pages/' . $item->image) }}"
                                             class="{{ $item->image_position == 1 ? 'img-fluid float-left' : 'img-fluid float-right' }}"
-                                            alt="About Images">
+                                            alt="{{$item->heading}}"  title="{{$item->heading}}">
                                     @endif
                                     <div class="section-title-wrap d-inline">
                                         {!! $item->description !!}
@@ -213,10 +211,10 @@
             <div class="hindu-video-bg hindu-video-section-pb bg-overlay-black border-radius-5">
                 <div class="row">
                     <div class="col-lg-8 ml-auto mr-auto">
-                        <a href="https://www.youtube.com/watch?v=5UWwNpilnz0" class="video-link popup-youtube">
+                        <a href="https://www.youtube.com/watch?v=5UWwNpilnz0" aria-label="youtube video" class="video-link popup-youtube">
                             <div class="video-content-wrap text-center">
                                 <div class="icon">
-                                    <img src="{{ Vite::asset('resources/images/icons/play-circle.png') }}" alt="Video Icon">
+                                    <img src="{{ Vite::asset('resources/images/icons/play-circle.webp') }}" alt="Video Icon" title="Video Icon">
                                 </div>
                                 <div class="content section-space--mt_80">
                                     <h3 class="text-white mb-10">Who is Guruji Sri Amritananda Natha Saraswati</h3>

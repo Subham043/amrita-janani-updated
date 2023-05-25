@@ -53,7 +53,7 @@
 <div class="form-items">
   <!-- <p>Access to the most powerfull tool in amrita janani.</p> -->
   <div class="page-links">
-    <a href="{{route('signin')}}">Login</a><a href="{{route('index')}}" class="active">Register</a>
+    <a aria-label="sign in" href="{{route('signin')}}">Login</a><a aria-label="sign up" href="{{route('signup')}}" class="active">Register</a>
   </div>
   <h3>Register to get access to Amrita Janani</h3><br/>
     <form action="{{route('signup_store')}}" method="post" id="loginForm">
@@ -89,10 +89,10 @@
         @enderror
         </div>
         <div class="mb-2">
-        <input type="checkbox" id="chk1"><label for="chk1">Accept <a href="{{route('privacy_policy')}}" class="text-white font-weight-bold text-underline" target="_blank">Terms & Condtions</a></label>
+        <input type="checkbox" id="chk1"><label for="chk1">Accept <a aria-label="privacy page" href="{{route('privacy_policy')}}" class="text-white font-weight-bold text-underline" target="_blank">Terms & Condtions</a></label>
         </div>
         <div class="form-button">
-            <button id="btnsubmit" type="submit" class="ibtn">Register</button> <a href="{{route('signin')}}">Already a registered user?</a>
+            <button id="btnsubmit" type="submit" class="ibtn">Register</button> <a aria-label="sign in" href="{{route('signin')}}">Already a registered user?</a>
         </div>
     </form>
 </div>

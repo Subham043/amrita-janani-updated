@@ -361,14 +361,14 @@ select {
   outline: none;
   border: 1px solid #f8f8f8;
   border-radius: 5px;
-  background: #f8f8f8 url("../../images/icons/selector-icon.html") no-repeat center right 20px;
+  /* background: #f8f8f8 url("../../images/icons/selector-icon.html") no-repeat center right 20px; */
   background-color: #f8f8f8;
   -moz-appearance: none;
   -webkit-appearance: none;
 }
 
 select:focus {
-  background: #f8f8f8 url("../../images/icons/selector-icon.html") no-repeat center right 20px !important;
+  /* background: #f8f8f8 url("../../images/icons/selector-icon.html") no-repeat center right 20px !important; */
 }
 
 .fixed-bg {
@@ -719,7 +719,7 @@ input[type="checkbox"] {
   padding-top: 136px;
   padding-bottom: 131px;
   background-size: cover;
-  background-image: url(../../images/hero/banner2.jpg);
+  background-image: url(../../images/hero/banner2.webp);
 }
 
 @media only screen and (max-width: 767px), only screen and (min-width: 768px) and (max-width: 991px), only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -730,7 +730,7 @@ input[type="checkbox"] {
 }
 
 .breadcrumb-area--bg-two {
-  background-image: url(../../);
+  /* background-image: url(../../); */
 }
 
 .bg-overlay-black-4 {
@@ -812,7 +812,7 @@ input[type="checkbox"] {
   .breadcrumb-area--bg-two {
     padding-top: 80px;
     padding-bottom: 80px;
-    background-image: url(../../images/bg/breadcrumb-03.png);
+    /* background-image: url(../../images/bg/breadcrumb-03.png); */
   }
 }
 
@@ -823,7 +823,7 @@ input[type="checkbox"] {
   padding-top: 450px;
   padding-bottom: 60px;
   background-size: cover;
-  background-image: url(../../images/bg/breadcrumb-02.png);
+  /* background-image: url(../../images/bg/breadcrumb-02.png); */
 }
 
 @media only screen and (max-width: 767px), only screen and (min-width: 768px) and (max-width: 991px), only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -1101,7 +1101,7 @@ input[type="checkbox"] {
 }
 
 .section-title-muslim::after {
-  content: url("../../images/icons/muslim-title.png");
+  /* content: url("../../images/icons/muslim-title.png"); */
 }
 
 .section-title--two {
@@ -3115,7 +3115,7 @@ input[type="checkbox"] {
 =            06. Hero Area Css           =
 =========================================*/
 .hindu-hero-bg {
-  background: url(../../images/hero/hindu-hero-bg-01.png);
+  /* background: url(../../images/hero/hindu-hero-bg-01.png); */
 }
 
 .hero-style-01 {
@@ -3155,19 +3155,19 @@ input[type="checkbox"] {
 }
 
 .muslim-hero-bg {
-  background: url(../../images/hero/muslim-hero-bg-01.png);
+  /* background: url(../../images/hero/muslim-hero-bg-01.png); */
   background-size: cover;
   background-position: center;
 }
 
 .christian-hero-bg {
-  background: url(../../images/hero/christian-hero-bg-01.png);
+  /* background: url(../../images/hero/christian-hero-bg-01.png); */
   background-size: cover;
   background-position: center;
 }
 
 .christian-hero-bg-two {
-  background: url(../../images/hero/banner3.jpg);
+  background: url(../../images/hero/banner3.webp);
   background-size: cover;
   background-position: center;
 }
@@ -3206,7 +3206,7 @@ input[type="checkbox"] {
   }
 
   .christian-hero-bg-two {
-    background: url(../../images/hero/banner3.jpg);
+    background: url(../../images/hero/banner3.webp);
     background-size: cover;
     background-position: center left;
   }
@@ -3428,7 +3428,7 @@ input[type="checkbox"] {
 }
 
 .hero-boder-top::after {
-  content: url(../../images/icons/border-top.png);
+  /* content: url(../../images/icons/border-top.png); */
   left: 50%;
   bottom: 100%;
   position: absolute;
@@ -3654,7 +3654,7 @@ input[type="checkbox"] {
   right: 0;
   height: 350px;
   width: 300px;
-  background: url(../../images/bg/banner-top.png);
+  /* background: url(../../images/bg/banner-top.png); */
   background-repeat: repeat;
   background-size: auto;
   background-size: contain;
@@ -3670,7 +3670,7 @@ input[type="checkbox"] {
   left: 0;
   height: 350px;
   width: 300px;
-  background: url(../../images/bg/banner-bottom.png);
+  /* background: url(../../images/bg/banner-bottom.png); */
   background-repeat: repeat;
   background-size: auto;
   background-size: contain;
@@ -3991,35 +3991,35 @@ input[type="checkbox"] {
 }
 
 .newsletter-bg {
-  background: url(../../images/bg/newsletter-bg.png);
+  /* background: url(../../images/bg/newsletter-bg.png); */
   background-size: cover;
   background-position: bottom center;
   background-repeat: no-repeat;
 }
 
 .hindu-video-bg {
-  background: url(../../images/hero/banner4.jpg);
+  background: url(../../images/hero/banner4.webp);
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
 }
 
 .church-video-bg {
-  background: url(../../images/bg/church-video-bg.png);
+  /* background: url(../../images/bg/church-video-bg.png); */
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
 }
 
 .church-testmonial-bg {
-  background: url(../../images/bg/church-testmonial.png);
+  /* background: url(../../images/bg/church-testmonial.png); */
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
 }
 
 .about-video-bg {
-  background: url(../../images/bg/about-video-bg.png);
+  /* background: url(../../images/bg/about-video-bg.png); */
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;

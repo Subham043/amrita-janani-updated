@@ -69,8 +69,8 @@
                             </div>
                             <div class="contact-info">
                                 <h4>Phone</h4>
-                                <p><a href="tel:+919440845333">+91 94408 45333</a><br>
-                                    <a href="tel:+918340005500">+91 83400 05500</a></p>
+                                <p><a aria-label="phone 1" href="tel:+919440845333">+91 94408 45333</a><br>
+                                    <a aria-label="phone 2" href="tel:+918340005500">+91 83400 05500</a></p>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                             </div>
                             <div class="contact-info">
                                 <h4>Mail</h4>
-                                <p><a href="mailto:admin@amrita-janani.org">admin@amrita-janani.org</a></p>
+                                <p><a aria-label="email" href="mailto:admin@amrita-janani.org">admin@amrita-janani.org</a></p>
                             </div>
                         </div>
                     </div>

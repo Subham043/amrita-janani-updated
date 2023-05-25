@@ -21,7 +21,7 @@
     @if($audio->contentVisible())
     <div class="container">
         <div class="main-audio-container">
-        <img src="{{Vite::asset('resources/images/audio-book.png')}}" alt="">
+        <img src="{{Vite::asset('resources/images/audio-book.webp')}}" alt="">
             <audio id="player" controls>
                 <source src="{{route('content_audio_file',$audio->uuid)}}" type="audio/{{$audio->file_format()}}" />
             </audio>
@@ -103,8 +103,10 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
+@if(!$audio->contentVisible())
+    @include('pages.main.content.common.request_access_form_js', ['url'=>route('content_audio_requestAccess', $audio->uuid)])
+@endif
 
-@include('pages.main.content.common.request_access_form_js', ['url'=>route('content_audio_requestAccess', $audio->uuid)])
 @include('pages.main.content.common.report_form_js', ['url'=>route('content_audio_report', $audio->uuid)])
 
 

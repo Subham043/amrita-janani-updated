@@ -30,11 +30,17 @@ class AudioPageController extends CommonContentController
         $audio = AudioModel::where('uuid', $uuid)->where('status', 1)->firstOrFail();
 
         if($audio->contentVisible()){
-            $file = File::get(storage_path('app/public/upload/audios/').$audio->audio);
-            $response = Response::make($file, 200);
-            $response->header('Content-Type', 'audio/'.File::extension($audio->audio));
-            $response->header('Cache-Control', 'public, max_age=3600');
-            return $response;
+            try {
+                //code...
+                $file = File::get(storage_path('app/public/upload/audios/').$audio->audio);
+                $response = Response::make($file, 200);
+                $response->header('Content-Type', 'audio/'.File::extension($audio->audio));
+                $response->header('Cache-Control', 'public, max_age=3600');
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                abort(404, 'file not found');
+            }
         }else{
             return redirect()->intended(route('content_audio_view', $uuid));
         }

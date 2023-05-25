@@ -74,7 +74,7 @@
                     </div>
                     <div>
                         @if($item->image)
-                        <img src="{{asset('storage/upload/pages/'.$item->image)}}" class="{{$item->image_position==1?'img-fluid float-left':'img-fluid float-right'}}" alt="About Images">
+                        <img src="{{asset('storage/upload/pages/'.$item->image)}}"  alt="{{$item->heading}}"  title="{{$item->heading}}" class="{{$item->image_position==1?'img-fluid float-left':'img-fluid float-right'}}">
                         @endif
                         <div class="section-title-wrap d-inline">
                             {!!$item->description!!}

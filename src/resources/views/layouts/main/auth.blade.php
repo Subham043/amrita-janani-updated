@@ -53,7 +53,7 @@
 
     <div class="form-body">
         <div class="website-logo">
-            <a aria-label="home page" href="{{route('index')}}">
+            <a rel="nofollow" aria-label="home page" href="{{route('index')}}">
                 <div class="logo">
                     <img alt="amrita janani logo" title="amrita janani logo" class="" src="{{ Vite::asset('resources/images/logo/logo.webp') }}" >
                 </div>
@@ -86,7 +86,7 @@
             iziToast.error({
                 title: 'Error',
                 message: message,
-                position: 'topRight',
+                position: 'topCenter',
                 timeout:7000
             });
         }
@@ -94,7 +94,7 @@
             iziToast.success({
                 title: 'Success',
                 message: message,
-                position: 'topRight',
+                position: 'topCenter',
                 timeout:6000
             });
         }

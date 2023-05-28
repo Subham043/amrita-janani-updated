@@ -165,7 +165,7 @@
                                 Sri Amritananda Natha Saraswati of Devipuram, Vizag, India. The teachings are in the form of
                                 lectures, practice manuals, guided meditations, etc.</p>
                             <div class="text-left">
-                                <a aria-label="about page" href="{{ route('about') }}" class="submit-btn">Learn More</a>
+                                <a rel="nofollow" aria-label="about page" href="{{ route('about') }}" class="submit-btn">Learn More</a>
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
             <div class="hindu-video-bg hindu-video-section-pb bg-overlay-black border-radius-5">
                 <div class="row">
                     <div class="col-lg-8 ml-auto mr-auto">
-                        <a href="https://www.youtube.com/watch?v=5UWwNpilnz0" aria-label="youtube video" class="video-link popup-youtube">
+                        <a rel="nofollow" href="https://www.youtube.com/watch?v=5UWwNpilnz0" aria-label="youtube video" class="video-link popup-youtube">
                             <div class="video-content-wrap text-center">
                                 <div class="icon">
                                     <img src="{{ Vite::asset('resources/images/icons/play-circle.webp') }}" alt="Video Icon" title="Video Icon">

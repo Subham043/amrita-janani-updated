@@ -116,7 +116,7 @@ $(function() {
     jQuery(document).ready(function () {
 
         //FOR PDFs
-        var source_pdf = "{{asset('storage/upload/documents/'.$document->document)}}";
+        var source_pdf = "{{route('content_document_file',$document->uuid)}}";
         var option_pdf = {
             webglShadow: true,
 

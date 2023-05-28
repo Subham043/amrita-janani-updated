@@ -32,7 +32,7 @@ class ContentSecurityPolicy extends Basic
         ->addDirective(Directive::FONT, Keyword::SELF)
         ->addNonceForDirective(Directive::SCRIPT);
 
-        if(request()->is('admin/document/view/*') || request()->is('content/document/*')){
+        if(request()->is('admin/document/view/*') || request()->is('admin/document/trash/view/*') || request()->is('content/document/*')){
             $this
             ->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
         }

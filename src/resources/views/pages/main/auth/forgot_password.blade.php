@@ -60,7 +60,7 @@
             @enderror
         </div>
         <div class="form-button">
-            <button id="submitBtn" type="submit" class="ibtn">Submit</button> <a aria-label="sign in" href="{{route('signin')}}">Remember your password?</a>
+            <button id="submitBtn" type="submit" class="ibtn">Submit</button> <a rel="nofollow" aria-label="sign in" href="{{route('signin')}}">Remember your password?</a>
         </div>
     </form>
 </div>

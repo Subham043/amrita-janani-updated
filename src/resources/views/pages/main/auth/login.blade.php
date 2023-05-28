@@ -54,7 +54,7 @@
 <div class="form-items">
     <!-- <p>Access to the most powerfull tool in amrita janani.</p> -->
     <div class="page-links">
-        <a aria-label="ssign in" href="{{route('signin')}}" class="active">Login</a><a aria-label="sign up" href="{{route('signup')}}">Register</a>
+        <a rel="nofollow" aria-label="ssign in" href="{{route('signin')}}" class="active">Login</a><a rel="nofollow" aria-label="sign up" href="{{route('signup')}}">Register</a>
     </div>
     <h3>Get access to Amrita Janani by logging in</h3><br/>
     <form action="{{route('signin_authenticate')}}" method="post" id="loginForm">
@@ -75,7 +75,7 @@
 
         <input type="checkbox" id="chk1"><label for="chk1">Remember me</label>
         <div class="form-button">
-            <button id="submitBtn" type="submit" class="ibtn">Login</button> <a
+            <button id="submitBtn" type="submit" class="ibtn">Login</button> <a rel="nofollow"
                 href="{{route('forgot_password')}}">Forgot password?</a>
         </div>
     </form>

@@ -123,7 +123,7 @@
             iziToast.error({
                 title: 'Error',
                 message: message,
-                position: 'topRight',
+                position: 'bottomCenter',
                 timeout:7000
             });
         }
@@ -131,7 +131,7 @@
             iziToast.success({
                 title: 'Success',
                 message: message,
-                position: 'topRight',
+                position: 'bottomCenter',
                 timeout:6000
             });
         }
@@ -142,7 +142,6 @@
             errorToast('{{ Session::get('error_status') }}')
         @endif
     </script>
-
 
     @yield('javascript')
 

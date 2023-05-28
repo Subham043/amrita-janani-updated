@@ -7,7 +7,7 @@
                         <div class="col-md-6 col-8">
                             <!-- logo -->
                             <div class="logo">
-                                <a aria-label="home page" href="{{route('index')}}">
+                                <a rel="nofollow" aria-label="home page" href="{{route('index')}}">
                                     <img src="{{ Vite::asset('resources/images/logo/logo.webp') }}" class="img-fluid"  alt="amrita janani logo"  title="amrita janani logo">
                                 </a>
                             </div>
@@ -25,16 +25,16 @@
                 <nav class="offcanvas-navigation">
                     <ul>
                         <li class="has-children">
-                            <a aria-label="home page" href="{{route('index')}}">Home</a>
+                            <a rel="nofollow" aria-label="home page" href="{{route('index')}}">Home</a>
                         </li>
                         <li class="has-children">
-                            <a aria-label="about page" href="{{route('about')}}">About</a>
+                            <a rel="nofollow" aria-label="about page" href="{{route('about')}}">About</a>
                         </li>
                         <li class="has-children">
-                            <a aria-label="faq page" href="{{route('faq')}}">FAQs</a>
+                            <a rel="nofollow" aria-label="faq page" href="{{route('faq')}}">FAQs</a>
                         </li>
                         <li class="has-children">
-                            <a aria-label="contact page" href="{{route('contact')}}">Contact</a>
+                            <a rel="nofollow" aria-label="contact page" href="{{route('contact')}}">Contact</a>
                         </li>
                         @if(Auth::check())
                         <li class="has-children">
@@ -58,9 +58,9 @@
                         @endif
                         <li class="has-children">
                             @if(Auth::check())
-                            <a aria-label="logout" href="{{route('signout')}}">Logout</a>
+                            <a rel="nofollow" aria-label="logout" href="{{route('signout')}}">Logout</a>
                             @else
-                            <a aria-label="sign in" href="{{route('signin')}}">Login</a>
+                            <a rel="nofollow" aria-label="sign in" href="{{route('signin')}}">Login</a>
                             @endif
                         </li>
                     </ul>

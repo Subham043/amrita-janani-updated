@@ -2,6 +2,9 @@
 
 
 @section('css')
+<link href="{{asset('main/dflip/css/dflip.min.css')}}" rel="stylesheet" type="text/css">
+<!-- themify-icons.min.css is not required in version 2.0 and above -->
+<link href="{{asset('main/dflip/css/themify-icons.min.css')}}" rel="stylesheet" type="text/css">
 <style nonce="{{ csp_nonce() }}">
     #canvas_container {
         width: 100%;
@@ -228,36 +231,7 @@
 
                             <div id="image-container">
                                 @if($country->document)
-                                <div class="pt-3 pb-3 border-bottom border-bottom-dashed mt-4">
-                                    <h6 class="fw-semibold text-uppercase">Document</h6>
-                                    <!-- <embed src="{{asset('storage/upload/documents/'.$country->document)}}#toolbar=0" width="500" height="375"> -->
-
-                                    <div id="my_pdf_viewer" oncontextmenu="return false">
-                                        <div id="pdf_controllers">
-
-                                            <div id="navigation_controls">
-                                                <button id="go_previous" title="previous page"><i class="bx bx-skip-previous"></i></button>
-                                                <label>
-                                                    <input id="current_page" value="1" type="text"/>
-                                                    /<span id="totalPageCount">0</span>
-                                                </label>
-                                                <button id="go_next" title="next page"><i class="bx bx-skip-next"></i></button>
-                                            </div>
-
-                                            <div id="zoom_controls">
-                                                <button id="zoom_in" title="zoom in"><i class="ri-zoom-in-line"></i></button>
-                                                <button id="zoom_out" title="zoom out"><i class="ri-zoom-out-line"></i></button>
-                                            </div>
-                                        </div>
-
-                                        <div id="canvas_container">
-                                            <canvas id="pdf_renderer"></canvas>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
+                                    <div id="flipbookPDFContainer"></div>
                                 @endif
                             </div>
 
@@ -279,90 +253,186 @@
 @stop
 
 @section('javascript')
-<script src="http://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
 @include('includes.admin.delete_handler')
 
+
+@if($country->document)
+<script src="{{asset('main/dflip/js/libs/jquery.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('main/dflip/js/dflip.min.js')}}" type="text/javascript"></script>
 <script nonce="{{ csp_nonce() }}">
+    jQuery(document).ready(function () {
+
+        //FOR PDFs
+        var source_pdf = "{{asset('storage/upload/documents/'.$country->document)}}";
+        var option_pdf = {
+            webglShadow: true,
+
+            // if enable sound at start (true|false)
+            soundEnable: false,
+
+            // set to true to show outline on open (true|false)
+            autoEnableOutline: false,
+
+            // set to true to show thumbnail on open (true|false)
+            autoEnableThumbnail: false,
+
+            // set to true if PDF inbuilt outline is to be removed (true|false)
+            overwritePDFOutline: false,
+
+            // enableDownload of PDF files (true|false)
+            enableDownload: false,
+
+            // duration of page turn in milliseconds
+            duration: 800,
+
+            //direction of flipbook
+            //DFLIP.DIRECTION.LTR or 1	for left to right(default),
+            //DFLIP.DIRECTION.RTL or 2	for right to left,
+            direction: DFLIP.DIRECTION.LTR,
+
+            //set as
+            //DFLIP.PAGE_MODE.AUTO	 				for auto-detect(default),
+            //DFLIP.PAGE_MODE.SINGLE or 1 			for singleview,
+            //DFLIP.PAGE_MODE.DOUBLE or 2 			for doubleview,
+            pageMode: DFLIP.PAGE_MODE.AUTO,
+
+            //set as
+            //DFLIP.SINGLE_PAGE_MODE.AUTO	 				for auto-detect(default),
+            //DFLIP.SINGLE_PAGE_MODE.ZOOM or 1 				for normal zoom single view,
+            //DFLIP.SINGLE_PAGE_MODE.BOOKLET or 2 			for Booklet mode,
+            singlePageMode: DFLIP.SINGLE_PAGE_MODE.AUTO,
+
+            //color value in hexadecimal
+            backgroundColor: "#fff",
+
+            forceFit: true, //very rare usage leave it as true unless page are not fitting wrong...
+            transparent: false, //true or false
+            hard: "none", //possible values are "all", "none", "cover"
 
 
-    var myState = {
-        pdf: null,
-        currentPage: 1,
-        zoom: 1
-    }
+            annotationClass: "",
 
-    pdfjsLib.getDocument('{{asset('storage/upload/documents/'.$country->document)}}').then((pdf) => {
+            autoPlay: false,
+            autoPlayDuration: 5000,
+            autoPlayStart: false,
 
-        myState.pdf = pdf;
-        document.getElementById("totalPageCount").innerHTML = myState.pdf._pdfInfo.numPages;
-        render();
+            // texture settings
+            maxTextureSize: 1600,	//max page size to be rendered. for pdf files only
+            minTextureSize: 256,	//min page size to be rendered. for pdf files only
+            rangeChunkSize: 524288,
 
+            // icons for the buttons
+            icons: {
+                'altnext': 'ti-angle-right',
+                'altprev': 'ti-angle-left',
+                'next': 'ti-angle-right',
+                'prev': 'ti-angle-left',
+                'end': 'ti-angle-double-right',
+                'start': 'ti-angle-double-left',
+                'share': 'ti-sharethis',
+                'help': 'ti-help-alt',
+                'more': 'ti-more-alt',
+                'download': 'ti-download',
+                'zoomin': 'ti-zoom-in',
+                'zoomout': 'ti-zoom-out',
+                'fullscreen': 'ti-fullscreen',
+                'fitscreen': 'ti-arrows-corner',
+                'thumbnail': 'ti-layout-grid2',
+                'outline': 'ti-menu-alt',
+                'close': 'ti-close',
+                'doublepage': 'ti-book',
+                'singlepage': 'ti-file',
+                'sound': 'ti-volume',
+                'facebook': 'ti-facebook',
+                'google': 'ti-google',
+                'twitter': 'ti-twitter-alt',
+                'mail': 'ti-email',
+                'play': 'ti-control-play',
+                'pause': 'ti-control-pause'
+            },
+
+            // TRANSLATION text to be displayed
+            text: {
+
+                toggleSound: "Turn on/off Sound",
+                toggleThumbnails: "Toggle Thumbnails",
+                toggleOutline: "Toggle Outline/Bookmark",
+                previousPage: "Previous Page",
+                nextPage: "Next Page",
+                toggleFullscreen: "Toggle Fullscreen",
+                zoomIn: "Zoom In",
+                zoomOut: "Zoom Out",
+                toggleHelp: "Toggle Help",
+
+                singlePageMode: "Single Page Mode",
+                doublePageMode: "Double Page Mode",
+                downloadPDFFile: "Download PDF File",
+                gotoFirstPage: "Goto First Page",
+                gotoLastPage: "Goto Last Page",
+                play: "Start AutoPlay",
+                pause: "Pause AutoPlay",
+
+                share: "Share"
+            },
+
+            //valid controlnames:
+            //altPrev,pageNumber,altNext,outline,thumbnail,zoomIn,zoomOut,fullScreen,share
+            //more,download,pageMode,startPage,endPage,sound
+            allControls: "altPrev,pageNumber,altNext,play,outline,thumbnail,zoomIn,zoomOut,fullScreen,more,pageMode,startPage,endPage",
+            moreControls: "pageMode,startPage,endPage",
+            hideControls: "",
+
+            controlsPosition: DFLIP.CONTROLSPOSITION.BOTTOM,
+            paddingTop: 30,
+            paddingLeft: 50,
+            paddingRight: 50,
+            paddingBottom: 30,
+
+            //set if the zoom changes on mouse scroll (true|false)
+            scrollWheel: true,
+
+            // callbacks
+            onCreate: function (flipBook) {
+            // after flip book is created is fired
+            },
+            onCreateUI: function (flipBook) {
+            // after ui created event is fired
+            },
+            onFlip: function (flipBook) {
+            // after flip event is fired
+            },
+            beforeFlip: function (flipBook) {
+            // before flip event is fired
+            },
+            onReady: function (flipBook) {
+            // after flip book is completely loaded
+            },
+
+            zoomRatio: 1.5,
+            pageSize: DFLIP.PAGE_SIZE.AUTO,
+
+
+            //(NON-OPTION) developer parameters
+            enableDebugLog: false,
+            canvasToBlob: false,//as of 1.2.9 canvas are better optimized and secure
+            enableAnnotation: true,
+            pdfRenderQuality: 0.90,
+
+            pageRatio: null, 		//equals to width/height
+
+            pixelRatio: window.devicePixelRatio || 1,
+            thumbElement: 'div',
+
+            /*3D settings*/
+            spotLightIntensity: 0.22,
+            ambientLightColor: "#fff",
+            ambientLightIntensity: 0.8,
+            shadowOpacity: 0.15
+        };
+
+        var flipBook_pdf = $("#flipbookPDFContainer").flipBook(source_pdf,option_pdf);
     });
-
-    function render() {
-        myState.pdf.getPage(myState.currentPage).then((page) => {
-
-            var canvas = document.getElementById("pdf_renderer");
-            var ctx = canvas.getContext('2d');
-
-            var viewport = page.getViewport(myState.zoom);
-
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            page.render({
-                canvasContext: ctx,
-                viewport: viewport
-            });
-        });
-    }
-
-
-
-    document.getElementById('go_previous').addEventListener('click', (e) => {
-        if(myState.pdf == null || myState.currentPage == 1) return false;
-        myState.currentPage -= 1;
-        document.getElementById("current_page").value = myState.currentPage;
-        render();
-    });
-
-    document.getElementById('go_next').addEventListener('click', (e) => {
-        if(myState.pdf == null || myState.currentPage >= myState.pdf._pdfInfo.numPages) return false;
-        myState.currentPage += 1;
-        document.getElementById("current_page").value = myState.currentPage;
-        render();
-    });
-
-    document.getElementById('current_page').addEventListener('keypress', (e) => {
-        if(myState.pdf == null) return;
-
-        // Get key code
-        var code = (e.keyCode ? e.keyCode : e.which);
-
-        // If key code matches that of the Enter key
-        if(code == 13) {
-            var desiredPage =
-            document.getElementById('current_page').valueAsNumber;
-
-            if(desiredPage >= 1 && desiredPage <= myState.pdf._pdfInfo.numPages) {
-                myState.currentPage = desiredPage;
-                document.getElementById("current_page").value = desiredPage;
-                render();
-            }
-        }
-    });
-
-    document.getElementById('zoom_in').addEventListener('click', (e) => {
-        if(myState.pdf == null) return;
-        myState.zoom += 0.1;
-        render();
-    });
-
-    document.getElementById('zoom_out').addEventListener('click', (e) => {
-        if(myState.pdf == null) return;
-        myState.zoom -= 0.1;
-        render();
-    });
-
 </script>
+@endif
+
 @stop

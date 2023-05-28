@@ -15,42 +15,42 @@
 	var $html = $('html');
     var $body = $('body');
 
-        
+
     /*===============================
     =         Sticky Header         =
     =================================*/
     windows.on('scroll', function () {
         var scroll = windows.scrollTop();
         var headerHeight = sticky.height();
-    
+
         if (screenSize >= 320) {
             if (scroll < headerHeight) {
                 sticky.removeClass('is-sticky');
-                stickySub.removeClass('is-sticky');sticky
+                stickySub.removeClass('is-sticky');
             } else {
                 sticky.addClass('is-sticky');
                 stickySub.addClass('is-sticky');
                 stickySub.css('top', $('.header-sticky').height())
             }
         }
-    
+
     });
 
 
     /*==========================================
     =            mobile menu active            =
     ============================================*/
-    
+
     $("#mobile-menu-trigger").on('click', function(){
         $("#mobile-menu-overlay").addClass("active");
         $body.addClass('no-overflow');
     });
-    
+
     $("#mobile-menu-close-trigger").on('click', function(){
         $("#mobile-menu-overlay").removeClass("active");
         $body.removeClass('no-overflow');
     });
- 
+
     /*Close When Click Outside*/
     $body.on('click', function(e){
         var $target = e.target;
@@ -59,19 +59,19 @@
             $body.removeClass('no-overflow');
         }
     });
-    
+
     /*=============================================
     =            offcanvas mobile menu            =
     =============================================*/
     var $offCanvasNav = $('.offcanvas-navigation'),
         $offCanvasNavSubMenu = $offCanvasNav.find('.sub-menu');
-    
+
     /*Add Toggle Button With Off Canvas Sub Menu*/
     $offCanvasNavSubMenu.parent().prepend('<span class="menu-expand"><i></i></span>');
-    
+
     /*Close Off Canvas Sub Menu*/
     $offCanvasNavSubMenu.slideUp();
-    
+
     /*Category Sub Menu Toggle*/
     $offCanvasNav.on('click', 'li a, li .menu-expand', function(e) {
         var $this = $(this);
@@ -91,7 +91,7 @@
 
 
 
-    
+
     /*===================================
     =           Menu Activeion          =
     ===================================*/
@@ -111,7 +111,7 @@
         else
         $(".navigation-menu li a[href*='"+curpage+"']").parents("li").addClass("active");
     }
-   
+
 
     /*=========================================
     =         Magnific Popup                  =
@@ -128,7 +128,7 @@
         removalDelay: 300,
         mainClass: 'mfp-fade'
     });
-    
+
 
 $(document).ready(function(){
 
@@ -215,7 +215,7 @@ scrollToTop();
 
 
 
-/* 
+/*
 const compareNumber = (no1,no2)=>{
     if(no1 === no2)
       console.log("they are equal")
@@ -224,10 +224,10 @@ const compareNumber = (no1,no2)=>{
     else
       console.log("number one is less than number two")
   }
-  
+
   const no1 = 12,
         no2 = 13;
-  
+
   compareNumber(no1,no2);
 
  */

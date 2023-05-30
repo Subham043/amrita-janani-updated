@@ -143,14 +143,20 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{strpos(url()->current(),'telescope') !== false ? 'active' : ''}}" href="/admin/telescope" target="_blank">
-                                    <i class="ri-tv-line"></i> <span data-key="t-widgets">Telescope</span>
+                                <a class="nav-link menu-link {{strpos(url()->current(),'telescope') !== false || strpos(url()->current(),'horizon') !== false ? 'active' : ''}}" href="#sidebarDashboards13" data-bs-toggle="collapse" role="button"
+                                    aria-expanded="{{strpos(url()->current(),'telescope') !== false || strpos(url()->current(),'horizon') !== false ? 'true' : 'false'}}" aria-controls="sidebarDashboards13">
+                                    <i class="ri-tv-line"></i> <span data-key="t-dashboards">Administrative Tools</span>
                                 </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link {{strpos(url()->current(),'horizon') !== false ? 'active' : ''}}" href="/admin/horizon" target="_blank">
-                                    <i class="ri-mail-settings-line"></i> <span data-key="t-widgets">Horizon</span>
-                                </a>
+                                <div class="collapse menu-dropdown {{strpos(url()->current(),'telescope') !== false || strpos(url()->current(),'horizon') !== false ? 'show' : ''}}" id="sidebarDashboards13">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="/admin/telescope" target="_blank" class="nav-link {{strpos(url()->current(),'telescope') !== false ? 'active' : ''}}" data-key="t-analytics"> Telescope </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/admin/horizon" target="_blank" class="nav-link {{strpos(url()->current(),'horizon') !== false ? 'active' : ''}}" data-key="t-analytics"> Horizon </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <!-- end Dashboard Menu -->
                         </ul>

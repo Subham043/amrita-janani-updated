@@ -28,7 +28,7 @@ class ForgotPasswordPageController extends Controller
             (new RateLimitService($request))->clearRateLimit();
             return redirect(route('forgot_password'))->with(['success_status' => __($status)]);
         }
-        return redirect(route('forgot_password'))->with(['error_status' => __($status)]);
+        return redirect(route('forgot_password'))->with(['error_popup' => __($status)]);
 
     }
 }

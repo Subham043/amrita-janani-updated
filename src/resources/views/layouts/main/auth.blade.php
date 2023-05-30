@@ -67,6 +67,9 @@
                 </div>
             </div>
             <div class="form-holder">
+                <div class="px-2 pt-2">
+                    <a rel="nofollow" aria-label="home page" href="{{route('index')}}" class="btn btn-dark">Go Back</a>
+                </div>
                 <div class="form-content">
                     @yield('content')
                 </div>
@@ -78,16 +81,28 @@
     <script src="{{ asset('auth/js/popper.min.js') }}"></script>
     <script src="{{ asset('auth/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('main/js/plugins/iziToast.min.js') }}"></script>
+    <script src="{{ asset('admin/js/pages/sweetalert2.js') }}"></script>
     <script src="{{ asset('admin/js/pages/just-validate.production.min.js') }}"></script>
 
     <script type="text/javascript" nonce="{{ csp_nonce() }}">
 
+        const errorPopup = (message) =>{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                backdrop: true,
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+                allowEnterKey: true,
+            })
+        }
         const errorToast = (message) =>{
             iziToast.error({
                 title: 'Error',
                 message: message,
                 position: 'topCenter',
-                timeout:7000
+                timeout:0
             });
         }
         const successToast = (message) =>{
@@ -95,7 +110,7 @@
                 title: 'Success',
                 message: message,
                 position: 'topCenter',
-                timeout:6000
+                timeout:0
             });
         }
         @if (session('success_status'))
@@ -103,6 +118,9 @@
         @endif
         @if (session('error_status'))
             errorToast('{{ Session::get('error_status') }}')
+        @endif
+        @if (session('error_popup'))
+            errorPopup('{{ Session::get('error_popup') }}')
         @endif
 
     </script>

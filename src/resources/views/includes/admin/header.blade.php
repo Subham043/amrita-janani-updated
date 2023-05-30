@@ -6,7 +6,7 @@
             <div class="d-flex">
                 <!-- LOGO -->
                 <div class="navbar-brand-box horizontal-logo">
-                    <a href="index.html" class="logo logo-dark">
+                    <a href="{{route('dashboard')}}" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src="{{ asset('admin/images/logo-sm.png') }}" alt="" height="22">
                         </span>
@@ -15,7 +15,7 @@
                         </span>
                     </a>
 
-                    <a href="index.html" class="logo logo-light">
+                    <a href="{{route('dashboard')}}" class="logo logo-light">
                         <span class="logo-sm">
                             <img src="{{ asset('admin/images/logo-sm.png') }}" alt="" height="22">
                         </span>
@@ -45,9 +45,9 @@
                             </div>
 
                             <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm btn-rounded">how to setup <i
+                                <a href="{{route('dashboard')}}" class="btn btn-soft-secondary btn-sm btn-rounded">how to setup <i
                                         class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i
+                                <a href="{{route('dashboard')}}" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i
                                         class="mdi mdi-magnify ms-1"></i></a>
                             </div>
                             <!-- item-->

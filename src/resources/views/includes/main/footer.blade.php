@@ -70,7 +70,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="copy-right-box">
-                            <p class="text-white">Copyright &copy; <script nonce="{{ csp_nonce() }}">document.write(new Date().getFullYear())</script> Amrita Janani and Devipuram All Right Reserved.</p>
+                            <p class="text-white">Copyright &copy; {{date('Y')}} Amrita Janani and Devipuram All Right Reserved.</p>
                             <p class=" text-white"><a aria-label="privacy page" href="{{route('privacy_policy')}}">Privacy policy</a></p>
                         </div>
                     </div>

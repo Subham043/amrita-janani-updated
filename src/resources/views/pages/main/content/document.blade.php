@@ -70,7 +70,7 @@
                                 @foreach($languages as $languages)
                                 <li>
                                     <label for="language{{$languages->id}}">
-                                        <input type="checkbox" name="language" id="language{{$languages->id}}" value="{{$languages->id}}" @if(app('request')->has('language') && in_array($languages->id, explode(',', app('request')->input('language'))) ) checked @endif>
+                                        <input type="checkbox" name="language" id="language{{$languages->id}}" value="{{$languages->id}}" @if(app('request')->has('language') && in_array($languages->id, explode('_', app('request')->input('language'))) ) checked @endif>
                                         {{$languages->name}}
                                     </label>
                                 </li>

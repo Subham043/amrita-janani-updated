@@ -35,9 +35,9 @@ class LoginPageController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             (new RateLimitService($request))->clearRateLimit();
-            return redirect()->intended(route('content_dashboard'))->with('success_status', 'Logged in successfully.');
+            return redirect()->intended(route('content_dashboard'));
         }
 
-        return redirect(route('signin'))->with('error_status', 'Oops! You have entered invalid credentials');
+        return redirect(route('signin'))->with('error_popup', 'Oops! You have entered invalid credentials');
     }
 }

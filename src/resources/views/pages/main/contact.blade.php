@@ -273,12 +273,12 @@ validationModal
         if(error?.response?.data?.errors?.captcha){
             errorToast(error?.response?.data?.errors?.captcha[0])
         }
-        if(error?.response?.data?.error){
-            errorToast(error?.response?.data?.error)
+        if(error?.response?.data?.error_popup){
+            errorPopup(error?.response?.data?.error_popup)
         }
-        if(error?.response?.data?.message){
-            errorToast(error?.response?.data?.message)
-        }
+        // if(error?.response?.data?.message){
+        //     errorToast(error?.response?.data?.message)
+        // }
         await reload_captcha()
         document.getElementById('captcha').value='';
     } finally{
@@ -288,7 +288,6 @@ validationModal
         submitBtn.disabled = false;
     }
 })
-
 </script>
 
 @include('includes.main.captcha')

@@ -101,7 +101,7 @@
                     title: 'Error',
                     message: message,
                     position: 'topRight',
-                    timeout:7000
+                    timeout:0
                 });
             }
             const successToast = (message) =>{
@@ -109,7 +109,7 @@
                     title: 'Success',
                     message: message,
                     position: 'topRight',
-                    timeout:6000
+                    timeout:0
                 });
             }
             @if (session('success_status'))

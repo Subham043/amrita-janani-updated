@@ -31,7 +31,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             (new RateLimitService($request))->clearRateLimit();
-            return redirect()->intended(route('dashboard'))->with('success_status', 'Logged in successfully.');
+            return redirect()->intended(route('dashboard'));
         }
 
         return redirect(route('login'))->with('error_status', 'Oops! You have entered invalid credentials');

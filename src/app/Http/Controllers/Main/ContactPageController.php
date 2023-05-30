@@ -19,7 +19,7 @@ class ContactPageController extends CommonController
         if($result){
             return response()->json(["message" => "Message sent successfully."], 201);
         }else{
-            return response()->json(["error"=>"something went wrong. Please try again"], 400);
+            return response()->json(["error_popup"=>"something went wrong. Please try again"], 400);
         }
     }
 }

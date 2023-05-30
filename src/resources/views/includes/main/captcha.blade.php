@@ -9,7 +9,7 @@
                 errorToast(error?.response?.data?.error)
             }
             if(error?.response?.data?.message){
-                errorToast(error?.response?.data?.message)
+                errorPopup(error?.response?.data?.message)
             }
         } finally{}
     }

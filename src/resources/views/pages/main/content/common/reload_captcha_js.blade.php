@@ -9,9 +9,9 @@
             const response = await axios.get('{{route('captcha_ajax')}}')
             document.getElementById(id).innerHTML = response.data.captcha
         } catch (error) {
-            console.log(error);
-            if(error?.response?.data?.error){
-                errorToast(error?.response?.data?.error)
+            // console.log(error);
+            if(error?.response?.data?.error_popup){
+                errorPopup(error?.response?.data?.message)
             }
         } finally{}
     }

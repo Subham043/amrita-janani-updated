@@ -123,7 +123,7 @@ body {
 }
 
 .content-holder .content-container .media-container .img-holder {
-    
+
     background-color:#fff;
 }
 
@@ -141,9 +141,16 @@ body {
 }
 
 .content-holder .content-container .media-container .media-holder p.desc{
-    white-space: nowrap;
+    /* white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical; */
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .content-holder .content-container .media-container .media-holder h5{
@@ -487,7 +494,7 @@ hr {
 }
 
 .action-button-row .action-btn.report-button{
-    
+
     border-color:#ff8300;
     background-color:#ff8300;
     color:#fff;

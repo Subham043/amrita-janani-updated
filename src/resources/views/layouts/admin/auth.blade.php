@@ -63,7 +63,7 @@
                         <div class="col-lg-12">
                             <div class="text-center mt-sm-5 mb-4 text-white-50">
                                 <div>
-                                    <a href="index.html" class="d-inline-block auth-logo">
+                                    <a href="{{route('login')}}" class="d-inline-block auth-logo">
                                         <img src="{{ asset('admin/images/logo.png') }}" alt="">
                                     </a>
                                 </div>
@@ -106,7 +106,7 @@
                     title: 'Success',
                     message: '{{ session('success_status') }}',
                     position: 'topRight',
-                    timeout:6000
+                    timeout:0
                 });
 
             @endif
@@ -116,7 +116,7 @@
                     title: 'Error',
                     message: '{{ session('error_status') }}',
                     position: 'topRight',
-                    timeout:6000
+                    timeout:0
                 });
 
             @endif

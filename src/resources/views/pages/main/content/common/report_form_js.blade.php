@@ -33,7 +33,7 @@ validationModal2
             title: 'Error',
             message: message,
             position: 'bottomCenter',
-            timeout:7000
+            timeout:0
         });
     }
     const successToast = (message) =>{
@@ -41,7 +41,7 @@ validationModal2
             title: 'Success',
             message: message,
             position: 'bottomCenter',
-            timeout:6000
+            timeout:0
         });
     }
     var submitBtn = document.getElementById('SubmitBtn2')
@@ -76,6 +76,9 @@ validationModal2
         }
         if(error?.response?.data?.error){
             errorToast(error?.response?.data?.error)
+        }
+        if(error?.response?.data?.error_popup){
+            errorPopup(error?.response?.data?.error_popup)
         }
         await reload_captcha('captcha_container2')
         document.getElementById('captcha2').value = '';

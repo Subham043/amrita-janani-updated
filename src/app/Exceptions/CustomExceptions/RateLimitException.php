@@ -46,9 +46,13 @@ class RateLimitException extends Exception
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => $this->showMessage(),
+                'error_popup' => $this->showMessage(),
             ], $this->showStatusCode());
         }else{
-            return redirect()->back()->with('error_status', $this->showMessage());
+            if(request()->is('admin/*')){
+                return redirect()->back()->with('error_status', $this->showMessage());
+            }
+            return redirect()->back()->with('error_popup', $this->showMessage());
         }
     }
 

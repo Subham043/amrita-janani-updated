@@ -54,7 +54,7 @@ class ResetPasswordPageController extends Controller
             (new RateLimitService($request))->clearRateLimit();
             return redirect(route('signin'))->with('success_status', __($status));
         }
-        return back()->with(['error_status' => __($status)]);
+        return back()->with(['error_popup' => __($status)]);
 
     }
 }

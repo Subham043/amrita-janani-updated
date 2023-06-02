@@ -77,7 +77,8 @@ return [
 
     'middleware' => [
         'web',
-        'auth',
+        'auth_admin',
+        'admin',
         Authorize::class,
     ],
 

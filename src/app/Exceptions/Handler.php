@@ -11,6 +11,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+use Illuminate\Support\Facades\View;
+use App\Support\Types\UserType;
 
 class Handler extends ExceptionHandler
 {
@@ -85,6 +87,9 @@ class Handler extends ExceptionHandler
     private function customRender($exception, $status_code, $message, $headers = []){
         if(request()->is('admin/*')){
             if(Auth::check()){
+                View::share('common', [
+                    'user_type' => UserType::lists()
+                ]);
                 return $this->sendErrorResponse($exception, $status_code, $message, $headers, 'errors.admin.authenticated_error');
             }else{
                 return $this->sendErrorResponse($exception, $status_code, $message, $headers, 'errors.admin.unauthenticated_error');

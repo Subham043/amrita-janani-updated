@@ -7,6 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\View;
+use App\Support\Types\UserType;
+use Illuminate\Support\Facades\Auth;
 
 class RateLimitException extends Exception
 {
@@ -50,6 +53,11 @@ class RateLimitException extends Exception
             ], $this->showStatusCode());
         }else{
             if(request()->is('admin/*')){
+                if(Auth::check()){
+                    View::share('common', [
+                        'user_type' => UserType::lists()
+                    ]);
+                }
                 return redirect()->back()->with('error_status', $this->showMessage());
             }
             return redirect()->back()->with('error_popup', $this->showMessage());

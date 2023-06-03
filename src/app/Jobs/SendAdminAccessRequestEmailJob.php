@@ -32,6 +32,6 @@ class SendAdminAccessRequestEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to(config('ADMIN_EMAIL'))->send(new SendAdminAccessRequestEmail($this->details));
+        Mail::to(env('ADMIN_EMAIL'))->send(new SendAdminAccessRequestEmail($this->details));
     }
 }

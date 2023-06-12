@@ -31,7 +31,7 @@ class RegisterPageController extends Controller
                         ->symbols()
                         ->uncompromised()
             ],
-            'cpassword' => ['required_with:password|same:password'],
+            'cpassword' => ['required_with:password', 'same:password'],
         ],
         [
             'name.required' => 'Please enter the name !',

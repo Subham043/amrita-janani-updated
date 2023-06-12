@@ -1,2 +1,4 @@
 /mysql
+/artibot-node/node_modules
+/artibot-node/.env
 .env

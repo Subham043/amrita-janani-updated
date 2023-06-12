@@ -37,24 +37,28 @@ const createSignature = (req) => {
     // hmac.update(Buffer.from(payload), 'utf-8');
     // return hmac.digest('hex');
     const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    console.log("url", url);
     const payload = `${req.method.toUpperCase()}&${url}&${req.buf}`;
+    console.log("payload", payload);
     const hmac = crypto.createHmac('sha1', WEBHOOK_SECRET);
     hmac.update(Buffer.from(payload), 'utf-8');
     return hmac.digest('hex');
 };
 const verifyWebhookSignature = (req, res, next) => {
-    // const signature = createSignature(req);
-    // if (!req.headers["x-artibot-signature"] || signature !== req.headers["x-artibot-signature"].toLowerCase()) {
-    //     return res.status(403).json({
-    //         message: "invalid signature"
-    //     });
-    // }
-    if (req.headers["x-artibot-signature"] && JSON.stringify(req.body)===req.buff) {
-        next();
+    const signature = createSignature(req);
+    console.log("signature", signature);
+    if (!req.headers["x-artibot-signature"] || signature !== req.headers["x-artibot-signature"].toLowerCase()) {
+        return res.status(403).json({
+            message: "invalid signature"
+        });
     }
-    return res.status(403).json({
-        message: "invalid signature"
-    });
+    next();
+    // if (req.headers["x-artibot-signature"] && JSON.stringify(req.body)===req.buff) {
+    //     next();
+    // }
+    // return res.status(403).json({
+    //     message: "invalid signature"
+    // });
 };
 
 app.get('/artibot/test', async function (req, res) {

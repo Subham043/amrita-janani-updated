@@ -3,10 +3,19 @@ const express = require('express');
 const helmet = require("helmet");
 const hpp = require('hpp');
 const cors = require('cors');
-global.crypto = require('crypto')
+const crypto = require('crypto');
 
 const app = express();
-app.use(express.json()); //Used to parse JSON bodies
+app.use(express.json(
+    {
+        // verify normally allows us to conditionally abort the parse, but we're using
+        // to gain easy access to 'buf', which is a Buffer of the raw request body,
+        // which we will need later when we validate the webhook signature
+        verify: (req, res, buf) => {
+            req.buf = buf;
+        }
+    }
+)); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: false })); //Parse URL-encoded bodies
 app.use(helmet({
   crossOriginResourcePolicy: false,
@@ -20,9 +29,14 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 const createSignature = (req) => {
-    const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-    const payload = req.method.toUpperCase() + '&' + url + '&' + req.buf;
-    const hmac = crypto.createHmac('sha1', process.env.WEBHOOK_SECRET);
+    // const url = req.protocol + '://' + req.get('host') + req.originalUrl;
+    // const payload = req.method.toUpperCase() + '&' + url + '&' + req.buf;
+    // const hmac = crypto.createHmac('sha1', process.env.WEBHOOK_SECRET);
+    // hmac.update(Buffer.from(payload), 'utf-8');
+    // return hmac.digest('hex');
+    const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    const payload = `${req.method.toUpperCase()}&${url}&${req.buf}`;
+    const hmac = crypto.createHmac('sha1', WEBHOOK_SECRET);
     hmac.update(Buffer.from(payload), 'utf-8');
     return hmac.digest('hex');
 };
@@ -44,7 +58,9 @@ app.get('/artibot/test', async function (req, res) {
 });
 
 app.post('/artibot/webhook', verifyWebhookSignature, async function (req, res) {
-    console.log(req);
+    console.log('Received ArtiBot.ai webhook payload', new Date());
+    console.log('Signature', req.headers[ARTIBOT_SIGNATURE_HEADER]);
+    console.log(req.body);
     return res.status(200).json({
         message: "working"
     });

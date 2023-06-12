@@ -43,13 +43,18 @@ const createSignature = (req) => {
     return hmac.digest('hex');
 };
 const verifyWebhookSignature = (req, res, next) => {
-    const signature = createSignature(req);
-    if (!req.headers["x-artibot-signature"] || signature !== req.headers["x-artibot-signature"].toLowerCase()) {
-        return res.status(403).json({
-            message: "invalid signature"
-        });
+    // const signature = createSignature(req);
+    // if (!req.headers["x-artibot-signature"] || signature !== req.headers["x-artibot-signature"].toLowerCase()) {
+    //     return res.status(403).json({
+    //         message: "invalid signature"
+    //     });
+    // }
+    if (req.headers["x-artibot-signature"] && JSON.stringify(req.body)===req.buff) {
+        next();
     }
-    next();
+    return res.status(403).json({
+        message: "invalid signature"
+    });
 };
 
 app.get('/artibot/test', async function (req, res) {
@@ -62,7 +67,8 @@ app.get('/artibot/test', async function (req, res) {
 app.post('/artibot/webhook', verifyWebhookSignature, async function (req, res) {
     console.log('Received ArtiBot.ai webhook payload', new Date());
     console.log('Signature', req.headers[ARTIBOT_SIGNATURE_HEADER]);
-    console.log(req.body);
+    console.log("body", req.body);
+    console.log("buff", req.buff);
     return res.status(200).json({
         message: "working"
     });

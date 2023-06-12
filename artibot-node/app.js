@@ -31,34 +31,20 @@ app.use(cors(corsOptions))
 const WEBHOOK_SECRET = "AmritaJanani@321";
 
 const createSignature = (req) => {
-    // const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-    // const payload = req.method.toUpperCase() + '&' + url + '&' + req.buf;
-    // const hmac = crypto.createHmac('sha1', process.env.WEBHOOK_SECRET);
-    // hmac.update(Buffer.from(payload), 'utf-8');
-    // return hmac.digest('hex');
     const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-    console.log("url", url);
     const payload = `${req.method.toUpperCase()}&${url}&${req.buf}`;
-    console.log("payload", payload);
     const hmac = crypto.createHmac('sha1', WEBHOOK_SECRET);
     hmac.update(Buffer.from(payload), 'utf-8');
     return hmac.digest('hex');
 };
 const verifyWebhookSignature = (req, res, next) => {
     const signature = createSignature(req);
-    console.log("signature", signature);
     if (!req.headers["x-artibot-signature"] || signature !== req.headers["x-artibot-signature"].toLowerCase()) {
         return res.status(403).json({
             message: "invalid signature"
         });
     }
     next();
-    // if (req.headers["x-artibot-signature"] && JSON.stringify(req.body)===req.buff) {
-    //     next();
-    // }
-    // return res.status(403).json({
-    //     message: "invalid signature"
-    // });
 };
 
 app.get('/artibot/test', async function (req, res) {
@@ -72,7 +58,6 @@ app.post('/artibot/webhook', verifyWebhookSignature, async function (req, res) {
     console.log('Received ArtiBot.ai webhook payload', new Date());
     console.log('Signature', req.headers[ARTIBOT_SIGNATURE_HEADER]);
     console.log("body", req.body);
-    console.log("buff", req.buff);
     return res.status(200).json({
         message: "working"
     });

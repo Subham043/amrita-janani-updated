@@ -6,6 +6,16 @@ const cors = require('cors');
 const crypto = require('crypto');
 
 const app = express();
+
+app.use(function(request, response, next) {
+
+    if (process.env.NODE_ENV != 'development' && !request.secure) {
+        return response.redirect("https://" + request.headers.host + request.url);
+    }
+
+    next();
+})
+
 app.use(express.json(
     {
         // verify normally allows us to conditionally abort the parse, but we're using

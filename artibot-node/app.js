@@ -28,6 +28,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
+const WEBHOOK_SECRET = "AmritaJanani@321";
+
 const createSignature = (req) => {
     // const url = req.protocol + '://' + req.get('host') + req.originalUrl;
     // const payload = req.method.toUpperCase() + '&' + url + '&' + req.buf;

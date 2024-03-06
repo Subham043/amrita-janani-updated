@@ -30,7 +30,7 @@ class LoginPageController extends Controller
         ]);
 
         $credentials = Purify::clean($request->only('email', 'password', 'remember'));
-        $credentials['status'] = 1;
+        // $credentials['status'] = 1;
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();

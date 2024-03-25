@@ -32,6 +32,6 @@ class SendAdminEnquiryEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to(env('ADMIN_EMAIL'))->send(new SendAdminEnquiryEmail($this->details));
+        Mail::to(config('services.admin_email'))->send(new SendAdminEnquiryEmail($this->details));
     }
 }

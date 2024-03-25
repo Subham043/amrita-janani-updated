@@ -21,6 +21,8 @@ return [
         'scheme' => 'https',
     ],
 
+    'admin_email' => env('ADMIN_EMAIL', ''),
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

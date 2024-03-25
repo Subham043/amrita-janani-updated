@@ -49,7 +49,7 @@ class RegisterPageController extends Controller
         $user = new User;
         $user->name = Purify::clean($req->name);
         $user->email = Purify::clean($req->email);
-        $user->phone = Purify::clean($req->phone);
+        $user->phone = $req->phone ? Purify::clean($req->phone) : null;
         $user->userType = 2;
         $user->password = Hash::make(Purify::clean($req->password));
         $user->otp = rand(1000,9999);
